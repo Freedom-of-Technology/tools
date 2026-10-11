@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
 import { checkFile } from '../public/tools/domain-check/check/compare.js';
-import { createLookup } from '../public/tools/domain-check/check/live.js';
+import { createLookup } from '../public/tools/shared/live.js';
 import { fakeInternet } from './fake-internet.js';
 
 const BAKERY = readFileSync(new URL('files/maple-street-bakery.com.zone', import.meta.url), 'utf8');

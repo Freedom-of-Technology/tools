@@ -2,7 +2,7 @@
 // Every bit of text from the file goes in with textContent, never as HTML.
 
 import { checkFile, NEEDS_A_LOOK, STATUS } from './check/compare.js';
-import { createLookup } from './check/live.js';
+import { createLookup } from '../shared/live.js';
 import { ZoneError } from './check/zone.js';
 
 const lookup = createLookup();

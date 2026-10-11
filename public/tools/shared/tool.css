@@ -69,6 +69,66 @@ code {
 .freeot[hidden] { display: none; }
 .freeot .fo-p { color: var(--text); }
 
+/* ---- Results: the head, the cards, the status words ---- */
+/* Statuses are always spelled out in words, never color alone. Each tool picks which badges are
+   filled (its problems) in its own stylesheet. */
+
+#results { padding: 8px 0 24px; }
+.checking { font-weight: 600; padding: 24px 0; margin: 0; }
+
+.result {
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 4px solid var(--accent);
+  display: flex; flex-direction: column; gap: 18px;
+}
+.result h3 { margin-top: 12px; }
+.result-head { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-start; }
+.result-head p { margin: 0; }
+.summary { font-size: var(--size-heading-3); font-weight: 600; margin-top: 8px !important; }
+.hint { color: var(--text); font-size: var(--size-label); }
+.result-message p { margin: 0; }
+
+.problems { display: flex; flex-direction: column; gap: var(--space-gap); }
+.problem {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--accent);
+  border-radius: var(--panel-corner);
+  padding: 20px var(--space-card);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.problem p { margin: 0; max-width: 46em; }
+.problem-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.problem-title { margin: 0; font-family: var(--font-headings); font-size: var(--size-heading-3); letter-spacing: var(--heading-tracking); line-height: 1.2; overflow-wrap: break-word; }
+.note { font-size: var(--size-label); }
+
+.compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.compare .fo-label { margin-bottom: 4px; }
+.values { margin: 0; padding-left: 1.1em; }
+.values li + li { margin-top: 4px; }
+.value-none { color: var(--text); font-style: normal; margin: 0; }
+
+/* Status words. Problems are filled; everything else is outlined. */
+.badge {
+  display: inline-block;
+  font-size: var(--size-label);
+  font-weight: 700;
+  line-height: 1.3;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 2px solid var(--line);
+  color: var(--text);
+  white-space: nowrap;
+}
+.tag {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: var(--size-label);
+  font-weight: 600;
+  color: var(--label);
+}
+
 /* ---- The guide below the tool ---- */
 
 .guide { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 14px; }

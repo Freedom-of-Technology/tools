@@ -1,0 +1,32 @@
+/* The email protection check's own styles, on top of the layout every tool shares
+   (../shared/tool.css). Statuses are always spelled out in words, never color alone. */
+
+/* ---- The form ---- */
+
+.ask {
+  background: var(--band);
+  border-radius: var(--panel-corner);
+  padding: var(--space-card);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.ask .fo-p { color: var(--text); }
+.ask input {
+  width: 100%;
+  max-width: 30em;
+  font: inherit;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--label);
+  border-radius: var(--button-corner);
+  padding: 12px 14px;
+}
+.ask input:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+/* ---- Results ---- */
+
+/* What needs a fix, or couldn't be checked, is filled. */
+.badge-fix, .badge-failed {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--page);
+}

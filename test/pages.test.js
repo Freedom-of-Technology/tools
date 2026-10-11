@@ -38,14 +38,17 @@ test('every style, script, picture and link a tool page uses on this site is the
   assert.deepEqual(broken, []);
 });
 
-test("every \"What this means\" link on Almanac Check's results goes to its explanation on the page", () => {
-  const html = readFileSync(join(PUBLIC, 'tools/domain-check/index.html'), 'utf8');
-  const app = readFileSync(join(PUBLIC, 'tools/domain-check/app.js'), 'utf8');
-  const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
-  const targets = [
-    ...[...app.matchAll(/'#?((?:means|what)-[a-z-]+)'/g)].map((m) => m[1]),
-    ...[...html.matchAll(/href="#([^"]+)"/g)].map((m) => m[1]),
-  ];
-  assert.ok(targets.includes('means-different') && targets.includes('what-results-mean'), 'found the links in app.js');
-  assert.deepEqual(targets.filter((id) => !ids.has(id)), []);
-});
+// Each tool, and one link its results make, to show the links were found at all.
+for (const [tool, sample] of [['domain-check', 'means-different'], ['email-check', 'means-dmarc']]) {
+  test(`every "What this means" link on ${tool}'s results goes to its explanation on the page`, () => {
+    const html = readFileSync(join(PUBLIC, `tools/${tool}/index.html`), 'utf8');
+    const app = readFileSync(join(PUBLIC, `tools/${tool}/app.js`), 'utf8');
+    const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+    const targets = [
+      ...[...app.matchAll(/'#?((?:means|what)-[a-z-]+)'/g)].map((m) => m[1]),
+      ...[...html.matchAll(/href="#([^"]+)"/g)].map((m) => m[1]),
+    ];
+    assert.ok(targets.includes(sample), 'found the links in app.js');
+    assert.deepEqual(targets.filter((id) => !ids.has(id)), []);
+  });
+}
