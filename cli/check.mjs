@@ -7,10 +7,15 @@
 //       asks that server for the records instead of Google Public DNS: for checking a new DNS
 //       company's copy before the domain's name servers are switched to it. Name servers and
 //       DNSSEC aren't compared then, since the registry still names the old company.
+//   node cli/check.mjs dns --secrets .
+//       also looks for secrets in every other file in that folder and the folders inside it,
+//       such as the guides and the list of addresses. Another repository checked out inside it
+//       (this one, in an almanac's GitHub check) isn't part of the almanac and is left out.
 //
 // Exit code 1 means something needs a look: a record that's different or missing, a "paste:"
 // note that doesn't match its record, a lookup that failed, a file that couldn't be read, or a
-// file that looks like it holds a secret (refused before anything about it is asked).
+// file that looks like it holds a secret (a records file is refused before anything about it is
+// asked).
 //
 // Needs Node 22 or later and nothing else.
 
@@ -21,7 +26,7 @@ import { fileURLToPath } from 'node:url';
 
 import { NEEDS_A_LOOK, STATUS, checkFile } from '../site/check/compare.js';
 import { LookupError, createLookup } from '../site/check/live.js';
-import { ZoneError } from '../site/check/zone.js';
+import { ZoneError, findSecrets } from '../site/check/zone.js';
 
 const bare = (host) => host.replace(/\.$/, '').toLowerCase();
 
@@ -154,20 +159,62 @@ async function zoneFiles(paths) {
   return files;
 }
 
+// Every file in `dir` and the folders inside it, leaving out git's own folder and any other
+// repository checked out inside it.
+async function everyFile(dir, top = true) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  if (!top && entries.some((e) => e.name === '.git')) return [];
+  const files = [];
+  for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+    if (entry.name === '.git') continue;
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) files.push(...(await everyFile(path, false)));
+    else if (entry.isFile()) files.push(path);
+  }
+  return files;
+}
+
+function reportSecrets(file, secrets, log, { recordsFile }) {
+  log(`\n${file}`);
+  for (const { line, what } of secrets) {
+    log(`  SECRET?     line ${line} looks like ${what}.${recordsFile ? ' Nothing in this file was checked.' : ''}`);
+  }
+  log('              Move it to the password manager, then take it out of the file and its history.');
+  log('              Once a secret has been in the file, it has to be replaced with a new one.');
+  return secrets.length;
+}
+
 // Returns the exit code. `fetch`, `Resolver` and `log` are passed in so tests can stand in for the
 // network and read what was written.
 export async function main(args, { fetch, Resolver: DnsResolver, log = console.log } = {}) {
   args = [...args];
-  const at = args.indexOf('--ns');
-  const server = at >= 0 ? args.splice(at, 2)[1] : undefined;
-  if (!args.length || (at >= 0 && !server)) {
-    log('Usage: node cli/check.mjs <records file or folder>... [--ns <name server>]');
+  const option = (name) => {
+    const at = args.indexOf(name);
+    return at < 0 ? { given: false } : { given: true, value: args.splice(at, 2)[1] };
+  };
+  const ns = option('--ns');
+  const secretsIn = option('--secrets');
+  const server = ns.value;
+  if (!args.length || (ns.given && !server) || (secretsIn.given && !secretsIn.value)) {
+    log('Usage: node cli/check.mjs <records file or folder>... [--ns <name server>] [--secrets <folder>]');
     return 2;
   }
 
   const lookup = server ? createServerLookup(server, { fetch, Resolver: DnsResolver }) : createLookup({ fetch });
+  const files = await zoneFiles(args.map((a) => resolve(a)));
   let problems = 0;
-  for (const file of await zoneFiles(args.map((a) => resolve(a)))) {
+
+  // Records files get the same look below, so they aren't reported twice.
+  if (secretsIn.given) {
+    const others = (await everyFile(resolve(secretsIn.value))).filter((f) => !files.includes(f));
+    for (const file of others) {
+      const secrets = findSecrets(await readFile(file, 'utf8'));
+      if (secrets.length) problems += reportSecrets(file, secrets, log, { recordsFile: false });
+    }
+    log(`\nLooked for secrets in ${others.length} other file(s).`);
+  }
+
+  for (const file of files) {
     let result;
     try {
       result = await checkFile(await readFile(file, 'utf8'), lookup);
@@ -178,13 +225,7 @@ export async function main(args, { fetch, Resolver: DnsResolver, log = console.l
       continue;
     }
     if (result.refused) {
-      log(`\n${file}`);
-      for (const { line, what } of result.refused) {
-        log(`  SECRET?     line ${line} looks like ${what}. Nothing in this file was checked.`);
-      }
-      log('              Move it to the password manager, then take it out of the file and its history.');
-      log('              Once a secret has been in the file, it has to be replaced with a new one.');
-      problems += result.refused.length;
+      problems += reportSecrets(file, result.refused, log, { recordsFile: true });
       continue;
     }
     problems += report(result, { log, server });

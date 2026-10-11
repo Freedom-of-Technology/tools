@@ -2,9 +2,9 @@
 // stand-in for the network (fake-internet.js, and FakeResolver below for asking a named server).
 
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
@@ -36,7 +36,10 @@ async function run(args, internet, options = {}) {
 
 async function folderWith(files) {
   const dir = await mkdtemp(join(tmpdir(), 'almanac-check-'));
-  for (const [name, text] of Object.entries(files)) await writeFile(join(dir, name), text);
+  for (const [name, text] of Object.entries(files)) {
+    await mkdir(dirname(join(dir, name)), { recursive: true });
+    await writeFile(join(dir, name), text);
+  }
   return dir;
 }
 
@@ -58,6 +61,38 @@ test("a records file holding a secret fails GitHub's check", async () => {
   assert.equal(code, 1);
   assert.match(output, /line \d+ looks like a password, key or code written out/);
   assert.deepEqual(net.asked, []);
+});
+
+test("a password written into a guide fails GitHub's check, not only one in a records file", async () => {
+  const almanac = await folderWith({
+    'dns/maple-street-bakery.com.zone': BAKERY_TEXT,
+    'guides/email-stopped-working.md': '# Email stopped working\n\nSign in to Cloudflare.\nCloudflare password: Rolling-Pin-42\n',
+  });
+  const { code, output } = await run([join(almanac, 'dns'), '--secrets', almanac], bakeryLive());
+  assert.equal(code, 1);
+  assert.match(output, /email-stopped-working\.md\n +SECRET\? +line 4 looks like a password, key or code written out\.\n/);
+});
+
+test("the checker's own copy, which GitHub's check puts inside the almanac, isn't searched, so its made-up secrets don't fail every almanac", async () => {
+  const almanac = await folderWith({
+    'dns/maple-street-bakery.com.zone': BAKERY_TEXT,
+    'guides/email-stopped-working.md': '# Email stopped working\n',
+    '.almanac-check/.git/HEAD': 'ref: refs/heads/main\n',
+    '.almanac-check/test/cli.test.js': "const note = 'api key: sk9-maple-4471';\n",
+  });
+  const { code, output } = await run([join(almanac, 'dns'), '--secrets', almanac], bakeryLive());
+  assert.equal(code, 0);
+  assert.match(output, /Looked for secrets in 1 other file\(s\)\./);
+});
+
+test('a records file holding a secret is reported once, not once more by the search of the whole almanac', async () => {
+  const almanac = await folderWith({
+    'dns/maple-street-bakery.com.zone': BAKERY_TEXT.replace('; Our website', '; api key: sk9-maple-4471\n; Our website'),
+  });
+  const { code, output } = await run([join(almanac, 'dns'), '--secrets', almanac], bakeryLive());
+  assert.equal(code, 1);
+  assert.equal(output.match(/SECRET\?/g).length, 1);
+  assert.match(output, /\n1 thing\(s\) need a look\./);
 });
 
 test("a folder checks every records file in it, so a domain added to an almanac is checked without changing GitHub's check", async () => {

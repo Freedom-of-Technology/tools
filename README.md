@@ -55,18 +55,22 @@ split into two (`._spfm`).
 For FreeOT, and for the check GitHub runs on each almanac. Business owners use the page. It needs
 Node 22 or later and nothing else, and runs the same checking code as the page:
 
-    node cli/check.mjs ../almanac/dns
+    node cli/check.mjs ../almanac/dns --secrets ../almanac
     node cli/check.mjs ../almanac/dns/freeot.com.zone --ns woz.ns.cloudflare.com
 
 A folder means every `.zone` file in it. It exits with 1 when anything needs a look, or when a file
 looks like it holds a secret (refused before anything about it is asked).
 
+`--secrets` looks for secrets in every other file in that folder and the folders inside it, such
+as an almanac's guides. Another repository checked out inside it is left out: an almanac's GitHub
+check puts this one there, and its tests hold made-up secrets.
+
 The `--ns` form asks that server for the records instead of Google Public DNS: for checking a new DNS
 company's copy before the domain's name servers are switched to it. The registry isn't asked then,
 since it still names the old company until the switch.
 
-An almanac's workflow checks out this repo and runs it on the almanac's `dns` folder, so a change
-merged here changes every almanac's check.
+An almanac's workflow checks out this repo and runs it on the almanac's `dns` folder, with
+`--secrets` on the whole almanac, so a change merged here changes every almanac's check.
 
 ## Working on it
 
