@@ -7,6 +7,7 @@ asked, and nothing typed or uploaded is saved.
 | Tool | Address | What it does |
 |---|---|---|
 | Almanac Check | [/tools/domain-check/](https://freedomoftechnology.com/tools/domain-check/) | Checks a domain's saved DNS records file against what's live on the internet, record by record. |
+| Email protection check | [/tools/email-check/](https://freedomoftechnology.com/tools/email-check/) | Says whether someone can send email pretending to be a domain: its SPF, DKIM and DMARC records, and when its registration runs out. |
 
 ## Nothing you give a tool is kept
 
@@ -69,13 +70,40 @@ since it still names the old company until the switch.
 `--secrets` also looks for secrets in every other file in that folder, such as an almanac's guides.
 Another repository checked out inside it is left out.
 
+## Email protection check
+
+An owner types their web address (or an email address, or a page's full address), and the page
+answers "Can someone send email pretending to be you?" in plain words, then shows each check with
+what's live and how to fix it. A result can be shared: the domain rides after the `#` in the
+address, which browsers never send to the server.
+
+### What it checks
+
+- **DMARC** (`_dmarc.<domain>`): missing, more than one, watching only (`p=none`), or sending fakes
+  to spam or refusing them; part coverage (`pct`) and no reports (`rua`).
+- **SPF**: missing, more than one, an ending that lets anyone send (`+all`) or says nothing
+  (`?all`), more than ten lookups (counted through every `include:`), and GoDaddy's
+  `include:secureserver.net` left behind after email moved elsewhere.
+- **DKIM**: looks for a key at the names the domain's email service uses (from its MX records:
+  Google Workspace, Microsoft 365) and at common names. Microsoft 365 always uses the same two
+  names, so nothing there means DKIM is off; anywhere else, a key may sit at a name the page can't
+  guess, and the page says so rather than call it missing.
+- **Registration**: when it runs out, from the registry; flagged within 30 days.
+
+### What it asks, and whom
+
+The same three public services as Almanac Check: Google Public DNS for the domain's MX and TXT
+records, its DMARC record, a few DKIM names and the names its SPF record includes; IANA's list of
+registries; and the domain's registry, for the registration's end date.
+
 ## Layout
 
 | Path | What it is |
 |---|---|
 | `public/` | Every file the site serves, at the same path: `public/tools/domain-check/index.html` is `/tools/domain-check/`. No build step. |
-| `public/tools/shared/` | What every tool page shares: `tool.css` (the page layout) and `brand/` (FreeOT's color and font settings, fonts and logos, copied from FreeOT's brand kit). |
-| `public/tools/domain-check/` | Almanac Check. `check/` is the checking code: `zone.js` reads a records file, `live.js` asks the internet, `compare.js` compares the two. `app.js` is the page. |
+| `public/tools/shared/` | What every tool page shares: `tool.css` (the page layout and result cards), `live.js` (the public lookups: Google Public DNS, IANA and the registry) and `brand/` (FreeOT's color and font settings, fonts and logos, copied from FreeOT's brand kit). |
+| `public/tools/domain-check/` | Almanac Check. `check/` is the checking code: `zone.js` reads a records file, `compare.js` compares it with what's live. `app.js` is the page. |
+| `public/tools/email-check/` | The email protection check. `check/email.js` is the checking code; `app.js` is the page. |
 | `src/worker.js` | The Cloudflare Worker in front of the files: it redirects Almanac Check's old address, check.freeot.com, and adds the security headers. |
 | `wrangler.toml` | How Cloudflare runs the Worker, including the addresses it answers on. |
 | `cli/check.mjs` | Almanac Check from the command line. |

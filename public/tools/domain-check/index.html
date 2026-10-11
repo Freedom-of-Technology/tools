@@ -82,63 +82,6 @@
         answer is a second opinion, and it can be wrong.</p>
     </div>
 
-    <section class="guide" id="what-is-sent" aria-labelledby="sent-title">
-      <h2 class="fo-h2" id="sent-title">What this page sends, and to whom</h2>
-      <p class="fo-p">Your file stays on your computer. To see what's live, the page has to ask the
-        internet, just as your browser does every time it opens a website. Here is everything it
-        asks, and who gets each question.</p>
-
-      <h3 class="fo-h3" id="sent-what">What goes out</h3>
-      <ul>
-        <li>For each record in your file, two things: its name (such as
-          <code>www.yourbusiness.com</code>) and its type (such as the one for email). What your
-          file says the record should be, and any notes in it, are never sent. The page compares
-          the answer with your file right here, on your computer.</li>
-        <li>Your domain's name, once, to find out which DNS company runs it.</li>
-        <li>Nothing at all from a file that looks like it holds a secret, such as a password, a
-          private key or an access code. The page checks for those first, and refuses the file
-          before asking anything. Secrets belong in a password manager, not a records file.</li>
-      </ul>
-
-      <h3 class="fo-h3" id="sent-who">Who gets it</h3>
-      <ul>
-        <li><strong>Google's public lookup service</strong> (<code>dns.google</code>) gets the names
-          and types. The page asks Google not to pass on what area you're in.</li>
-        <li><strong>IANA</strong> (<code>data.iana.org</code>), the body that keeps the list of domain
-          registries, sends that list. It isn't told your domain.</li>
-        <li><strong>Your domain's registry</strong>, the company that keeps the master list for your
-          domain ending (for .com, that's Verisign), gets your domain's name.</li>
-      </ul>
-      <p class="fo-p">Like any lookup, each of them sees the names asked about and your internet
-        address. The questions travel over a secure connection, so others on your network can see
-        only that you reached Google and the registry, not which names you asked about.</p>
-      <p class="fo-p">None of this is secret to begin with. DNS records are public by design: anyone
-        can look up any domain's records at any time. That's how email and websites find you.</p>
-
-      <h3 class="fo-h3" id="sent-not">What it doesn't do</h3>
-      <ul>
-        <li>It doesn't check whether domains are for sale, and doesn't search for new ones. It only
-          looks up the records of a domain that's already yours.</li>
-        <li>Nothing you check is sent to FreeOT. Opening this page loads it from FreeOT's site, like
-          any web page, but the page has no tracking scripts or cookies and stores nothing.</li>
-      </ul>
-
-      <h3 class="fo-h3" id="sent-same-code">Is this page the same as the code on GitHub?</h3>
-      <p class="fo-p">It's meant to be, file for file: there's no build step, so the site serves the
-        files in the <a class="fo-link" href="https://github.com/Freedom-of-Technology/tools" target="_blank" rel="noopener">public repository</a>
-        as they are, and every change is made there, where its history is public. You don't have to
-        take our word for it. Two ways to check:</p>
-      <ol>
-        <li>Right-click this page, choose <strong>View page source</strong>, and compare it with
-          <code>public/tools/domain-check/index.html</code> on GitHub. The same works for
-          <code>app.js</code> and the files in <code>check/</code>.</li>
-        <li>Watch what it sends. In Chrome or Edge, press F12 (on a Mac, Command+Option+I), open the
-          <strong>Network</strong> tab, then check a file. Besides this page's own files, you'll see
-          requests only to <code>dns.google</code>, <code>data.iana.org</code> and your
-          registry.</li>
-      </ol>
-    </section>
-
     <section class="guide" id="records-files" aria-labelledby="guide-title">
       <h2 class="fo-h2" id="guide-title">About records files</h2>
 
@@ -199,6 +142,63 @@
         <dt id="means-failed">Couldn't check</dt>
         <dd>The lookup didn't work this time. Try again in a minute.</dd>
       </dl>
+    </section>
+
+    <section class="guide" id="what-is-sent" aria-labelledby="sent-title">
+      <h2 class="fo-h2" id="sent-title">What this page sends, and to whom</h2>
+      <p class="fo-p">Your file stays on your computer. To see what's live, the page has to ask the
+        internet, just as your browser does every time it opens a website. Here is everything it
+        asks, and who gets each question.</p>
+
+      <h3 class="fo-h3" id="sent-what">What goes out</h3>
+      <ul>
+        <li>For each record in your file, two things: its name (such as
+          <code>www.yourbusiness.com</code>) and its type (such as the one for email). What your
+          file says the record should be, and any notes in it, are never sent. The page compares
+          the answer with your file right here, on your computer.</li>
+        <li>Your domain's name, once, to find out which DNS company runs it.</li>
+        <li>Nothing at all from a file that looks like it holds a secret, such as a password, a
+          private key or an access code. The page checks for those first, and refuses the file
+          before asking anything. Secrets belong in a password manager, not a records file.</li>
+      </ul>
+
+      <h3 class="fo-h3" id="sent-who">Who gets it</h3>
+      <ul>
+        <li><strong>Google's public lookup service</strong> (<code>dns.google</code>) gets the names
+          and types. The page asks Google not to pass on what area you're in.</li>
+        <li><strong>IANA</strong> (<code>data.iana.org</code>), the body that keeps the list of domain
+          registries, sends that list. It isn't told your domain.</li>
+        <li><strong>Your domain's registry</strong>, the company that keeps the master list for your
+          domain ending (for .com, that's Verisign), gets your domain's name.</li>
+      </ul>
+      <p class="fo-p">Like any lookup, each of them sees the names asked about and your internet
+        address. The questions travel over a secure connection, so others on your network can see
+        only that you reached Google and the registry, not which names you asked about.</p>
+      <p class="fo-p">None of this is secret to begin with. DNS records are public by design: anyone
+        can look up any domain's records at any time. That's how email and websites find you.</p>
+
+      <h3 class="fo-h3" id="sent-not">What it doesn't do</h3>
+      <ul>
+        <li>It doesn't check whether domains are for sale, and doesn't search for new ones. It only
+          looks up the records of a domain that's already yours.</li>
+        <li>Nothing you check is sent to FreeOT. Opening this page loads it from FreeOT's site, like
+          any web page, but the page has no tracking scripts or cookies and stores nothing.</li>
+      </ul>
+
+      <h3 class="fo-h3" id="sent-same-code">Is this page the same as the code on GitHub?</h3>
+      <p class="fo-p">It's meant to be, file for file: there's no build step, so the site serves the
+        files in the <a class="fo-link" href="https://github.com/Freedom-of-Technology/tools" target="_blank" rel="noopener">public repository</a>
+        as they are, and every change is made there, where its history is public. You don't have to
+        take our word for it. Two ways to check:</p>
+      <ol>
+        <li>Right-click this page, choose <strong>View page source</strong>, and compare it with
+          <code>public/tools/domain-check/index.html</code> on GitHub. The same works for
+          <code>app.js</code> and the files in <code>check/</code>.</li>
+        <li>Watch what it sends. In Chrome or Edge, press F12 (on a Mac, Command+Option+I), open the
+          <strong>Network</strong> tab, then check a file. Besides this page's own files, you'll see
+          requests only to <code>dns.google</code>, <code>data.iana.org</code> and your
+          registry.</li>
+      </ol>
     </section>
   </main>
 

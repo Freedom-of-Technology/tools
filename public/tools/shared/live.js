@@ -1,6 +1,8 @@
 // Asks the internet what's live, the same public questions any browser or mail server asks.
+// Shared by every tool that looks a domain up (Almanac Check, the email protection check).
 //
-// Records come from Google Public DNS over HTTPS. Name servers and DNSSEC come from the
+// Records come from Google Public DNS over HTTPS. Name servers, DNSSEC and the registration's end
+// date come from the
 // registry that runs the domain's ending (.com, .org...), through its public RDAP service, found
 // from IANA's list:
 // the registry is where a name server change actually happens, while an ordinary lookup service
@@ -35,6 +37,9 @@ const NORMALIZE = {
 };
 
 export class LookupError extends Error {}
+
+// The registry answered, and has no record of the domain: it isn't registered.
+export class NotRegisteredError extends LookupError {}
 
 export function createLookup({ fetch = globalThis.fetch.bind(globalThis) } = {}) {
   async function getJson(url, what) {
@@ -98,14 +103,17 @@ export function createLookup({ fetch = globalThis.fetch.bind(globalThis) } = {})
     throw new LookupError(`no registry for ${domain} is listed by IANA`);
   }
 
-  // The domain's name servers and DNSSEC setting, straight from its registry.
+  // The domain's name servers, DNSSEC setting and registration end date, straight from its
+  // registry. `expires` is null when the registry doesn't say.
   async function registry(domain) {
     const base = await registryFor(domain);
     const data = await getJson(`${base.replace(/\/?$/, '/')}domain/${encodeURIComponent(domain)}`, 'the registry');
-    if (!data) throw new LookupError(`the registry has no record of ${domain}`);
+    if (!data) throw new NotRegisteredError(`the registry has no record of ${domain}`);
+    const expiration = (data.events ?? []).find((e) => e.eventAction === 'expiration');
     return {
       nameservers: (data.nameservers ?? []).map((ns) => bare(ns.ldhName)).sort(),
       dnssec: Boolean(data.secureDNS?.delegationSigned),
+      expires: expiration ? new Date(expiration.eventDate) : null,
     };
   }
 

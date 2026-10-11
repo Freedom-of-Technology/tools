@@ -70,6 +70,11 @@ export function fakeInternet({ records = {}, registry = {}, broken = new Set() }
         ldhName: domain.toUpperCase(),
         nameservers: entry.nameservers.map((ns) => ({ objectClassName: 'nameserver', ldhName: ns.toUpperCase() })),
         secureDNS: { delegationSigned: entry.dnssec ?? false },
+        events: [
+          { eventAction: 'registration', eventDate: '2020-03-26T14:17:32Z' },
+          ...(entry.expires ? [{ eventAction: 'expiration', eventDate: entry.expires }] : []),
+          { eventAction: 'last update of RDAP database', eventDate: '2026-10-11T21:28:35Z' },
+        ],
       });
     }
 

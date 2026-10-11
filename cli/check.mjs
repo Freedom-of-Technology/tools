@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Almanac Check from the command line, for FreeOT and for the check GitHub runs on each almanac.
-// It runs the page's own checking code (public/tools/domain-check/check/), so the page and this
-// can't disagree.
+// It runs the page's own checking code (public/tools/domain-check/check/ and the shared lookups in
+// public/tools/shared/live.js), so the page and this can't disagree.
 //
 //   node cli/check.mjs <file or folder>...    a folder means every *.zone file in it
 //   node cli/check.mjs dns/freeot.com.zone --ns woz.ns.cloudflare.com
@@ -26,7 +26,7 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { NEEDS_A_LOOK, STATUS, checkFile } from '../public/tools/domain-check/check/compare.js';
-import { LookupError, createLookup } from '../public/tools/domain-check/check/live.js';
+import { LookupError, createLookup } from '../public/tools/shared/live.js';
 import { ZoneError, findSecrets } from '../public/tools/domain-check/check/zone.js';
 
 const bare = (host) => host.replace(/\.$/, '').toLowerCase();
