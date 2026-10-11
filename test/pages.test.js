@@ -38,6 +38,13 @@ test('every style, script, picture and link a tool page uses on this site is the
   assert.deepEqual(broken, []);
 });
 
+test('every page tells the browser it handles light and dark itself, so phones that darken websites leave its colors alone', () => {
+  const pages = files(PUBLIC, '.html');
+  const missing = pages.filter((page) => !/<meta name="color-scheme" content="light dark">/.test(readFileSync(page, 'utf8')));
+  assert.ok(pages.length > 3, 'found the pages');
+  assert.deepEqual(missing.map((page) => relative(PUBLIC, page)), []);
+});
+
 // Each tool, and one link its results make, to show the links were found at all.
 for (const [tool, sample] of [['domain-check', 'means-different'], ['email-check', 'means-dmarc']]) {
   test(`every "What this means" link on ${tool}'s results goes to its explanation on the page`, () => {
