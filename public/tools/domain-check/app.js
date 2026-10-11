@@ -7,6 +7,7 @@ import { ZoneError } from './check/zone.js';
 
 const lookup = createLookup();
 const results = document.getElementById('results');
+const freeot = document.getElementById('freeot');
 
 // ---- Building the page's pieces ---------------------------------------------------------------
 
@@ -37,6 +38,16 @@ const LABELS = {
 
 const GUIDE_CHANGED = 'A record was changed or deleted';
 const GUIDE_RESTORE = 'Putting everything back';
+
+// Where the page's guide explains each result (index.html, "What each result means").
+const MEANS = {
+  [STATUS.different]: 'means-different',
+  [STATUS.missing]: 'means-missing',
+  [STATUS.paste]: 'means-copy-line',
+  [STATUS.failed]: 'means-failed',
+  nameservers: 'means-name-servers',
+  dnssec: 'means-dnssec',
+};
 
 // A domain name that may break onto the next line after a dot, never in the middle of a word.
 function domainName(name) {
@@ -70,7 +81,7 @@ function explainRecord(row) {
   switch (row.status) {
     case STATUS.different:
       parts.push(
-        h('p', {}, `What's live is different from your file. If nobody changed it on purpose, follow your almanac's guide "${GUIDE_CHANGED}" to put it back.`),
+        h('p', {}, `What's live is different from your file. If nobody changed it on purpose, change it back at your DNS company to the value in your file. With an almanac from FreeOT, follow its guide "${GUIDE_CHANGED}".`),
         h('div', { class: 'compare' },
           h('div', {}, h('p', { class: 'fo-label' }, 'Your file says'), valueList(row.file)),
           h('div', {}, h('p', { class: 'fo-label' }, 'Live right now'), valueList(row.live))),
@@ -78,7 +89,7 @@ function explainRecord(row) {
       break;
     case STATUS.missing:
       parts.push(
-        h('p', {}, `Nothing is live for this record. If nobody removed it on purpose, follow your almanac's guide "${GUIDE_CHANGED}" to put it back.`),
+        h('p', {}, `Nothing is live for this record. If nobody removed it on purpose, add it back at your DNS company with the value in your file. With an almanac from FreeOT, follow its guide "${GUIDE_CHANGED}".`),
         row.file.length ? h('div', {}, h('p', { class: 'fo-label' }, 'Your file says'), valueList(row.file)) : null,
       );
       break;
@@ -107,7 +118,7 @@ function explainNameservers(ns) {
   return [
     h('p', {}, 'The registry says a different DNS company runs your domain than your file does. ' +
       "If you moved your DNS to another company on purpose, update the name servers line at the top of your file. " +
-      `If you didn't, someone may have changed your domain: follow your almanac's guide "${GUIDE_RESTORE}", and get help.`),
+      `If you didn't, someone may have changed your domain: get help right away. With an almanac from FreeOT, follow its guide "${GUIDE_RESTORE}".`),
     h('div', { class: 'compare' },
       h('div', {}, h('p', { class: 'fo-label' }, 'Your file says'), valueList(ns.file)),
       h('div', {}, h('p', { class: 'fo-label' }, 'The registry says'), valueList(ns.live))),
@@ -118,15 +129,16 @@ function explainDnssec(d) {
   if (d.status === STATUS.failed) return [h('p', {}, `The registry lookup didn't work: ${d.reason}. Try again in a minute.`)];
   const word = (on) => (on ? 'on' : 'off');
   return [h('p', {}, `Your file says DNSSEC (a lock on your records that some companies turn on) is ${word(d.file)}, but the registry says it's ${word(d.live)}. ` +
-    `If nobody changed it on purpose, follow your almanac's guide "${GUIDE_RESTORE}", and get help.`)];
+    `If nobody changed it on purpose, get help. With an almanac from FreeOT, follow its guide "${GUIDE_RESTORE}".`)];
 }
 
 // ---- One file's results -------------------------------------------------------------------------
 
-function problemCard(title, status, body) {
+function problemCard(title, status, body, means = MEANS[status]) {
   return h('article', { class: 'problem' },
     h('div', { class: 'problem-head' }, badge(status), h('h4', { class: 'problem-title' }, title)),
-    body);
+    body,
+    means ? h('p', {}, h('a', { class: 'fo-link', href: `#${means}` }, 'What this means')) : null);
 }
 
 function renderResult(fileName, report, again) {
@@ -149,8 +161,10 @@ function renderResult(fileName, report, again) {
 
   // Problems first, each with what to do.
   const problems = [];
-  if (NEEDS_A_LOOK.has(report.nameservers.status)) problems.push(problemCard('Which DNS company runs your domain', report.nameservers.status, explainNameservers(report.nameservers)));
-  if (NEEDS_A_LOOK.has(report.dnssec.status)) problems.push(problemCard('DNSSEC', report.dnssec.status, explainDnssec(report.dnssec)));
+  if (NEEDS_A_LOOK.has(report.nameservers.status)) problems.push(problemCard('Which DNS company runs your domain', report.nameservers.status, explainNameservers(report.nameservers),
+    report.nameservers.status === STATUS.failed ? MEANS[STATUS.failed] : MEANS.nameservers));
+  if (NEEDS_A_LOOK.has(report.dnssec.status)) problems.push(problemCard('DNSSEC', report.dnssec.status, explainDnssec(report.dnssec),
+    report.dnssec.status === STATUS.failed ? MEANS[STATUS.failed] : MEANS.dnssec));
   for (const row of report.rows.filter((r) => NEEDS_A_LOOK.has(r.status))) {
     problems.push(problemCard([`${row.type} record for `, domainName(row.name)], row.status, explainRecord(row)));
   }
@@ -175,7 +189,8 @@ function renderResult(fileName, report, again) {
     h('div', { class: 'key' },
       h('p', {}, h('strong', {}, 'Cloudflare answers: '), "the record has Cloudflare's orange cloud on, so Cloudflare answers with its own addresses and where it really points can't be seen from outside. It's there and working."),
       h('p', {}, h('strong', {}, 'GoDaddy website: '), "GoDaddy's website builder answers for it. It's there and working."),
-      h('p', {}, h('strong', {}, 'Not checked: '), "names that are live but aren't in your file. Your DNS company's export lists every live record, if you want to compare.")),
+      h('p', {}, h('strong', {}, 'Not checked: '), "names that are live but aren't in your file. Your DNS company's export lists every live record, if you want to compare."),
+      h('p', {}, h('a', { class: 'fo-link', href: '#what-results-mean' }, 'What each result means'))),
   );
   return section;
 }
@@ -205,6 +220,8 @@ async function check(fileName, text) {
           slot.replaceChildren(h('p', { class: 'checking' }, `Checking ${fileName} again…`));
           run();
         });
+        // FreeOT's note goes below a full result, never before it.
+        freeot.hidden = false;
       }
     } catch (err) {
       section = err instanceof ZoneError

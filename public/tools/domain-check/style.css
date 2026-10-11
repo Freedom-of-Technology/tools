@@ -1,47 +1,7 @@
-/* Almanac Check's own layout, on FreeOT's color and font settings (brand/colors.css) and
-   pieces (brand/pieces.css). Statuses are always spelled out in words, never color alone. */
+/* Almanac Check's own styles, on top of the layout every tool shares (../shared/tool.css).
+   Statuses are always spelled out in words, never color alone. */
 
-*, *::before, *::after { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--page);
-  color: var(--text);
-  font-family: var(--font-text);
-  font-size: var(--size-paragraph);
-  line-height: 1.55;
-  font-variant-numeric: tabular-nums;
-}
-
-main, .top, .bottom {
-  max-width: 1040px;
-  margin: 0 auto;
-  padding-left: var(--space-side-phone);
-  padding-right: var(--space-side-phone);
-}
-@media (min-width: 768px) {
-  main, .top, .bottom { padding-left: 40px; padding-right: 40px; }
-}
-
-.top { padding-top: 24px; padding-bottom: 8px; }
-.top-logo { display: inline-block; }
-.top-logo img { display: block; height: 52px; width: auto; }
-
-code {
-  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
-  font-size: 0.875em;
-  overflow-wrap: anywhere;
-}
-
-.visually-hidden {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-}
-
-/* ---- Intro and the drop box ---- */
-
-.intro { padding: 32px 0 28px; display: flex; flex-direction: column; gap: 14px; }
-.intro .fo-p { color: var(--text); }
+/* ---- The drop box ---- */
 
 .drop {
   background: var(--band);
@@ -69,7 +29,6 @@ label.fo-btn { cursor: pointer; }
 }
 .paste textarea:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 
-.privacy { margin: 0; font-size: var(--size-label); line-height: 1.5; color: var(--text); max-width: 46em; }
 
 /* ---- Results ---- */
 
@@ -159,6 +118,3 @@ label.fo-btn { cursor: pointer; }
 
 .key { display: flex; flex-direction: column; gap: 6px; font-size: var(--size-label); }
 .key p { margin: 0; max-width: 60em; }
-
-.bottom { padding-top: 24px; padding-bottom: 40px; font-size: var(--size-label); }
-.bottom p { margin: 0; border-top: 1px solid var(--line); padding-top: 16px; }

@@ -1,0 +1,85 @@
+/* The layout every FreeOT tool page shares, on FreeOT's color and font settings (brand/colors.css)
+   and pieces (brand/pieces.css): the top and bottom of the page, the privacy statement, the
+   "Check this page's claims with AI" button, the FreeOT note below a result, and the guide below
+   the tool. Each tool's own styles go in its folder. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-size: var(--size-paragraph);
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+}
+
+main, .top, .bottom {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-left: var(--space-side-phone);
+  padding-right: var(--space-side-phone);
+}
+@media (min-width: 768px) {
+  main, .top, .bottom { padding-left: 40px; padding-right: 40px; }
+}
+
+.top { padding-top: 24px; padding-bottom: 8px; }
+.top-logo { display: inline-block; }
+.top-logo img { display: block; height: 52px; width: auto; }
+
+code {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.875em;
+  overflow-wrap: anywhere;
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.intro { padding: 32px 0 28px; display: flex; flex-direction: column; gap: 14px; }
+.intro .fo-p { color: var(--text); }
+
+/* ---- Where people type: the privacy statement ---- */
+
+.privacy { margin: 0; font-size: var(--size-label); line-height: 1.5; color: var(--text); max-width: 46em; }
+.privacy p { margin: 0; }
+.privacy p + p { margin-top: 6px; }
+
+/* ---- Check this page's claims with AI ---- */
+
+.ai-check {
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  margin: 28px 0 0;
+}
+.ai-check p { margin: 0; font-size: var(--size-label); max-width: 34em; }
+
+/* ---- The FreeOT note, below a result ---- */
+
+.freeot {
+  margin-top: 40px;
+  background: var(--band);
+  border-radius: var(--panel-corner);
+  padding: var(--space-card);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.freeot[hidden] { display: none; }
+.freeot .fo-p { color: var(--text); }
+
+/* ---- The guide below the tool ---- */
+
+.guide { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 14px; }
+.guide h2 { margin-bottom: 4px; }
+.guide h3 { margin-top: 22px; scroll-margin-top: 16px; }
+.guide .fo-p, .guide li { color: var(--text); }
+.guide ol, .guide ul { margin: 0; padding-left: 1.3em; max-width: 40em; }
+.guide li + li { margin-top: 6px; }
+.guide dl { margin: 0; max-width: 46em; }
+.guide dt { font-weight: 700; margin-top: 14px; scroll-margin-top: 16px; }
+.guide dd { margin: 4px 0 0; }
+
+.bottom { padding-top: 24px; padding-bottom: 40px; font-size: var(--size-label); }
+.bottom p { margin: 0; border-top: 1px solid var(--line); padding-top: 16px; }

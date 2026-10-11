@@ -1,8 +1,13 @@
 {
-  "name": "almanac-check",
+  "name": "tools",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test test/*.test.js"
+    "test": "node --test --test-force-exit test/*.test.js",
+    "dev": "wrangler dev",
+    "deploy-check": "wrangler deploy --dry-run"
+  },
+  "devDependencies": {
+    "wrangler": "4.146.0"
   }
 }
