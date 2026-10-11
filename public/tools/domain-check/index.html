@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https:; img-src 'self'; style-src 'self'; font-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Check your domain's DNS records against a saved copy · Almanac Check · FreeOT</title>
+  <meta name="description" content="Free: compare a saved DNS records file from GoDaddy or Cloudflare with what's live right now, record by record. It runs in your browser, and your file stays on your computer.">
+  <link rel="canonical" href="https://freedomoftechnology.com/tools/domain-check/">
+  <link rel="icon" href="/tools/shared/brand/logo/freeot-icon-32.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/tools/shared/brand/logo/freeot-app-icon.png">
+  <link rel="stylesheet" href="/tools/shared/brand/fonts.css">
+  <link rel="stylesheet" href="/tools/shared/brand/colors.css">
+  <link rel="stylesheet" href="/tools/shared/brand/pieces.css">
+  <link rel="stylesheet" href="/tools/shared/tool.css">
+  <link rel="stylesheet" href="/tools/domain-check/style.css">
+  <script type="module" src="/tools/domain-check/app.js"></script>
+</head>
+<body>
+  <header class="top">
+    <a class="top-logo" href="https://freedomoftechnology.com/">
+      <picture>
+        <source srcset="/tools/shared/brand/logo/freeot-logo-horizontal-reverse.svg" media="(prefers-color-scheme: dark)">
+        <img src="/tools/shared/brand/logo/freeot-logo-horizontal.svg" alt="FreeOT" width="151" height="64">
+      </picture>
+    </a>
+  </header>
+
+  <main>
+    <section class="intro">
+      <p class="fo-eyebrow">Almanac Check</p>
+      <h1 class="fo-h1">Check your domain's DNS records</h1>
+      <p class="fo-p">Your domain's DNS records send visitors to your website and email to your inbox.
+        Drop in a saved copy of them, called a records file, and this page compares every line with
+        what the internet sees right now.</p>
+      <p class="fo-p">No records file yet? <a class="fo-link" href="#records-files">Here's how to save one</a>.</p>
+    </section>
+
+    <section class="drop" id="drop" aria-labelledby="drop-title">
+      <h2 class="fo-h3" id="drop-title">Your records file</h2>
+      <p class="fo-p">Drag the file onto this box, or choose it. It ends in <code>.zone</code>, or
+        <code>.txt</code> for a file saved from GoDaddy or Cloudflare.</p>
+      <div class="fo-row">
+        <label class="fo-btn" for="file">Choose a file</label>
+        <input id="file" type="file" accept=".zone,.txt,text/plain" multiple class="visually-hidden">
+        <button type="button" class="fo-btn fo-btn-outline" id="paste-open" aria-expanded="false" aria-controls="paste-box">Paste it instead</button>
+      </div>
+      <div id="paste-box" class="paste" hidden>
+        <label class="fo-label" for="paste">The file's text</label>
+        <textarea id="paste" rows="10" spellcheck="false" autocomplete="off"
+          placeholder="Open the file, copy all of it, and paste it here."></textarea>
+        <div class="fo-row"><button type="button" class="fo-btn" id="paste-check">Check it</button></div>
+      </div>
+      <div class="privacy">
+        <p><strong>Your information stays with you.</strong> This tool runs in your browser. Nothing
+          you type or upload is saved, and FreeOT doesn't collect, keep, sell or share it. Close the
+          page and it's gone.</p>
+        <p>Your file is read on this computer and never uploaded. To check each record, this page asks
+          Google's public lookup service about the names in your file, and asks the registry for your
+          domain ending (such as .com) which DNS company runs your domain. Those are the same public
+          questions any web browser or email server asks. Like any lookup, Google and the registry
+          see which names were asked about, and from what internet address.</p>
+      </div>
+    </section>
+
+    <div id="results" aria-live="polite"></div>
+
+    <aside class="freeot" id="freeot" aria-labelledby="freeot-title" hidden>
+      <h2 class="fo-h3" id="freeot-title">Or we can do it for you</h2>
+      <p class="fo-p">Don't have a records file? FreeOT keeps one for every client domain, in the
+        client's own GitHub, so there's always a record of how things should be.</p>
+      <div class="fo-row">
+        <a class="fo-btn" href="mailto:dk@freedomoftechnology.com?subject=Ask%20about%20my%20domain">Ask about your domain</a>
+      </div>
+      <p class="privacy">If you contact us, we keep only what you send.</p>
+    </aside>
+
+    <div class="ai-check">
+      <a class="fo-btn fo-btn-outline" target="_blank" rel="noopener"
+        href="https://www.google.com/search?udm=50&amp;q=Check%20this%20page%3A%20freedomoftechnology.com%2Ftools%2Fdomain-check.%20It%20says%20it%20runs%20in%20the%20browser%2C%20that%20the%20records%20file%20you%20give%20it%20never%20leaves%20your%20computer%2C%20and%20that%20nothing%20you%20type%20or%20upload%20is%20saved.%20Read%20the%20page%20and%20its%20public%20code%20at%20github.com%2FFreedom-of-Technology%2Ftools.%20Do%20its%20claims%20hold%20up%3F%20Is%20there%20anything%20it%20doesn%27t%20tell%20me%3F">Check this page's claims with AI</a>
+      <p>Opens Google's AI Mode in a new tab, asking it to read this page and its public code. An AI
+        answer is a second opinion, and it can be wrong.</p>
+    </div>
+
+    <section class="guide" id="records-files" aria-labelledby="guide-title">
+      <h2 class="fo-h2" id="guide-title">About records files</h2>
+
+      <h3 class="fo-h3" id="what-is-one">What a records file is</h3>
+      <p class="fo-p">Your domain's DNS records are a short list of settings kept by your DNS company:
+        where your website is, which service gets your email, and the codes that let other services
+        prove they work for you. A records file is that list, saved as plain text. Save one while
+        everything works, and you can always see what changed, and put it back.</p>
+
+      <h3 class="fo-h3" id="save-cloudflare">Saving one from Cloudflare</h3>
+      <ol>
+        <li>Sign in to Cloudflare and click your domain.</li>
+        <li>Open <strong>DNS</strong>, then <strong>Records</strong>.</li>
+        <li>Click <strong>Import and Export</strong>, then <strong>Export</strong>.</li>
+        <li>The file lands in your <strong>Downloads</strong> folder. Keep it somewhere safe.</li>
+      </ol>
+
+      <h3 class="fo-h3" id="save-godaddy">Saving one from GoDaddy</h3>
+      <ol>
+        <li>Sign in to GoDaddy and open your <strong>Domain Portfolio</strong>.</li>
+        <li>Click your domain, then open <strong>DNS</strong>.</li>
+        <li>Open the <strong>Actions</strong> menu and choose <strong>Export Zone File</strong>.</li>
+        <li>The file lands in your <strong>Downloads</strong> folder. Keep it somewhere safe.</li>
+      </ol>
+      <p class="fo-p">Another DNS company? Look in its DNS settings for "export" or "zone file". Most
+        offer one.</p>
+
+      <h3 class="fo-h3" id="what-results-mean">What each result means</h3>
+      <dl>
+        <dt id="means-matches">Matches</dt>
+        <dd>What's live is the same as your file. Nothing to do.</dd>
+        <dt id="means-different">Different</dt>
+        <dd>What's live isn't what your file says. If you or someone helping you changed it on purpose,
+          save a new records file. If nobody did, change the record at your DNS company back to the
+          value in your file. Just changed it? Lookups can show the old answer for a while; the result
+          says how long.</dd>
+        <dt id="means-missing">Missing</dt>
+        <dd>Nothing is live for this record. If nobody removed it on purpose, add it back at your DNS
+          company with the value in your file. A brand-new record can take up to an hour to show up.</dd>
+        <dt id="means-cloudflare">Cloudflare answers</dt>
+        <dd>The record has Cloudflare's orange cloud on, so Cloudflare answers with its own addresses and
+          where it really points can't be seen from outside. It's there and working.</dd>
+        <dt id="means-godaddy">GoDaddy website</dt>
+        <dd>GoDaddy's website builder answers for it. It's there and working.</dd>
+        <dt id="means-copy-line">Copy line differs</dt>
+        <dd>Only in files kept by FreeOT. A note in the file that writes a long value out in one piece,
+          for copying, doesn't say the same as the record under it. One of them is wrong.</dd>
+        <dt id="means-name-servers">Which DNS company runs your domain</dt>
+        <dd>The registry, where your domain is listed, says a different DNS company runs it than your
+          file does. If you moved it on purpose, save a new records file. If you didn't, someone may
+          have changed your domain: get help right away.</dd>
+        <dt id="means-dnssec">DNSSEC</dt>
+        <dd>A lock on your records that some DNS companies turn on. The registry and your file disagree
+          about whether it's on. If nobody changed it on purpose, get help.</dd>
+        <dt id="means-not-checked">Not checked</dt>
+        <dd>A kind of record this page can't look up, or names that are live but aren't in your file.
+          DNS doesn't list every name a domain has; your DNS company's export does.</dd>
+        <dt id="means-failed">Couldn't check</dt>
+        <dd>The lookup didn't work this time. Try again in a minute.</dd>
+      </dl>
+    </section>
+  </main>
+
+  <footer class="bottom">
+    <p>Almanac Check is free, from <a class="fo-link" href="https://freedomoftechnology.com/">FreeOT</a>.
+      Its code is public on <a class="fo-link" href="https://github.com/Freedom-of-Technology/tools/tree/main/public/tools/domain-check" target="_blank" rel="noopener">GitHub</a>.</p>
+  </footer>
+</body>
+</html>

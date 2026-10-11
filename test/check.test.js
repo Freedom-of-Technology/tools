@@ -1,5 +1,5 @@
-// Runs the page's own checking code (site/check/) on records files, against a stand-in for the
-// network (fake-internet.js). Nothing here re-creates the code under test.
+// Runs the page's own checking code (public/tools/domain-check/check/) on records files, against
+// a stand-in for the network (fake-internet.js). Nothing here re-creates the code under test.
 //
 //   node --test
 
@@ -7,8 +7,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { checkFile } from '../site/check/compare.js';
-import { createLookup } from '../site/check/live.js';
+import { checkFile } from '../public/tools/domain-check/check/compare.js';
+import { createLookup } from '../public/tools/domain-check/check/live.js';
 import { fakeInternet } from './fake-internet.js';
 
 const BAKERY = readFileSync(new URL('files/maple-street-bakery.com.zone', import.meta.url), 'utf8');

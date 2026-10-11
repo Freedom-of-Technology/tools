@@ -1,0 +1,31 @@
+# How Cloudflare runs FreeOT's free tools: one Worker (src/worker.js) serving the files in public/.
+# This file is the live setting. Cloudflare deploys it on every merge to main, routes included, so
+# a route changed in the dashboard is overwritten at the next merge: change it here instead.
+
+name = "freeot-tools"
+main = "src/worker.js"
+compatibility_date = "2026-09-15"
+
+# Only the addresses below. No workers.dev address and no preview addresses, so the tools have
+# one public home.
+workers_dev = false
+preview_urls = false
+
+routes = [
+  # The tools, as paths on the main site. The rest of freedomoftechnology.com is the website,
+  # published separately; these routes leave it alone.
+  { pattern = "freedomoftechnology.com/tools", zone_name = "freedomoftechnology.com" },
+  { pattern = "freedomoftechnology.com/tools/*", zone_name = "freedomoftechnology.com" },
+  { pattern = "www.freedomoftechnology.com/tools", zone_name = "freedomoftechnology.com" },
+  { pattern = "www.freedomoftechnology.com/tools/*", zone_name = "freedomoftechnology.com" },
+  # Almanac Check's first address, redirected to its page on the main site.
+  { pattern = "check.freeot.com/*", zone_name = "freeot.com" },
+]
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+# The Worker sees every request first, so it can redirect and add the security headers.
+run_worker_first = true
+html_handling = "auto-trailing-slash"
+not_found_handling = "404-page"
