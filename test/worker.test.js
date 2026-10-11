@@ -20,7 +20,15 @@ before(async () => {
   await Promise.all(HOSTS.map(async (hostname) => {
     const worker = await unstable_startWorker({
       config: CONFIG,
-      dev: { server: { port: 0 }, inspector: false, logLevel: 'error', origin: { hostname, secure: true } },
+      dev: {
+        server: { port: 0 },
+        inspector: false,
+        logLevel: 'error',
+        // Each copy keeps nothing on disk. Sharing Wrangler's storage folder, copies starting
+        // together can find its database locked, and one crashes.
+        persist: false,
+        origin: { hostname, secure: true },
+      },
     });
     workers[hostname] = worker;
   }));
