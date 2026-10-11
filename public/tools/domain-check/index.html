@@ -56,11 +56,10 @@
         <p><strong>Your information stays with you.</strong> This tool runs in your browser. Nothing
           you type or upload is saved, and FreeOT doesn't collect, keep, sell or share it. Close the
           page and it's gone.</p>
-        <p>Your file is read on this computer and never uploaded. To check each record, this page asks
-          Google's public lookup service about the names in your file, and asks the registry for your
-          domain ending (such as .com) which DNS company runs your domain. Those are the same public
-          questions any web browser or email server asks. Like any lookup, Google and the registry
-          see which names were asked about, and from what internet address.</p>
+        <p>Your file is read on this computer and never uploaded. To check it, the page asks the
+          internet what's live, the same way your browser does when it opens a website: only the
+          name and type of each record, never what your file says about it.
+          <a class="fo-link" href="#what-is-sent">What this page sends, and to whom</a>.</p>
       </div>
     </section>
 
@@ -78,10 +77,67 @@
 
     <div class="ai-check">
       <a class="fo-btn fo-btn-outline" target="_blank" rel="noopener"
-        href="https://www.google.com/search?udm=50&amp;q=Check%20this%20page%3A%20freedomoftechnology.com%2Ftools%2Fdomain-check.%20It%20says%20it%20runs%20in%20the%20browser%2C%20that%20the%20records%20file%20you%20give%20it%20never%20leaves%20your%20computer%2C%20and%20that%20nothing%20you%20type%20or%20upload%20is%20saved.%20Read%20the%20page%20and%20its%20public%20code%20at%20github.com%2FFreedom-of-Technology%2Ftools.%20Do%20its%20claims%20hold%20up%3F%20Is%20there%20anything%20it%20doesn%27t%20tell%20me%3F">Check this page's claims with AI</a>
+        href="https://www.google.com/search?udm=50&amp;q=Check%20this%20page%3A%20freedomoftechnology.com%2Ftools%2Fdomain-check.%20It%20compares%20a%20saved%20DNS%20records%20file%20with%20what%27s%20live.%20It%20says%20the%20file%20never%20leaves%20your%20computer%2C%20that%20only%20the%20name%20and%20type%20of%20each%20record%20are%20looked%20up%2C%20through%20Google%20Public%20DNS%20and%20the%20domain%27s%20registry%2C%20and%20that%20nothing%20is%20saved.%20Read%20the%20page%2C%20including%20its%20section%20%22What%20this%20page%20sends%2C%20and%20to%20whom%22%2C%20and%20its%20public%20code%20at%20github.com%2FFreedom-of-Technology%2Ftools.%20Do%20its%20claims%20hold%20up%3F%20Is%20there%20anything%20it%20doesn%27t%20tell%20me%3F">Check this page's claims with AI</a>
       <p>Opens Google's AI Mode in a new tab, asking it to read this page and its public code. An AI
         answer is a second opinion, and it can be wrong.</p>
     </div>
+
+    <section class="guide" id="what-is-sent" aria-labelledby="sent-title">
+      <h2 class="fo-h2" id="sent-title">What this page sends, and to whom</h2>
+      <p class="fo-p">Your file stays on your computer. To see what's live, the page has to ask the
+        internet, just as your browser does every time it opens a website. Here is everything it
+        asks, and who gets each question.</p>
+
+      <h3 class="fo-h3" id="sent-what">What goes out</h3>
+      <ul>
+        <li>For each record in your file, two things: its name (such as
+          <code>www.yourbusiness.com</code>) and its type (such as the one for email). What your
+          file says the record should be, and any notes in it, are never sent. The page compares
+          the answer with your file right here, on your computer.</li>
+        <li>Your domain's name, once, to find out which DNS company runs it.</li>
+        <li>Nothing at all from a file that looks like it holds a secret, such as a password, a
+          private key or an access code. The page checks for those first, and refuses the file
+          before asking anything. Secrets belong in a password manager, not a records file.</li>
+      </ul>
+
+      <h3 class="fo-h3" id="sent-who">Who gets it</h3>
+      <ul>
+        <li><strong>Google's public lookup service</strong> (<code>dns.google</code>) gets the names
+          and types. The page asks Google not to pass on what area you're in.</li>
+        <li><strong>IANA</strong> (<code>data.iana.org</code>), the body that keeps the list of domain
+          registries, sends that list. It isn't told your domain.</li>
+        <li><strong>Your domain's registry</strong>, the company that keeps the master list for your
+          domain ending (for .com, that's Verisign), gets your domain's name.</li>
+      </ul>
+      <p class="fo-p">Like any lookup, each of them sees the names asked about and your internet
+        address. The questions travel over a secure connection, so others on your network can see
+        only that you reached Google and the registry, not which names you asked about.</p>
+      <p class="fo-p">None of this is secret to begin with. DNS records are public by design: anyone
+        can look up any domain's records at any time. That's how email and websites find you.</p>
+
+      <h3 class="fo-h3" id="sent-not">What it doesn't do</h3>
+      <ul>
+        <li>It doesn't check whether domains are for sale, and doesn't search for new ones. It only
+          looks up the records of a domain that's already yours.</li>
+        <li>Nothing you check is sent to FreeOT. Opening this page loads it from FreeOT's site, like
+          any web page, but the page has no tracking scripts or cookies and stores nothing.</li>
+      </ul>
+
+      <h3 class="fo-h3" id="sent-same-code">Is this page the same as the code on GitHub?</h3>
+      <p class="fo-p">It's meant to be, file for file: there's no build step, so the site serves the
+        files in the <a class="fo-link" href="https://github.com/Freedom-of-Technology/tools" target="_blank" rel="noopener">public repository</a>
+        as they are, and every change is made there, where its history is public. You don't have to
+        take our word for it. Two ways to check:</p>
+      <ol>
+        <li>Right-click this page, choose <strong>View page source</strong>, and compare it with
+          <code>public/tools/domain-check/index.html</code> on GitHub. The same works for
+          <code>app.js</code> and the files in <code>check/</code>.</li>
+        <li>Watch what it sends. In Chrome or Edge, press F12 (on a Mac, Command+Option+I), open the
+          <strong>Network</strong> tab, then check a file. Besides this page's own files, you'll see
+          requests only to <code>dns.google</code>, <code>data.iana.org</code> and your
+          registry.</li>
+      </ol>
+    </section>
 
     <section class="guide" id="records-files" aria-labelledby="guide-title">
       <h2 class="fo-h2" id="guide-title">About records files</h2>
