@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-jxMtYpNVObhUuOjqzpPFlrUmaAmx7DlglcoshsGh/20='; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="light dark">
+  <title>Make a QR code that asks for a Google review: free review link maker · FreeOT</title>
+  <meta name="description" content="Free: turn your Google review link into a QR code and a 5x7 counter card with your business name and logo. It uses Google's own link, so it never expires. Nothing is saved or uploaded.">
+  <link rel="canonical" href="https://freedomoftechnology.com/tools/review-link/">
+  <link rel="icon" href="/tools/shared/brand/logo/freeot-icon-32.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/tools/shared/brand/logo/freeot-app-icon.png">
+  <link rel="stylesheet" href="/tools/shared/brand/fonts.css" integrity="sha384-6XFRTf3kr/+m/ibUtlHsPnZ436L326lBEGENWb/u2a7SP1Ybw9XahXpl5h5ceW6o">
+  <link rel="stylesheet" href="/tools/shared/brand/colors.css" integrity="sha384-A8JhEkDP4F+fCD859gLzp3YqMVFgc5juCHG1se7/lcxwsD9TjimGVi+2hPPFv2bA">
+  <link rel="stylesheet" href="/tools/shared/brand/pieces.css" integrity="sha384-1EmzCFb5xwhj9z4KmhAOHpL9JCJAx398hM3HhtciXrkEzdo+jqk+oJ1bujdAMKqT">
+  <link rel="stylesheet" href="/tools/shared/tool.css" integrity="sha384-vqxHrUsvrZoY8lPl862cU4IfkcngEgrL6Vis+yiRqctlg+SnbJ+rCPjwM2ZIYdiW">
+  <link rel="stylesheet" href="/tools/shared/maker.css" integrity="sha384-5qqV9nQmE2qivesf0Uh2fVjoHfa9npxzaqy+zu3v659JsZpFEWUVTQsD8AwR3Uiv">
+  <script type="importmap">
+{
+  "integrity": {
+    "/tools/review-link/card/link.js": "sha384-5SHaL4Y0dvxGh8tbpmbtww0zVvTVIY0XulUUwj4q6NMWLhhBv4y+Q1OyAuvMWNFX",
+    "/tools/shared/column.js": "sha384-lL10/bh+4BgxzMy/krgkUeYMRjkkC7vtJDusvKq+4hzku51soyhIvF/Xarj+T5aE",
+    "/tools/shared/logo/read.js": "sha384-rg8FI54rzyq5Hyc1caToS2q7Km66CSWuRoOBqf8s5dd3Ysiy3GlUJnNHpH9dwtb9",
+    "/tools/shared/logo/rules.js": "sha384-T9YGT4oEZ1/jX7fjEikRZypAdOGunZRbYjX7uG9/ldxGLGw/+SK/U5iwW5YOx2t5",
+    "/tools/shared/page.js": "sha384-Dhao05Ved49By6qrnmuKmB2UHvEsE0RKZfolPwDV9lPhpIXWY89geFEdA/J3Az+Z",
+    "/tools/shared/qr/picture.js": "sha384-n0B02hL54Hw+XYmVxGrRpjXYheTCtU885Oqrkx9uW8gy8Fd1gaAaJqK/CXq26hKm",
+    "/tools/shared/qr/qr.js": "sha384-GwPhZ+ZGhbJv9erEjXN3OJSN3mmW2bPB9TfYmhw6EWBtoFAQmBTyi70VRI0x3+St",
+    "/tools/shared/qr/vendor/qrcode-generator-2.0.4.mjs": "sha384-xHtsZTi0cOhTiha4kloGDUR5e5A8ixkKsF1Mmpqq3tkDpAhkA4YOKIDua/Tc0Ecd"
+  }
+}
+  </script>
+  <script src="/tools/shared/qr/vendor/jsQR-1.4.0.js" integrity="sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx" defer></script>
+  <script type="module" src="/tools/review-link/app.js" integrity="sha384-bUwMriTepl4+tH6Smb4nVabLVIEFMIr4OZfQFl7HYCtPihzX1ixfBQPgiZvxwi8F"></script>
+</head>
+<body>
+  <header class="top">
+    <a class="top-logo" href="https://freedomoftechnology.com/">
+      <picture>
+        <source srcset="/tools/shared/brand/logo/freeot-logo-horizontal-reverse.svg" media="(prefers-color-scheme: dark)">
+        <img src="/tools/shared/brand/logo/freeot-logo-horizontal.svg" alt="FreeOT" width="151" height="64">
+      </picture>
+    </a>
+    <details class="menu">
+      <summary>Free tools</summary>
+      <nav class="menu-panel" aria-label="Free tools">
+        <a class="fo-link" href="/tools/">All free tools</a>
+        <p class="fo-label">Domains</p>
+        <ul>
+          <li><a class="fo-link" href="/tools/domain-check/">Almanac Check</a></li>
+          <li><a class="fo-link" href="/tools/email-check/">Email protection check</a></li>
+        </ul>
+        <p class="fo-label">Everyday listings</p>
+        <ul>
+          <li><a class="fo-link" href="/tools/contact-card/">Contact card maker</a></li>
+          <li><a class="fo-link" href="/tools/review-link/" aria-current="page">Review link maker</a></li>
+        </ul>
+      </nav>
+    </details>
+  </header>
+
+  <main>
+    <section class="intro">
+      <nav class="trail" aria-label="Where you are"><a class="fo-link" href="/tools/">Free tools</a> <span aria-hidden="true">›</span> <a class="fo-link" href="/tools/#everyday-listings">Everyday listings</a></nav>
+      <p class="fo-eyebrow">Review link maker</p>
+      <h1 class="fo-h1">Make a QR code that asks for a Google review</h1>
+      <p class="fo-p">Put it on your counter, and a happy customer can leave you a review in a few
+        taps: they point their phone's camera at the code, and Google's review box opens for your
+        business. The code holds Google's own link, so it keeps working, with no account and nothing
+        to renew.</p>
+    </section>
+
+    <form class="ask" id="review-form" aria-labelledby="ask-title" novalidate>
+      <h2 class="fo-h3" id="ask-title">Your business</h2>
+      <p class="fo-p">You'll need your review link from Google.
+        <a class="fo-link" href="#means-link">How to get your review link</a> takes a minute, on a computer.</p>
+      <div class="fields">
+        <div class="field">
+          <label class="fo-label" for="business">Business name</label>
+          <input id="business" name="business" type="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label class="fo-label" for="topline">Words above the code</label>
+          <input id="topline" name="topline" type="text" autocomplete="off" value="Enjoyed your visit?">
+        </div>
+        <div class="field wide">
+          <label class="fo-label" for="link">Your Google review link</label>
+          <input id="link" name="link" type="text" inputmode="url" autocomplete="off" autocapitalize="off"
+            spellcheck="false" placeholder="https://g.page/r/…/review" aria-describedby="link-hint">
+          <p class="hint" id="link-hint">Paste it exactly as Google gave it.</p>
+        </div>
+      </div>
+
+      <fieldset class="logo">
+        <legend class="fo-label">Your logo, if you'd like one</legend>
+        <p class="fo-p">It goes at the top of your counter card. Any size works: your browser makes a
+          smaller copy for your card and code. Your own file isn't changed or uploaded.</p>
+        <div class="fo-row">
+          <label class="fo-btn fo-btn-outline" for="logo">Choose your logo</label>
+          <input id="logo" name="logo" type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" class="visually-hidden">
+          <span class="logo-chosen" id="logo-chosen">No logo chosen</span>
+          <button type="button" class="logo-remove" id="logo-remove" hidden>Remove</button>
+        </div>
+        <label class="check" for="logo-in-code">
+          <input id="logo-in-code" name="logo-in-code" type="checkbox" disabled>
+          Also put it in the middle of the code
+        </label>
+      </fieldset>
+
+      <div class="fo-row"><button type="submit" class="fo-btn">Make my code</button></div>
+      <div class="privacy">
+        <p><strong>Your information stays with you.</strong> This tool runs in your browser. Nothing
+          you type or upload is saved, and FreeOT doesn't collect, keep, sell or share it. Close the
+          page and it's gone.</p>
+        <p>Your logo is read by your browser to draw your card. It isn't uploaded anywhere.
+          <a class="fo-link" href="#what-is-sent">What this page sends, and to whom</a>.</p>
+      </div>
+    </form>
+
+    <div id="results" aria-live="polite"></div>
+
+    <aside class="freeot" id="freeot" aria-labelledby="freeot-title" hidden>
+      <h2 class="fo-h3" id="freeot-title">Or let it ask for you</h2>
+      <p class="fo-p">FreeOT can send the review request for you: a thank-you with your review link,
+        automatically after each job, from your own email.</p>
+      <div class="fo-row">
+        <a class="fo-btn" href="mailto:dk@freedomoftechnology.com?subject=Ask%20about%20automations">Ask about automations</a>
+      </div>
+      <p class="privacy">If you contact us, we keep only what you send.</p>
+    </aside>
+
+    <div class="ai-check">
+      <a class="fo-btn fo-btn-outline" target="_blank" rel="noopener"
+        href="https://www.google.com/search?udm=50&amp;q=Check%20this%20page%3A%20freedomoftechnology.com%2Ftools%2Freview-link.%20It%20turns%20a%20Google%20review%20link%20and%20an%20optional%20logo%20into%20a%20QR%20code%20and%20a%205x7%20counter%20card.%20It%20says%20it%20runs%20in%20the%20browser%2C%20sends%20nothing%20anywhere%2C%20saves%20nothing%20typed%20or%20uploaded%2C%20takes%20only%20a%20link%20from%20Google%2C%20and%20test-scans%20each%20code%20before%20offering%20it.%20Each%20page%20lists%20a%20fingerprint%20%28SRI%20hash%29%20of%20every%20script%20and%20style%20it%20loads.%20Read%20the%20page%2C%20including%20its%20section%20%22What%20this%20page%20sends%2C%20and%20to%20whom%22%2C%20and%20its%20public%20code%20at%20github.com%2FFreedom-of-Technology%2Ftools.%20Do%20its%20claims%20hold%20up%3F%20Is%20there%20anything%20it%20doesn%27t%20tell%20me%3F">Check this page's claims with AI</a>
+      <p>Opens Google's AI Mode in a new tab, asking it to read this page and its public code. An AI
+        answer is a second opinion, and it can be wrong.</p>
+    </div>
+
+    <section class="guide" id="using-it" aria-labelledby="using-title">
+      <h2 class="fo-h2" id="using-title">Using your code</h2>
+      <dl>
+        <dt id="means-link">Getting your review link</dt>
+        <dd>
+          <ol>
+            <li>On a computer, sign in to the Google account that manages your business, and open
+              your Business Profile: search Google for your business's name, or go to
+              <a class="fo-link" href="https://business.google.com/" target="_blank" rel="noopener">business.google.com</a>.</li>
+            <li>Choose <strong>Read reviews</strong>, then <strong>Get more reviews</strong>.</li>
+            <li>Google shows your review link. Choose the copy button next to it, and paste the link
+              into the box above.</li>
+          </ol>
+          Google offers this on a computer only, not in its phone app. No Business Profile yet? Google's
+          help explains how to <a class="fo-link" href="https://support.google.com/business/answer/10514137" target="_blank" rel="noopener">add your business</a>.
+        </dd>
+        <dt id="means-try">Try it first</dt>
+        <dd>Point your phone's camera at the code on your screen. Your phone should offer to open
+          Google, at the review box for your business. Every code this page offers has already
+          passed a test: the page scans it back and checks it holds exactly your link.</dd>
+        <dt id="means-files">Which file to use</dt>
+        <dd>
+          <ul>
+            <li><strong>Counter card, 5x7:</strong> your business name, your logo and the code, sized
+              for a 5x7 inch photo print. Print it and stand it on your counter.</li>
+            <li><strong>Code, SVG:</strong> for anything else printed, such as receipts, flyers,
+              menus and signs. It stays sharp at any size; send this one to your printer or
+              designer.</li>
+            <li><strong>Code, PNG:</strong> for documents, slides and email.</li>
+          </ul>
+        </dd>
+        <dt id="means-print">Printing the counter card</dt>
+        <dd>Order it as a 5x7 photo print at a drugstore or photo counter, or print it at home on
+          5x7 photo paper. It fits any 5x7 picture frame or sign holder. Scan the printed card with
+          your phone before you put it out.</dd>
+        <dt id="means-elsewhere">Other places for your link</dt>
+        <dd>The link works anywhere people can tap it: your thank-you emails and texts, your
+          receipts and invoices, and your website. Use <strong>Copy link</strong> once your code is
+          made. For printing on something else, keep the code at least 2 cm (about 3/4 inch) wide,
+          with the white border around it.</dd>
+        <dt id="means-rules">Google's rules for asking</dt>
+        <dd>Ask every customer, not only the happy ones, and never offer anything in return: no
+          discount, gift or entry into a drawing. Google removes reviews it thinks were paid for,
+          and it can restrict a business that offers rewards. Reviews from your own staff aren't
+          allowed either. Customers need a Google account to leave a review.
+          <a class="fo-link" href="https://support.google.com/contributionpolicy/answer/7400114" target="_blank" rel="noopener">Google's rules</a>.</dd>
+        <dt id="means-forever">Why it never expires</dt>
+        <dd>Many QR code websites make "dynamic" codes: the code holds a link to their server, which
+          then sends people on. When the subscription ends, the code stops working, often after it's
+          printed on everything. This code holds Google's own link, so it works as long as your
+          Business Profile does. Google makes the link; this page only puts it in a code.</dd>
+        <dt id="means-google-link">Why only a link from Google</dt>
+        <dd>A code on your counter is trusted: customers scan it without reading where it goes. So
+          this page takes only a link to Google, and says so if what's pasted goes anywhere else.
+          Google has a few kinds of review link, all of which work here.</dd>
+        <dt id="means-your-logo">Your logo</dt>
+        <dd>Any size works. A large logo, such as one from your designer or a photo, is more than a
+          card needs, so your browser makes a smaller copy of it and every file you download uses
+          that copy. Your own file isn't changed.</dd>
+        <dt id="means-logo">A logo in the middle</dt>
+        <dd>QR codes carry spare information so they still read when part is scuffed or covered. With
+          your logo in the middle, the page uses the most spare information a code can carry, keeps
+          the logo small, and offers the code only if it still scans. Because it's small there, a
+          fifth of the code's width, small words and thin lines in your logo won't show; your
+          counter card shows it larger. A busy or very dark logo can still make a code harder to
+          read on older phones, so try it before printing.</dd>
+      </dl>
+    </section>
+
+    <section class="guide" id="what-is-sent" aria-labelledby="sent-title">
+      <h2 class="fo-h2" id="sent-title">What this page sends, and to whom</h2>
+      <p class="fo-p">Nothing. Once this page has loaded, it makes your code, your counter card and
+        your files in your browser, and doesn't contact FreeOT, Google or anyone else.</p>
+
+      <h3 class="fo-h3" id="sent-not">What it doesn't do</h3>
+      <ul>
+        <li>It doesn't upload your link, your business name or your logo. Your browser reads the
+          logo from your computer or phone to draw it; the downloads are made in your browser, too.</li>
+        <li>It doesn't check your link with Google. <strong>Try your link</strong> opens it in a new
+          tab only when you choose it, just as if you'd pasted it into your browser.</li>
+        <li>It has no tracking scripts or cookies, and stores nothing. Opening the page loads it from
+          FreeOT's site, like any web page.</li>
+        <li>It can't connect anywhere even if it tried: its security settings tell your browser to
+          block every connection the page itself might make.</li>
+      </ul>
+
+      <h3 class="fo-h3" id="sent-same-code">Is this page the same as the code on GitHub?</h3>
+      <p class="fo-p">It's meant to be, file for file: there's no build step, so the site serves the
+        files in the <a class="fo-link" href="https://github.com/Freedom-of-Technology/tools" target="_blank" rel="noopener">public repository</a>
+        as they are, and every change is made there, where its history is public. Two ways to check:</p>
+      <ol>
+        <li>Right-click this page, choose <strong>View page source</strong>, and compare it with
+          <code>public/tools/review-link/index.html</code> on GitHub. That one comparison covers everything
+          the page runs: the source lists a fingerprint of every script and style it uses, and your
+          browser refuses to run any file that doesn't match its fingerprint. Up-to-date browsers
+          check them; an older one skips the check.</li>
+        <li>Watch what it sends. In Chrome or Edge, press F12 (on a Mac, Command+Option+I), open the
+          <strong>Network</strong> tab, then make a code. You'll see nothing go out: what's listed
+          is your own browser making the downloads, at addresses starting <code>blob:</code> or
+          <code>data:</code>.</li>
+      </ol>
+      <p class="fo-p">The QR code is made with <a class="fo-link" href="https://github.com/kazuhikoarase/qrcode-generator" target="_blank" rel="noopener">qrcode-generator</a>
+        and test-scanned with <a class="fo-link" href="https://github.com/cozmo/jsQR" target="_blank" rel="noopener">jsQR</a>,
+        two widely used free libraries, copied into the repository as published.</p>
+    </section>
+  </main>
+
+  <footer class="bottom">
+    <p>The review link maker is free, from <a class="fo-link" href="https://freedomoftechnology.com/">FreeOT</a>.
+      Its code is public on <a class="fo-link" href="https://github.com/Freedom-of-Technology/tools/tree/main/public/tools/review-link" target="_blank" rel="noopener">GitHub</a>.</p>
+  </footer>
+</body>
+</html>

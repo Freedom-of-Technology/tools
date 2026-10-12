@@ -9,6 +9,7 @@ asked, and nothing typed or uploaded is saved.
 | Almanac Check | [/tools/domain-check/](https://freedomoftechnology.com/tools/domain-check/) | Checks a domain's saved DNS records file against what's live on the internet, record by record. |
 | Email protection check | [/tools/email-check/](https://freedomoftechnology.com/tools/email-check/) | Says whether someone can send email pretending to be a domain: its SPF, DKIM and DMARC records, and when its registration runs out. |
 | Contact card maker | [/tools/contact-card/](https://freedomoftechnology.com/tools/contact-card/) | Turns contact details, and a logo if wanted, into a "Scan to save" QR code, a card picture for a phone and a contact file. |
+| Review link maker | [/tools/review-link/](https://freedomoftechnology.com/tools/review-link/) | Turns a business's Google review link, and a logo if wanted, into a QR code and a 5x7 counter card. |
 
 ## Nothing you give a tool is kept
 
@@ -117,6 +118,22 @@ server and never expires, plus a phone-sized card picture with the logo, and a `
 The QR code comes from qrcode-generator and the test-scan from jsQR, kept as published in
 `public/tools/shared/qr/vendor/`, one pinned version each (its `README.md` lists them).
 
+## Review link maker
+
+An owner pastes the review link Google gives them (Business Profile, Read reviews, then Get more
+reviews), types their business name, and can add a logo. The page makes a QR code that holds that
+link, and a 5x7 counter card (1500 by 2100 pixels, 300 to the inch) with the name, the logo and the
+code.
+
+- **Only a link to Google is taken.** A code on a counter is scanned without being read, so
+  `card/link.js` refuses anything that isn't on one of Google's addresses, and says why. The link is
+  used exactly as Google gave it, with `https://` added if it was left off; the page never builds
+  a link of its own.
+- **Nothing is sent anywhere,** as with the contact card maker: `connect-src 'none'`, and the page
+  doesn't check the link with Google. **Try your link** opens it only when the owner chooses it.
+- **Every code is test-scanned** and must hold exactly the link. The logo works as it does in the
+  contact card maker, with the same shared code (`public/tools/shared/logo/`).
+
 ## Layout
 
 | Path | What it is |
@@ -128,6 +145,7 @@ The QR code comes from qrcode-generator and the test-scan from jsQR, kept as pub
 | `src/worker.js` | The Cloudflare Worker in front of the files: it redirects Almanac Check's old address, check.freeot.com, and adds the security headers. |
 | `wrangler.toml` | How Cloudflare runs the Worker, including the addresses it answers on. |
 | `public/tools/contact-card/` | The contact card maker. `card/vcard.js` writes the contact; `app.js` is the page, including the card picture. |
+| `public/tools/review-link/` | The review link maker. `card/link.js` checks the review link; `app.js` is the page, including the counter card. |
 | `public/tools/shared/logo/` | A logo the visitor adds, for the tools that take one: `rules.js` (which files, and when to make a smaller copy) and `read.js` (the copy, drawing it, and the "Choose your logo" picker). |
 | `public/tools/shared/qr/` | QR codes for the tools that make them: `qr.js` makes, draws and test-scans a code, on the libraries in `vendor/`; `picture.js` draws it in the browser and test-scans the finished picture. |
 | `cli/check.mjs` | Almanac Check from the command line. |
