@@ -1,5 +1,6 @@
-// A stand-in for the network: Google Public DNS over HTTPS, IANA's list of registries, and a
-// registry's RDAP service. Each answers in the shape the real service uses (captured from live
+// A stand-in for the network: Google Public DNS over HTTPS, IANA's list of registries, a
+// registry's RDAP service, and plain web pages (`pages`, by address, such as the almanac template's
+// front page on GitHub). Each answers in the shape the real service uses (captured from live
 // answers), so the page's own code reads them exactly as it reads the real thing.
 //
 //   const net = fakeInternet({ records: { 'example.com TXT': ['v=spf1 ...'] }, registry: {...} })
@@ -18,7 +19,7 @@ const IANA = {
 
 const json = (status, body) => ({ ok: status >= 200 && status < 300, status, json: async () => body });
 
-export function fakeInternet({ records = {}, registry = {}, broken = new Set() } = {}) {
+export function fakeInternet({ records = {}, registry = {}, broken = new Set(), pages = {} } = {}) {
   const asked = [];
 
   async function fetch(url) {
@@ -60,6 +61,8 @@ export function fakeInternet({ records = {}, registry = {}, broken = new Set() }
     }
 
     if (u.href === 'https://data.iana.org/rdap/dns.json') return json(200, IANA);
+
+    if (u.href in pages) return { ok: true, status: 200, text: async () => pages[u.href] };
 
     if (u.hostname.startsWith('rdap.')) {
       const domain = decodeURIComponent(u.pathname.split('/domain/')[1]);

@@ -109,6 +109,54 @@ test("a folder checks every records file in it, so a domain added to an almanac 
   assert.doesNotMatch(output, /notes\.txt/);
 });
 
+test("an almanac with no records files fails GitHub's check, rather than saying every record matches when nothing was compared", async () => {
+  const almanac = await folderWith({
+    'dns/README.md': '# Your records files\n',
+    'guides/email-stopped-working.md': '# Email stopped working\n',
+  });
+  const { code, output } = await run([join(almanac, 'dns'), '--secrets', almanac], bakeryLive());
+  assert.equal(code, 1);
+  assert.match(output, /NO RECORDS FILES +none in .*dns, so nothing was compared with what's live\./);
+  assert.doesNotMatch(output, /Every record in the files matches/);
+});
+
+for (const [name, guide, expected] of [
+  ['passes when nothing looks like a secret', '# Email stopped working\n', 0],
+  ['fails on a password written into a guide', '# Email stopped working\n\nCloudflare password: Rolling-Pin-42\n', 1],
+]) {
+  test(`the almanac template's own check, which has no records files and only looks for secrets, ${name}`, async () => {
+    const template = await folderWith({ 'dns/README.md': '# Your records files\n', 'guides/email-stopped-working.md': guide });
+    const { code, output } = await run(['--secrets', template], {});
+    assert.equal(code, expected);
+    assert.doesNotMatch(output, /NO RECORDS FILES/);
+  });
+}
+
+const TEMPLATE_FRONT_PAGE = 'https://raw.githubusercontent.com/Freedom-of-Technology/almanac-template/main/README.md';
+const frontPage = (version) =>
+  '# Your almanac\n\nTemplates and guides created and maintained by\n' +
+  '[Freedom of Technology, LLC](https://freedomoftechnology.com) ·\n' +
+  `[almanac template](https://github.com/Freedom-of-Technology/almanac-template) ${version}\n`;
+
+for (const [name, copied, template, expected] of [
+  ['names the newer version when the guides are behind', 'v1.0, 12 Oct 2026', 'v1.2, 3 Feb 2027',
+    /\nNotice: the guides are from almanac template v1\.0, and v1\.2 \(3 Feb 2027\) is out\./],
+  ['reads v1.10 as newer than v1.9', 'v1.9, 1 Jun 2027', 'v1.10, 2 Aug 2027',
+    /\nNotice: the guides are from almanac template v1\.9, and v1\.10 \(2 Aug 2027\) is out\./],
+  ['says the guides are current when they are', 'v1.0, 12 Oct 2026', 'v1.0, 12 Oct 2026',
+    /\nThe guides are from almanac template v1\.0, the current version\./],
+  ["says so when it can't reach the template", 'v1.0, 12 Oct 2026', null,
+    /\nNotice: couldn't find the almanac template's current version \(.+\)\. This doesn't fail the check\./],
+]) {
+  test(`GitHub's check on an almanac ${name}, without failing, so FreeOT sees guides that are behind and a client who left keeps a passing check`, async () => {
+    const almanac = await folderWith({ 'README.md': frontPage(copied), 'dns/maple-street-bakery.com.zone': BAKERY_TEXT });
+    const internet = { ...bakeryLive(), pages: template ? { [TEMPLATE_FRONT_PAGE]: frontPage(template) } : {} };
+    const { code, output } = await run([join(almanac, 'dns'), '--secrets', almanac], internet);
+    assert.equal(code, 0);
+    assert.match(output, expected);
+  });
+}
+
 // Stands in for node:dns's Resolver: answers only when pointed at a server it knows.
 class FakeResolver {
   static servers = {};

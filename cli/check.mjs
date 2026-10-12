@@ -12,11 +12,15 @@
 //       also looks for secrets in every other file in that folder and the folders inside it,
 //       such as the guides and the list of addresses. Another repository checked out inside it
 //       (this one, in an almanac's GitHub check) isn't part of the almanac and is left out.
+//       That folder is the whole almanac, so its front page is also compared with the almanac
+//       template's: guides copied from an older version get a notice, which never fails the check.
+//   node cli/check.mjs --secrets .
+//       only looks for secrets, for the almanac template itself, which has no records files.
 //
 // Exit code 1 means something needs a look: a record that's different or missing, a "paste:"
-// note that doesn't match its record, a lookup that failed, a file that couldn't be read, or a
+// note that doesn't match its record, a lookup that failed, a file that couldn't be read, a
 // file that looks like it holds a secret (a records file is refused before anything about it is
-// asked).
+// asked), or no records files at all, since then nothing was compared.
 //
 // Needs Node 22 or later and nothing else.
 
@@ -28,6 +32,9 @@ import { fileURLToPath } from 'node:url';
 import { NEEDS_A_LOOK, STATUS, checkFile } from '../public/tools/domain-check/check/compare.js';
 import { LookupError, createLookup } from '../public/tools/shared/live.js';
 import { ZoneError, findSecrets } from '../public/tools/domain-check/check/zone.js';
+
+// The template every almanac is copied from. Its front page names the current version.
+const TEMPLATE_FRONT_PAGE = 'https://raw.githubusercontent.com/Freedom-of-Technology/almanac-template/main/README.md';
 
 const bare = (host) => host.replace(/\.$/, '').toLowerCase();
 
@@ -185,9 +192,43 @@ function reportSecrets(file, secrets, log, { recordsFile }) {
   return secrets.length;
 }
 
+// An almanac's front page names the template version its guides were copied from, as in
+// "[almanac template](...) v1.0, 12 Oct 2026". The template's own front page names its current one.
+function templateVersion(text) {
+  const found = /\[almanac template\]\([^)]*\)\s+v(\d+)\.(\d+)(?:,[ \t]*([^\n]+))?/.exec(text);
+  return found && { major: Number(found[1]), minor: Number(found[2]), name: `v${found[1]}.${found[2]}`, date: found[3]?.trim() };
+}
+
+// Says whether the almanac's guides are behind the template. Only ever a notice: a client who
+// stops working with FreeOT keeps the version they have, and it still works.
+async function templateNotice(almanac, { fetch, log }) {
+  let front;
+  try {
+    front = await readFile(join(almanac, 'README.md'), 'utf8');
+  } catch {
+    return;
+  }
+  const copied = templateVersion(front);
+  if (!copied) return;
+  let current;
+  try {
+    const answer = await fetch(TEMPLATE_FRONT_PAGE);
+    if (!answer.ok) throw new Error(`GitHub answered ${answer.status}`);
+    current = templateVersion(await answer.text());
+    if (!current) throw new Error("its front page doesn't name a version");
+  } catch (err) {
+    log(`\nNotice: couldn't find the almanac template's current version (${err.message}). This doesn't fail the check.`);
+    return;
+  }
+  const behind = current.major > copied.major || (current.major === copied.major && current.minor > copied.minor);
+  log(behind
+    ? `\nNotice: the guides are from almanac template ${copied.name}, and ${current.name}${current.date ? ` (${current.date})` : ''} is out. FreeOT copies the changed guides in by pull request. This doesn't fail the check.`
+    : `\nThe guides are from almanac template ${copied.name}, the current version.`);
+}
+
 // Returns the exit code. `fetch`, `Resolver` and `log` are passed in so tests can stand in for the
 // network and read what was written.
-export async function main(args, { fetch, Resolver: DnsResolver, log = console.log } = {}) {
+export async function main(args, { fetch = globalThis.fetch, Resolver: DnsResolver, log = console.log } = {}) {
   args = [...args];
   const option = (name) => {
     const at = args.indexOf(name);
@@ -196,8 +237,8 @@ export async function main(args, { fetch, Resolver: DnsResolver, log = console.l
   const ns = option('--ns');
   const secretsIn = option('--secrets');
   const server = ns.value;
-  if (!args.length || (ns.given && !server) || (secretsIn.given && !secretsIn.value)) {
-    log('Usage: node cli/check.mjs <records file or folder>... [--ns <name server>] [--secrets <folder>]');
+  if ((!args.length && !secretsIn.given) || (ns.given && !server) || (secretsIn.given && !secretsIn.value)) {
+    log('Usage: node cli/check.mjs [<records file or folder>...] [--ns <name server>] [--secrets <folder>]');
     return 2;
   }
 
@@ -213,6 +254,18 @@ export async function main(args, { fetch, Resolver: DnsResolver, log = console.l
       if (secrets.length) problems += reportSecrets(file, secrets, log, { recordsFile: false });
     }
     log(`\nLooked for secrets in ${others.length} other file(s).`);
+    await templateNotice(resolve(secretsIn.value), { fetch, log });
+  }
+
+  if (!args.length) {
+    log(problems ? `\n${problems} thing(s) need a look.` : '\nNothing looks like a secret. No records files were named, so no records were compared.');
+    return problems ? 1 : 0;
+  }
+
+  if (!files.length) {
+    log(`\nNO RECORDS FILES  none in ${args.join(', ')}, so nothing was compared with what's live.`);
+    log('                  Each domain needs its records file there, named after it, such as example.com.zone.');
+    problems++;
   }
 
   for (const file of files) {
