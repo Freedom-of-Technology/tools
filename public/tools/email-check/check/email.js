@@ -176,7 +176,25 @@ function tags(record) {
   return out;
 }
 
-function checkDmarc(txt) {
+// Report addresses whose owner the page can name. GoDaddy's guide gives this address for the DMARC
+// record it tells customers to add, so reports go to GoDaddy, not to the owner.
+const REPORT_SERVICES = [{ name: 'GoDaddy', domain: /(^|\.)onsecureserver\.net$/ }];
+
+// Who receives the domain's DMARC reports ("rua=mailto:a@x.com,mailto:b@y.com!10m"), and whether
+// each address is at the domain itself.
+function reportsTo(rua, domain) {
+  return rua.split(',')
+    .map((part) => part.trim().replace(/^mailto:/i, '').replace(/!.*$/, '').toLowerCase())
+    .filter((address) => address.includes('@'))
+    .map((address) => {
+      const at = address.split('@').pop();
+      const yours = at === domain || at.endsWith(`.${domain}`);
+      const service = yours ? null : REPORT_SERVICES.find((s) => s.domain.test(at))?.name ?? null;
+      return { address, at, yours, service };
+    });
+}
+
+function checkDmarc(txt, domain) {
   const records = txt.filter(isDmarc);
   if (!records.length) return { findings: [{ code: 'missing', result: RESULT.fix }], values: [] };
   if (records.length > 1) return { findings: [{ code: 'two-records', result: RESULT.fix, count: records.length }], values: records };
@@ -191,7 +209,10 @@ function checkDmarc(txt) {
 
   const pct = t.pct === undefined ? 100 : Number(t.pct);
   if (['reject', 'quarantine'].includes(policy) && pct < 100) findings.push({ code: 'partial', result: RESULT.look, pct });
-  if (!t.rua) findings.push({ code: 'no-reports', result: RESULT.info });
+  const to = t.rua ? reportsTo(t.rua, domain) : [];
+  if (!to.length) findings.push({ code: 'no-reports', result: RESULT.info });
+  // Information only: who reads the reports doesn't change what happens to fake email.
+  else findings.push({ code: 'reports-to', result: RESULT.info, to });
   return { findings, values: records, policy };
 }
 
@@ -254,7 +275,7 @@ export async function checkEmail(domain, lookup, { now = new Date() } = {}) {
   const spf = txt === null
     ? { findings: [{ code: 'failed', result: RESULT.failed }] }
     : await attempt(() => checkSpf(txt, mail, lookup));
-  const dmarc = dmarcTxt.findings ? dmarcTxt : checkDmarc(dmarcTxt.values);
+  const dmarc = dmarcTxt.findings ? dmarcTxt : checkDmarc(dmarcTxt.values, domain);
   const dkim = await attempt(() => checkDkim(domain, mail, lookup));
   const expiry = registration ? checkExpiry(registration, now) : { findings: [{ code: 'failed', result: RESULT.failed, reason: registryFailure }] };
 
