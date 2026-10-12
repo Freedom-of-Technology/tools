@@ -5,9 +5,12 @@
 // The code is offered only when the finished picture, logo and all, scans back as exactly the
 // contact typed (readsBack in ../shared/qr/qr.js).
 
-import { BORDER, logoBox, makeCode, readsBack, toPixels, toSVG } from '../shared/qr/qr.js';
+import { BORDER, logoBox, makeCode, toSVG } from '../shared/qr/qr.js';
+import { codeCanvas, scaleFor, scansBack } from '../shared/qr/picture.js';
 import { ContactError, contactCard, fileName, fullName } from './card/vcard.js';
-import { LogoError, checkFile, copySize } from './card/logo.js';
+import { LogoError, drawFitted, logoPicker, readLogo } from '../shared/logo/read.js';
+import { FONT, INK, SOFT, column } from '../shared/column.js';
+import { download, downloads, h, notMade, pngOf, show } from '../shared/page.js';
 
 const form = document.getElementById('card-form');
 const results = document.getElementById('results');
@@ -24,122 +27,7 @@ const CODE_PIXELS = 1200;
 const CARD = { width: 1080, height: 1920, side: 96 };
 const CARD_CODE = 720;
 
-function h(tag, attrs = {}, ...children) {
-  const el = document.createElement(tag);
-  for (const [key, value] of Object.entries(attrs)) {
-    if (value === false || value == null) continue;
-    if (key === 'class') el.className = value;
-    else el.setAttribute(key, value === true ? '' : value);
-  }
-  for (const child of children.flat()) {
-    if (child == null || child === false) continue;
-    el.append(child instanceof Node ? child : String(child));
-  }
-  return el;
-}
-
-// ---- The logo, read in the browser -------------------------------------------------------------
-
-function readAsDataURL(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-}
-
-async function decoded(href) {
-  const image = new Image();
-  image.src = href;
-  try {
-    await image.decode();
-  } catch {
-    throw new LogoError('Your browser couldn\'t open that logo file. Try saving it as a PNG.');
-  }
-  return image;
-}
-
-// The logo, or a smaller copy of it (card/logo.js says when), drawn smoothly in the browser. The
-// copy is what every file uses, the print file included.
-async function readLogo(file) {
-  if (!file) return null;
-  checkFile(file);
-  const href = await readAsDataURL(file);
-  const image = await decoded(href);
-  // An SVG with no size of its own reports 0; it's drawn to fit, so any shape will do.
-  const width = image.naturalWidth || 300;
-  const height = image.naturalHeight || 150;
-  const copy = copySize({ width, height, vector: file.type === 'image/svg+xml', bytes: file.size });
-  if (!copy) return { image, href, width, height };
-
-  const canvas = document.createElement('canvas');
-  canvas.width = copy.width;
-  canvas.height = copy.height;
-  const ctx = canvas.getContext('2d');
-  ctx.imageSmoothingQuality = 'high';
-  ctx.drawImage(image, 0, 0, copy.width, copy.height);
-  // A photo stays a JPG, which is far smaller for photos; everything else becomes a PNG, which keeps
-  // a see-through background.
-  const smaller = file.type === 'image/jpeg' ? canvas.toDataURL('image/jpeg', 0.9) : canvas.toDataURL('image/png');
-  return { image: await decoded(smaller), href: smaller, width: copy.width, height: copy.height };
-}
-
-// Draws the logo fitted inside a box, centered.
-function drawFitted(ctx, logo, x, y, w, h) {
-  const fit = Math.min(w / logo.width, h / logo.height);
-  const dw = logo.width * fit;
-  const dh = logo.height * fit;
-  ctx.drawImage(logo.image, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
-  return { width: dw, height: dh };
-}
-
-// ---- The code, as a picture ----------------------------------------------------------------------
-
-// scale: pixels per square, whole, so every square is sharp.
-function codeCanvas(code, box, logo, scale) {
-  const picture = toPixels(code, scale, box);
-  const canvas = document.createElement('canvas');
-  canvas.width = picture.width;
-  canvas.height = picture.height;
-  const ctx = canvas.getContext('2d', { willReadFrequently: true });
-  ctx.putImageData(new ImageData(picture.rgba, picture.width, picture.height), 0, 0);
-  if (box && logo) {
-    // Half a square of room on every side, so the logo never touches a square.
-    const at = (box.x + BORDER + 0.5) * scale;
-    const room = (box.size - 1) * scale;
-    drawFitted(ctx, logo, at, at, room, room);
-  }
-  return canvas;
-}
-
-// The test-scan, on the finished picture with the logo drawn in.
-function scansBack(canvas, text) {
-  const { data, width, height } = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-  return readsBack(data, width, height, text);
-}
-
 // ---- The card picture ----------------------------------------------------------------------------
-
-const INK = '#111418';
-const SOFT = '#3d4550';
-const FONT = 'Figtree, system-ui, sans-serif';
-
-function wrap(ctx, text, width) {
-  const lines = [];
-  let line = '';
-  for (const word of text.split(' ')) {
-    const next = line ? `${line} ${word}` : word;
-    if (line && ctx.measureText(next).width > width) {
-      lines.push(line);
-      line = word;
-    } else {
-      line = next;
-    }
-  }
-  if (line) lines.push(line);
-  return lines;
-}
 
 async function cardPicture(details, code, logo) {
   await Promise.all([document.fonts.load(`700 76px ${FONT}`), document.fonts.load(`400 40px ${FONT}`)]);
@@ -147,88 +35,36 @@ async function cardPicture(details, code, logo) {
   canvas.width = CARD.width;
   canvas.height = CARD.height;
   const ctx = canvas.getContext('2d');
-  const inner = CARD.width - CARD.side * 2;
-  const middle = CARD.width / 2;
-
-  // Each piece: its height, and how to draw it from a top edge. Measured first, so the whole
-  // card can be centered on the picture.
-  const pieces = [];
-  const gap = (height) => pieces.push({ height, draw() {} });
-  const text = (value, font, color, lineHeight) => {
-    ctx.font = font;
-    for (const line of wrap(ctx, value, inner)) {
-      pieces.push({ height: lineHeight, draw(y) {
-        ctx.font = font;
-        ctx.fillStyle = color;
-        ctx.fillText(line, middle, y + lineHeight * 0.78);
-      } });
-    }
-  };
+  const col = column(ctx, CARD);
 
   if (logo) {
     const fit = Math.min(640 / logo.width, 220 / logo.height);
     const height = logo.height * fit;
-    pieces.push({ height, draw(y) { drawFitted(ctx, logo, middle - 320, y, 640, height); } });
-    gap(64);
+    col.piece(height, (y) => drawFitted(ctx, logo, col.middle - 320, y, 640, height));
+    col.gap(64);
   }
-  text(fullName(details), `700 76px ${FONT}`, INK, 88);
+  col.text(fullName(details), `700 76px ${FONT}`, INK, 88);
   const role = [details.title, details.first || details.last ? details.org : ''].map((s) => s.trim()).filter(Boolean).join(', ');
-  if (role) text(role, `400 42px ${FONT}`, SOFT, 56);
-  gap(56);
-  const side = code.width;
-  pieces.push({ height: side, draw(y) { ctx.drawImage(code, middle - side / 2, y); } });
-  gap(12);
-  text('Scan to save my contact', `600 38px ${FONT}`, SOFT, 50);
+  if (role) col.text(role, `400 42px ${FONT}`, SOFT, 56);
+  col.gap(56);
+  col.piece(code.width, (y) => ctx.drawImage(code, col.middle - code.width / 2, y));
+  col.gap(12);
+  col.text('Scan to save my contact', `600 38px ${FONT}`, SOFT, 50);
   const contact = [details.phone, details.email, details.website.replace(/^https?:\/\//i, '').replace(/\/$/, '')]
     .map((s) => s.trim()).filter(Boolean);
-  if (contact.length) gap(40);
-  for (const line of contact) text(line, `400 40px ${FONT}`, INK, 58);
-
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, CARD.width, CARD.height);
-  ctx.textAlign = 'center';
-  const total = pieces.reduce((sum, p) => sum + p.height, 0);
-  let y = Math.max(CARD.side, (CARD.height - total) / 2);
-  for (const piece of pieces) {
-    piece.draw(y);
-    y += piece.height;
-  }
+  if (contact.length) col.gap(40);
+  for (const line of contact) col.text(line, `400 40px ${FONT}`, INK, 58);
+  col.draw();
   return canvas;
-}
-
-// ---- The files -----------------------------------------------------------------------------------
-
-// Addresses for the downloads, made in the browser. Each new code lets go of the last ones.
-let made = [];
-const fileURL = (blob) => {
-  const url = URL.createObjectURL(blob);
-  made.push(url);
-  return url;
-};
-const pngOf = (canvas) => new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
-
-function download(label, url, name) {
-  return h('a', { class: 'fo-btn fo-btn-outline', href: url, download: name }, label);
 }
 
 // ---- Showing the result --------------------------------------------------------------------------
 
-function show(...children) {
-  results.replaceChildren(h('div', { class: 'result' }, ...children));
-  const heading = results.querySelector('h2');
-  if (heading) {
-    heading.setAttribute('tabindex', '-1');
-    heading.focus({ preventScroll: false });
-  }
-}
+const files = downloads();
 
 function problem(title, message) {
   freeot.hidden = true;
-  show(h('div', { class: 'problem' },
-    h('div', { class: 'problem-head' },
-      h('span', { class: 'badge badge-failed' }, 'Not made'),
-      h('h2', { class: 'problem-title' }, title)),
-    h('p', {}, message)));
+  notMade(results, title, message);
 }
 
 async function make() {
@@ -263,16 +99,15 @@ async function make() {
       : 'The code didn\'t scan back as your contact, so it isn\'t offered. Try shortening the longest details, then make it again.');
   }
 
-  for (const url of made) URL.revokeObjectURL(url);
-  made = [];
+  files.clear();
   const name = fileName(details);
   const svg = toSVG(code, { box, logo: inCode ? logo : null });
-  const onCard = codeCanvas(code, box, logo, Math.floor(CARD_CODE / (code.size + BORDER * 2)));
+  const onCard = codeCanvas(code, box, logo, scaleFor(code, CARD_CODE));
   const card = await cardPicture(details, onCard, logo);
-  const cardURL = fileURL(await pngOf(card));
+  const cardURL = files.url(await pngOf(card));
 
   freeot.hidden = false;
-  show(
+  show(results,
     h('div', { class: 'result-head' },
       h('div', {},
         h('span', { class: 'badge badge-passed' }, 'Passed the test-scan'),
@@ -285,31 +120,18 @@ async function make() {
       h('div', { class: 'downloads' },
         h('h3', { class: 'fo-h3' }, 'Download'),
         download('Card picture (PNG)', cardURL, `${name}-card.png`),
-        download('Code for print (SVG)', fileURL(new Blob([svg], { type: 'image/svg+xml' })), `${name}-contact-code.svg`),
-        download('Code as a picture (PNG)', fileURL(await pngOf(canvas)), `${name}-contact-code.png`),
-        download('Contact file (.vcf)', fileURL(new Blob([text + '\r\n'], { type: 'text/vcard' })), `${name}.vcf`),
+        download('Code for print (SVG)', files.url(new Blob([svg], { type: 'image/svg+xml' })), `${name}-contact-code.svg`),
+        download('Code as a picture (PNG)', files.url(await pngOf(canvas)), `${name}-contact-code.png`),
+        download('Contact file (.vcf)', files.url(new Blob([text + '\r\n'], { type: 'text/vcard' })), `${name}.vcf`),
         h('p', { class: 'hint' }, h('a', { class: 'fo-link', href: '#means-files' }, 'Which file to use')))),
   );
 }
 
-// The picker itself is hidden behind the "Choose your logo" button, so the page says which file is
-// chosen, and offers to take it off again.
-const logoChosen = document.getElementById('logo-chosen');
-const logoRemove = document.getElementById('logo-remove');
-
-function showLogoChoice() {
-  const file = logoInput.files[0];
-  logoChosen.textContent = file ? `Chosen: ${file.name}` : 'No logo chosen';
-  logoRemove.hidden = !file;
-  logoInCode.disabled = !file;
-  if (!file) logoInCode.checked = false;
-}
-
-logoInput.addEventListener('change', showLogoChoice);
-logoRemove.addEventListener('click', () => {
-  logoInput.value = '';
-  showLogoChoice();
-  logoInput.focus();
+logoPicker({
+  input: logoInput,
+  chosen: document.getElementById('logo-chosen'),
+  remove: document.getElementById('logo-remove'),
+  inCode: logoInCode,
 });
 
 form.addEventListener('submit', (event) => {
