@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="/tools/shared/brand/colors.css" integrity="sha384-A8JhEkDP4F+fCD859gLzp3YqMVFgc5juCHG1se7/lcxwsD9TjimGVi+2hPPFv2bA">
   <link rel="stylesheet" href="/tools/shared/brand/pieces.css" integrity="sha384-1EmzCFb5xwhj9z4KmhAOHpL9JCJAx398hM3HhtciXrkEzdo+jqk+oJ1bujdAMKqT">
   <link rel="stylesheet" href="/tools/shared/tool.css" integrity="sha384-kLJExGLzZDNTzF+DPLtyuZakkxVlZyA8fDGE3+ocxXW3sUytIfuY3Bl5TN5DYFdR">
-  <link rel="stylesheet" href="/tools/contact-card/style.css" integrity="sha384-cIc7ooemOHknVrQhl2Q7QN/OzupofG0IfYRKCxJe5OFPYEwpY7Wg/oq2SX0Kklb6">
+  <link rel="stylesheet" href="/tools/contact-card/style.css" integrity="sha384-bLiV/bhrfa9WQo8GPRAchGGF41Ro/cIfD9zMKmmYLvY9UetpKKRFSHqwooda1O6Z">
   <script type="importmap">
 {
   "integrity": {
@@ -27,7 +27,7 @@
 }
   </script>
   <script src="/tools/shared/qr/vendor/jsQR-1.4.0.js" integrity="sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx" defer></script>
-  <script type="module" src="/tools/contact-card/app.js" integrity="sha384-zlY9+ljUZXOAHnC27bnjAldSHO2Qj3b06vtlsVcva590BfDtHYFnoZoQME72bNRC"></script>
+  <script type="module" src="/tools/contact-card/app.js" integrity="sha384-7jWVIzAyNQI/4s9kQ6uk9sv+EuWTztxsDqHGHEO9ik/hPK505ghtHcpT5NW4wRqF"></script>
 </head>
 <body>
   <header class="top">
@@ -103,7 +103,12 @@
         <legend class="fo-label">Your logo, if you'd like one</legend>
         <p class="fo-p">It goes at the top of your card picture. Any size works: your browser makes a
           smaller copy for your card and code. Your own file isn't changed or uploaded.</p>
-        <input id="logo" name="logo" type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp">
+        <div class="fo-row">
+          <label class="fo-btn fo-btn-outline" for="logo">Choose your logo</label>
+          <input id="logo" name="logo" type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" class="visually-hidden">
+          <span class="logo-chosen" id="logo-chosen">No logo chosen</span>
+          <button type="button" class="logo-remove" id="logo-remove" hidden>Remove</button>
+        </div>
         <label class="check" for="logo-in-code">
           <input id="logo-in-code" name="logo-in-code" type="checkbox" disabled>
           Also put it in the middle of the code

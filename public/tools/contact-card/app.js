@@ -292,9 +292,24 @@ async function make() {
   );
 }
 
-logoInput.addEventListener('change', () => {
-  logoInCode.disabled = !logoInput.files.length;
-  if (logoInCode.disabled) logoInCode.checked = false;
+// The picker itself is hidden behind the "Choose your logo" button, so the page says which file is
+// chosen, and offers to take it off again.
+const logoChosen = document.getElementById('logo-chosen');
+const logoRemove = document.getElementById('logo-remove');
+
+function showLogoChoice() {
+  const file = logoInput.files[0];
+  logoChosen.textContent = file ? `Chosen: ${file.name}` : 'No logo chosen';
+  logoRemove.hidden = !file;
+  logoInCode.disabled = !file;
+  if (!file) logoInCode.checked = false;
+}
+
+logoInput.addEventListener('change', showLogoChoice);
+logoRemove.addEventListener('click', () => {
+  logoInput.value = '';
+  showLogoChoice();
+  logoInput.focus();
 });
 
 form.addEventListener('submit', (event) => {
