@@ -5,7 +5,8 @@
   "scripts": {
     "test": "node --test --test-force-exit test/*.test.js",
     "dev": "wrangler dev",
-    "deploy-check": "wrangler deploy --dry-run"
+    "deploy-check": "wrangler deploy --dry-run",
+    "fingerprints": "node scripts/fingerprints.mjs"
   },
   "devDependencies": {
     "wrangler": "4.146.0"

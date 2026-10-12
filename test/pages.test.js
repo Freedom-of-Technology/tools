@@ -9,6 +9,8 @@ import { dirname, join, relative } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { fingerprinted } from '../scripts/fingerprints.mjs';
+
 const PUBLIC = fileURLToPath(new URL('../public/', import.meta.url));
 
 function files(dir, ending) {
@@ -67,6 +69,16 @@ test('every page has the same tools menu, listing every tool, and /tools lists t
     .sort();
   assert.deepEqual(links(expected), tools);
   assert.deepEqual(links(index.match(/<main>[\s\S]*<\/main>/)[0]), tools);
+});
+
+test('every page carries an up-to-date fingerprint of each file it runs, so a changed file never leaves a page refusing its own scripts', () => {
+  const stale = files(PUBLIC, '.html').filter((page) => {
+    const html = readFileSync(page, 'utf8');
+    return fingerprinted(html) !== html;
+  });
+  assert.deepEqual(stale.map((page) => relative(PUBLIC, page)), [], 'run npm run fingerprints');
+  const card = readFileSync(join(PUBLIC, 'tools/contact-card/index.html'), 'utf8');
+  assert.match(card, /"\/tools\/shared\/qr\/qr\.js": "sha384-/, 'found the import map');
 });
 
 test('every page tells the browser it handles light and dark itself, so phones that darken websites leave its colors alone', () => {

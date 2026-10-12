@@ -130,7 +130,8 @@ The QR code comes from qrcode-generator and the test-scan from jsQR, kept as pub
 | `public/tools/contact-card/` | The contact card maker. `card/vcard.js` writes the contact; `app.js` is the page, including the card picture. |
 | `public/tools/shared/qr/` | QR codes for the tools that make them: `qr.js` makes, draws and test-scans a code, on the libraries in `vendor/`. |
 | `cli/check.mjs` | Almanac Check from the command line. |
-| `test/` | Tests. They run the code in `public/`, `src/` and `cli/`, on made-up records files. |
+| `scripts/fingerprints.mjs` | Writes into each page a fingerprint of every script and style it loads (see below). |
+| `test/` | Tests. They run the code in `public/`, `src/`, `cli/` and `scripts/`, on made-up records files and contacts. |
 
 ## Working on it
 
@@ -142,6 +143,7 @@ Then:
 
     npm test          # the tests, including the Worker on Cloudflare's own runtime
     npm run dev       # the site at http://localhost:8787/tools/
+    npm run fingerprints   # after changing any script or style
 
 The checking code talks only to the public services above. The tests use a stand-in for them
 (`test/fake-internet.js`), so they don't need the internet.
@@ -149,6 +151,11 @@ The checking code talks only to the public services above. The tests use a stand
 With no build step, the tools menu at the top of each page is written out on every page. A new
 tool goes into the menu on every page, and onto `/tools` under its category; a test fails until
 they all match.
+
+Each page carries a fingerprint (an SRI hash) of every script and style it loads: an `integrity`
+attribute on its own tags, and an import map listing the files its scripts import. The browser
+refuses any file that doesn't match, so comparing a page's source with GitHub checks everything it
+runs. After changing a script or style, run `npm run fingerprints`; a test fails until you do.
 
 GitHub runs the tests on every change, and checks that Cloudflare would accept `wrangler.toml`
 (`.github/workflows/test.yml`). Every merge to `main` goes live.

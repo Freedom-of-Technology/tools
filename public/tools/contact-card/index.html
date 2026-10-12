@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-ckM+Wix4WsfcLoQ79+ZJWm2en/gQxVPeFiXpGQrvLTQ='; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light dark">
   <title>Make a QR code that saves your contact: free contact card maker · FreeOT</title>
@@ -11,13 +11,23 @@
   <link rel="canonical" href="https://freedomoftechnology.com/tools/contact-card/">
   <link rel="icon" href="/tools/shared/brand/logo/freeot-icon-32.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/tools/shared/brand/logo/freeot-app-icon.png">
-  <link rel="stylesheet" href="/tools/shared/brand/fonts.css">
-  <link rel="stylesheet" href="/tools/shared/brand/colors.css">
-  <link rel="stylesheet" href="/tools/shared/brand/pieces.css">
-  <link rel="stylesheet" href="/tools/shared/tool.css">
-  <link rel="stylesheet" href="/tools/contact-card/style.css">
-  <script src="/tools/shared/qr/vendor/jsQR-1.4.0.js" defer></script>
-  <script type="module" src="/tools/contact-card/app.js"></script>
+  <link rel="stylesheet" href="/tools/shared/brand/fonts.css" integrity="sha384-6XFRTf3kr/+m/ibUtlHsPnZ436L326lBEGENWb/u2a7SP1Ybw9XahXpl5h5ceW6o">
+  <link rel="stylesheet" href="/tools/shared/brand/colors.css" integrity="sha384-A8JhEkDP4F+fCD859gLzp3YqMVFgc5juCHG1se7/lcxwsD9TjimGVi+2hPPFv2bA">
+  <link rel="stylesheet" href="/tools/shared/brand/pieces.css" integrity="sha384-1EmzCFb5xwhj9z4KmhAOHpL9JCJAx398hM3HhtciXrkEzdo+jqk+oJ1bujdAMKqT">
+  <link rel="stylesheet" href="/tools/shared/tool.css" integrity="sha384-kLJExGLzZDNTzF+DPLtyuZakkxVlZyA8fDGE3+ocxXW3sUytIfuY3Bl5TN5DYFdR">
+  <link rel="stylesheet" href="/tools/contact-card/style.css" integrity="sha384-cIc7ooemOHknVrQhl2Q7QN/OzupofG0IfYRKCxJe5OFPYEwpY7Wg/oq2SX0Kklb6">
+  <script type="importmap">
+{
+  "integrity": {
+    "/tools/contact-card/card/logo.js": "sha384-TM/UfLVmg9h+IkvTOdkw/xxQeWPHuw8FyK02bZtHFpdXFdkM+9KvC0WcTcIimSRp",
+    "/tools/contact-card/card/vcard.js": "sha384-222PG5hQosf3JiHcqGlo27VhSq8AzpnCAu3BwqZp5kgh65ZBs1RfUl4Pi17LE8Pq",
+    "/tools/shared/qr/qr.js": "sha384-GwPhZ+ZGhbJv9erEjXN3OJSN3mmW2bPB9TfYmhw6EWBtoFAQmBTyi70VRI0x3+St",
+    "/tools/shared/qr/vendor/qrcode-generator-2.0.4.mjs": "sha384-xHtsZTi0cOhTiha4kloGDUR5e5A8ixkKsF1Mmpqq3tkDpAhkA4YOKIDua/Tc0Ecd"
+  }
+}
+  </script>
+  <script src="/tools/shared/qr/vendor/jsQR-1.4.0.js" integrity="sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx" defer></script>
+  <script type="module" src="/tools/contact-card/app.js" integrity="sha384-zlY9+ljUZXOAHnC27bnjAldSHO2Qj3b06vtlsVcva590BfDtHYFnoZoQME72bNRC"></script>
 </head>
 <body>
   <header class="top">
@@ -124,7 +134,7 @@
 
     <div class="ai-check">
       <a class="fo-btn fo-btn-outline" target="_blank" rel="noopener"
-        href="https://www.google.com/search?udm=50&amp;q=Check%20this%20page%3A%20freedomoftechnology.com%2Ftools%2Fcontact-card.%20It%20turns%20contact%20details%20and%20an%20optional%20logo%20into%20a%20vCard%20QR%20code%20and%20a%20card%20picture.%20It%20says%20it%20runs%20in%20the%20browser%2C%20sends%20nothing%20anywhere%2C%20saves%20nothing%20typed%20or%20uploaded%2C%20and%20test-scans%20each%20code%20before%20offering%20it.%20Read%20the%20page%2C%20including%20its%20section%20%22What%20this%20page%20sends%2C%20and%20to%20whom%22%2C%20and%20its%20public%20code%20at%20github.com%2FFreedom-of-Technology%2Ftools.%20Do%20its%20claims%20hold%20up%3F%20Is%20there%20anything%20it%20doesn%27t%20tell%20me%3F">Check this page's claims with AI</a>
+        href="https://www.google.com/search?udm=50&amp;q=Check%20this%20page%3A%20freedomoftechnology.com%2Ftools%2Fcontact-card.%20It%20turns%20contact%20details%20and%20an%20optional%20logo%20into%20a%20vCard%20QR%20code%20and%20a%20card%20picture.%20It%20says%20it%20runs%20in%20the%20browser%2C%20sends%20nothing%20anywhere%2C%20saves%20nothing%20typed%20or%20uploaded%2C%20and%20test-scans%20each%20code%20before%20offering%20it.%20Each%20page%20lists%20a%20fingerprint%20%28SRI%20hash%29%20of%20every%20script%20and%20style%20it%20loads.%20Read%20the%20page%2C%20including%20its%20section%20%22What%20this%20page%20sends%2C%20and%20to%20whom%22%2C%20and%20its%20public%20code%20at%20github.com%2FFreedom-of-Technology%2Ftools.%20Do%20its%20claims%20hold%20up%3F%20Is%20there%20anything%20it%20doesn%27t%20tell%20me%3F">Check this page's claims with AI</a>
       <p>Opens Google's AI Mode in a new tab, asking it to read this page and its public code. An AI
         answer is a second opinion, and it can be wrong.</p>
     </div>
@@ -193,9 +203,10 @@
         as they are, and every change is made there, where its history is public. Two ways to check:</p>
       <ol>
         <li>Right-click this page, choose <strong>View page source</strong>, and compare it with
-          <code>public/tools/contact-card/index.html</code> on GitHub. The same works for
-          <code>app.js</code>, <code>card/vcard.js</code> and the QR code in
-          <code>shared/qr/</code>.</li>
+          <code>public/tools/contact-card/index.html</code> on GitHub. That one comparison covers everything
+          the page runs: the source lists a fingerprint of every script and style it uses, and your
+          browser refuses to run any file that doesn't match its fingerprint. Up-to-date browsers
+          check them; an older one skips the check.</li>
         <li>Watch what it sends. In Chrome or Edge, press F12 (on a Mac, Command+Option+I), open the
           <strong>Network</strong> tab, then make a code. You'll see nothing go out: what's listed
           is your own browser making the downloads, at addresses starting <code>blob:</code> or
