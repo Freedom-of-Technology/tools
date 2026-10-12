@@ -6,7 +6,8 @@
 //   included, moves permanently to the tool's page on the main site, keeping its path.
 // - www.freedomoftechnology.com/tools/... moves permanently to the same page without www, so
 //   every link counts toward one address.
-// - Everything else is a file from public/, with the security headers below added.
+// - Everything else is a file from public/, with the security headers below added. A page is also
+//   marked so Cloudflare passes it on unchanged (see unchanged()).
 
 const MAIN_SITE = 'https://freedomoftechnology.com';
 const OLD_ADDRESS = 'check.freeot.com';
@@ -21,6 +22,17 @@ const SECURITY_HEADERS = {
   'Referrer-Policy': 'no-referrer',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
 };
+
+// Cloudflare can rewrite a page on its way to the visitor: on freedomoftechnology.com it adds its
+// Web Analytics script to every page. A tool page says it has no tracking scripts and is the same
+// as its code on GitHub, so its HTML carries "no-transform", which Cloudflare leaves alone. Only
+// the HTML: no-transform also stops Cloudflare compressing a file, and the scripts are the big ones.
+// The rest of the site isn't served by this Worker, so its analytics are unaffected.
+function unchanged(response) {
+  if (!(response.headers.get('Content-Type') ?? '').startsWith('text/html')) return;
+  const cache = response.headers.get('Cache-Control');
+  response.headers.set('Cache-Control', cache ? `${cache}, no-transform` : 'no-transform');
+}
 
 function moved(to, from) {
   const target = new URL(to, MAIN_SITE);
@@ -42,6 +54,7 @@ export default {
     const asset = await env.ASSETS.fetch(request);
     const response = new Response(asset.body, asset);
     for (const [name, value] of Object.entries(SECURITY_HEADERS)) response.headers.set(name, value);
+    unchanged(response);
     return response;
   },
 };

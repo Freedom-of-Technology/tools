@@ -72,6 +72,16 @@ test('a mistyped tool address gets a page saying so, with a way to the tools, no
   assert.match(await response.text(), /There's no page here[\s\S]*href="\/tools\/"/);
 });
 
+test('a tool page reaches the visitor as it is on GitHub, with no Cloudflare analytics script added, while its scripts stay compressed', async () => {
+  for (const path of ['/tools/', '/tools/contact-card/', '/tools/domian-check/']) {
+    const page = await visit('freedomoftechnology.com', path);
+    assert.match(page.headers.get('Cache-Control') ?? '', /(^|, )no-transform$/, path);
+  }
+  const script = await visit('freedomoftechnology.com', '/tools/shared/qr/vendor/jsQR-1.4.0.js');
+  assert.equal(script.status, 200);
+  assert.doesNotMatch(script.headers.get('Cache-Control') ?? '', /no-transform/);
+});
+
 test("a tool page can't be shown inside another site, and doesn't tell the sites it links to where the visitor came from", async () => {
   const response = await visit('freedomoftechnology.com', '/tools/domain-check/');
   assert.equal(response.headers.get('Content-Security-Policy'), "frame-ancestors 'none'");
