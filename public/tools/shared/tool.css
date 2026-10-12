@@ -158,6 +158,8 @@ code {
 .result-head p { margin: 0; }
 .summary { font-size: var(--size-heading-3); font-weight: 600; margin-top: 8px !important; }
 .hint { color: var(--text); font-size: var(--size-label); }
+/* A link the page made, shown so it can be copied by hand (copyButton in page.js). */
+.shown-link { margin: 0; overflow-wrap: anywhere; font-size: var(--size-label); }
 .result-message p { margin: 0; }
 
 .problems { display: flex; flex-direction: column; gap: var(--space-gap); }

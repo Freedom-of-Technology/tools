@@ -11,7 +11,7 @@ import { codeCanvas, scaleFor, scansBack } from '../shared/qr/picture.js';
 import { ReviewLinkError, reviewDetails } from './card/link.js';
 import { LogoError, drawFitted, logoPicker, readLogo } from '../shared/logo/read.js';
 import { FONT, INK, SOFT, column } from '../shared/column.js';
-import { download, downloads, fileSlug, h, notMade, pngOf, show } from '../shared/page.js';
+import { copyButton, download, downloads, fileSlug, h, notMade, pngOf, show } from '../shared/page.js';
 
 const form = document.getElementById('review-form');
 const results = document.getElementById('results');
@@ -66,22 +66,6 @@ function problem(title, message) {
   notMade(results, title, message);
 }
 
-// Copies the link, and says so on the button, since nothing else on the page changes. Where the
-// browser won't let a page copy, it selects the link shown instead, ready to copy by hand.
-function copyButton(link, shown) {
-  const button = h('button', { type: 'button', class: 'fo-btn fo-btn-outline' }, 'Copy link');
-  button.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(link);
-      button.textContent = 'Copied';
-    } catch {
-      window.getSelection().selectAllChildren(shown);
-      button.textContent = 'Selected above: copy it from there';
-    }
-  });
-  return button;
-}
-
 async function make() {
   const data = new FormData(form);
   let details;
@@ -119,7 +103,7 @@ async function make() {
   const onCard = codeCanvas(code, box, logo, scaleFor(code, CARD_CODE));
   const card = await counterCard(details, onCard, logo);
   const cardURL = files.url(await pngOf(card));
-  const shown = h('p', { class: 'review-link' }, link);
+  const shown = h('p', { class: 'shown-link' }, link);
 
   freeot.hidden = false;
   show(results,

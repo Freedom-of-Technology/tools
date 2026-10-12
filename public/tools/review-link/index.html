@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-jxMtYpNVObhUuOjqzpPFlrUmaAmx7DlglcoshsGh/20='; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-wwZk1p3cBw81zInzFx/QlVe0HTslFV1TU2QxI7YzRzI='; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light dark">
   <title>Make a QR code that asks for a Google review: free review link maker · FreeOT</title>
@@ -14,8 +14,8 @@
   <link rel="stylesheet" href="/tools/shared/brand/fonts.css" integrity="sha384-6XFRTf3kr/+m/ibUtlHsPnZ436L326lBEGENWb/u2a7SP1Ybw9XahXpl5h5ceW6o">
   <link rel="stylesheet" href="/tools/shared/brand/colors.css" integrity="sha384-A8JhEkDP4F+fCD859gLzp3YqMVFgc5juCHG1se7/lcxwsD9TjimGVi+2hPPFv2bA">
   <link rel="stylesheet" href="/tools/shared/brand/pieces.css" integrity="sha384-1EmzCFb5xwhj9z4KmhAOHpL9JCJAx398hM3HhtciXrkEzdo+jqk+oJ1bujdAMKqT">
-  <link rel="stylesheet" href="/tools/shared/tool.css" integrity="sha384-vqxHrUsvrZoY8lPl862cU4IfkcngEgrL6Vis+yiRqctlg+SnbJ+rCPjwM2ZIYdiW">
-  <link rel="stylesheet" href="/tools/shared/maker.css" integrity="sha384-5qqV9nQmE2qivesf0Uh2fVjoHfa9npxzaqy+zu3v659JsZpFEWUVTQsD8AwR3Uiv">
+  <link rel="stylesheet" href="/tools/shared/tool.css" integrity="sha384-DkdLbh2rnvkOo/aZUuoYk8nQhSwGUrzU3HjZqSVMqY9MJaLQmmLKVk3O6xmWFJqR">
+  <link rel="stylesheet" href="/tools/shared/maker.css" integrity="sha384-9FrqK8lLqVLBp6slE3pUyeT88s1Uxq/3UBody2dczoIRQJChLUpBsZZQ8EKuH0Ws">
   <script type="importmap">
 {
   "integrity": {
@@ -23,7 +23,7 @@
     "/tools/shared/column.js": "sha384-lL10/bh+4BgxzMy/krgkUeYMRjkkC7vtJDusvKq+4hzku51soyhIvF/Xarj+T5aE",
     "/tools/shared/logo/read.js": "sha384-rg8FI54rzyq5Hyc1caToS2q7Km66CSWuRoOBqf8s5dd3Ysiy3GlUJnNHpH9dwtb9",
     "/tools/shared/logo/rules.js": "sha384-T9YGT4oEZ1/jX7fjEikRZypAdOGunZRbYjX7uG9/ldxGLGw/+SK/U5iwW5YOx2t5",
-    "/tools/shared/page.js": "sha384-Dhao05Ved49By6qrnmuKmB2UHvEsE0RKZfolPwDV9lPhpIXWY89geFEdA/J3Az+Z",
+    "/tools/shared/page.js": "sha384-zJdjiX+1UXtj/EnRIsIFwU4KNT3MZFnbJGDxlkENgN09gMDcHNI5RvREq6LFSKNE",
     "/tools/shared/qr/picture.js": "sha384-n0B02hL54Hw+XYmVxGrRpjXYheTCtU885Oqrkx9uW8gy8Fd1gaAaJqK/CXq26hKm",
     "/tools/shared/qr/qr.js": "sha384-GwPhZ+ZGhbJv9erEjXN3OJSN3mmW2bPB9TfYmhw6EWBtoFAQmBTyi70VRI0x3+St",
     "/tools/shared/qr/vendor/qrcode-generator-2.0.4.mjs": "sha384-xHtsZTi0cOhTiha4kloGDUR5e5A8ixkKsF1Mmpqq3tkDpAhkA4YOKIDua/Tc0Ecd"
@@ -31,7 +31,7 @@
 }
   </script>
   <script src="/tools/shared/qr/vendor/jsQR-1.4.0.js" integrity="sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx" defer></script>
-  <script type="module" src="/tools/review-link/app.js" integrity="sha384-bUwMriTepl4+tH6Smb4nVabLVIEFMIr4OZfQFl7HYCtPihzX1ixfBQPgiZvxwi8F"></script>
+  <script type="module" src="/tools/review-link/app.js" integrity="sha384-fK6nBpy1FCdPVhxAJobiQbs9Folj3Q4pHB5R6De8KOfIHiX5fY6enGjKAVreYh3X"></script>
 </head>
 <body>
   <header class="top">
@@ -45,6 +45,10 @@
       <summary>Free tools</summary>
       <nav class="menu-panel" aria-label="Free tools">
         <a class="fo-link" href="/tools/">All free tools</a>
+        <p class="fo-label">Ownership</p>
+        <ul>
+          <li><a class="fo-link" href="/tools/ownership-checklist/">The Ownership Checklist</a></li>
+        </ul>
         <p class="fo-label">Domains</p>
         <ul>
           <li><a class="fo-link" href="/tools/domain-check/">Almanac Check</a></li>

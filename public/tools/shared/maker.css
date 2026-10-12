@@ -39,7 +39,6 @@
 .made-picture p { margin: 10px 0 0; font-size: var(--size-label); }
 .downloads { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
 .downloads .fo-btn { min-width: 15em; justify-content: flex-start; }
-.review-link { margin: 0; overflow-wrap: anywhere; font-size: var(--size-label); }
 .passed { font-weight: 600; }
 .badge-passed { border-color: var(--text); }
 .badge-failed { background: var(--text); border-color: var(--text); color: var(--page); }
