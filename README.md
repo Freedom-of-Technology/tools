@@ -1,5 +1,7 @@
 # FreeOT free tools
 
+By [Freedom of Technology, LLC](https://freedomoftechnology.com)
+
 Free tools from [FreeOT](https://freedomoftechnology.com) for business owners, at
 **https://freedomoftechnology.com/tools/**. Each one solves one problem right on the page: no email
 asked, and nothing typed or uploaded is saved.
