@@ -82,16 +82,22 @@ and nothing else, and runs the page's own checking code:
     node cli/check.mjs ../almanac/dns
     node cli/check.mjs ../almanac/dns/freeot.com.zone --ns woz.ns.cloudflare.com
     node cli/check.mjs ../almanac/dns --secrets ../almanac
+    node cli/check.mjs --secrets ../almanac-template
 
-A folder means every `.zone` file in it. It exits with 1 when anything needs a look, or when a file
-looks like it holds a secret (refused before anything about it is asked).
+A folder means every `.zone` file in it. It exits with 1 when anything needs a look, when a file
+looks like it holds a secret (refused before anything about it is asked), or when there are no
+records files at all, since then nothing was compared.
 
 `--ns` asks that server for the records instead of Google Public DNS: for checking a new DNS
 company's copy before the domain's name servers are switched to it. The registry isn't asked then,
 since it still names the old company until the switch.
 
 `--secrets` also looks for secrets in every other file in that folder, such as an almanac's guides.
-Another repository checked out inside it is left out.
+Another repository checked out inside it is left out. That folder is the whole almanac, so the check
+also reads which version of the [almanac template](https://github.com/Freedom-of-Technology/almanac-template)
+its front page names, and gives a notice when the template has a newer one. The notice never fails
+the check: an almanac on an older version still works. With no records file or folder named, as in
+the template itself, it only looks for secrets.
 
 ## Email protection check
 
