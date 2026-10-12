@@ -101,7 +101,7 @@ registries; and the domain's registry, for the registration's end date.
 | Path | What it is |
 |---|---|
 | `public/` | Every file the site serves, at the same path: `public/tools/domain-check/index.html` is `/tools/domain-check/`. No build step. |
-| `public/tools/shared/` | What every tool page shares: `tool.css` (the page layout and result cards), `live.js` (the public lookups: Google Public DNS, IANA and the registry) and `brand/` (FreeOT's color and font settings, fonts and logos, copied from FreeOT's brand kit). |
+| `public/tools/shared/` | What every tool page shares: `tool.css` (the page layout, the tools menu and result cards), `live.js` (the public lookups: Google Public DNS, IANA and the registry) and `brand/` (FreeOT's color and font settings, fonts and logos, copied from FreeOT's brand kit). |
 | `public/tools/domain-check/` | Almanac Check. `check/` is the checking code: `zone.js` reads a records file, `compare.js` compares it with what's live. `app.js` is the page. |
 | `public/tools/email-check/` | The email protection check. `check/email.js` is the checking code; `app.js` is the page. |
 | `src/worker.js` | The Cloudflare Worker in front of the files: it redirects Almanac Check's old address, check.freeot.com, and adds the security headers. |
@@ -122,6 +122,10 @@ Then:
 
 The checking code talks only to the public services above. The tests use a stand-in for them
 (`test/fake-internet.js`), so they don't need the internet.
+
+With no build step, the tools menu at the top of each page is written out on every page. A new
+tool goes into the menu on every page, and onto `/tools` under its category; a test fails until
+they all match.
 
 GitHub runs the tests on every change, and checks that Cloudflare would accept `wrangler.toml`
 (`.github/workflows/test.yml`). Every merge to `main` goes live.

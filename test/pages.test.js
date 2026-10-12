@@ -38,6 +38,37 @@ test('every style, script, picture and link a tool page uses on this site is the
   assert.deepEqual(broken, []);
 });
 
+test('every link to a part of another page on this site lands on that part, so "Domains" opens at Domains', () => {
+  const broken = [];
+  for (const page of files(PUBLIC, '.html')) {
+    const html = readFileSync(page, 'utf8');
+    for (const [, address, id] of html.matchAll(/href="(\/[^"#]*)#([^"]+)"/g)) {
+      const target = readFileSync(fileFor(address, page), 'utf8');
+      if (!target.includes(` id="${id}"`)) broken.push(`${relative(PUBLIC, page)}: ${address}#${id}`);
+    }
+  }
+  assert.deepEqual(broken, []);
+});
+
+test('every page has the same tools menu, listing every tool, and /tools lists the same tools, so no tool is missing where a visitor looks for it', () => {
+  const menu = (html) => html.match(/<details class="menu">[\s\S]*?<\/details>/)?.[0].replace(/ aria-current="page"/g, '');
+  const pages = files(PUBLIC, '.html');
+  const index = readFileSync(join(PUBLIC, 'tools/index.html'), 'utf8');
+  const expected = menu(index);
+  assert.ok(expected, 'found the menu on /tools');
+
+  const different = pages.filter((page) => menu(readFileSync(page, 'utf8')) !== expected);
+  assert.deepEqual(different.map((page) => relative(PUBLIC, page)), []);
+
+  const links = (html) => [...html.matchAll(/href="(\/tools\/[a-z-]+\/)"/g)].map((m) => m[1]).sort();
+  const tools = readdirSync(join(PUBLIC, 'tools'))
+    .filter((name) => name !== 'shared' && existsSync(join(PUBLIC, 'tools', name, 'index.html')))
+    .map((name) => `/tools/${name}/`)
+    .sort();
+  assert.deepEqual(links(expected), tools);
+  assert.deepEqual(links(index.match(/<main>[\s\S]*<\/main>/)[0]), tools);
+});
+
 test('every page tells the browser it handles light and dark itself, so phones that darken websites leave its colors alone', () => {
   const pages = files(PUBLIC, '.html');
   const missing = pages.filter((page) => !/<meta name="color-scheme" content="light dark">/.test(readFileSync(page, 'utf8')));
