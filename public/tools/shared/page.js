@@ -7,7 +7,7 @@
 //   downloads()                       -> { url(blob), clear() }: addresses for files made in the browser
 //   pngOf(canvas)                     -> the canvas as a PNG file
 //   download(label, url, name)        -> a download button
-//   copyButton(link, shown)           -> a Copy link button; `shown` is the element showing the link
+//   copyButton(text, shown, label)    -> a copy button; `shown` is the element showing the text
 //   fileSlug(text, fallback)          -> a safe start for a downloaded file's name
 
 export function h(tag, attrs = {}, ...children) {
@@ -64,13 +64,13 @@ export function download(label, url, name) {
   return h('a', { class: 'fo-btn fo-btn-outline', href: url, download: name }, label);
 }
 
-// Copies the link, and says so on the button, since nothing else on the page changes. Where the
-// browser won't let a page copy, it selects the link shown instead, ready to copy by hand.
-export function copyButton(link, shown) {
-  const button = h('button', { type: 'button', class: 'fo-btn fo-btn-outline' }, 'Copy link');
+// Copies the text, and says so on the button, since nothing else on the page changes. Where the
+// browser won't let a page copy, it selects the text shown instead, ready to copy by hand.
+export function copyButton(text, shown, label = 'Copy link') {
+  const button = h('button', { type: 'button', class: 'fo-btn fo-btn-outline' }, label);
   button.addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText(link);
+      await navigator.clipboard.writeText(text);
       button.textContent = 'Copied';
     } catch {
       window.getSelection().selectAllChildren(shown);
