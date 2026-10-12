@@ -8,6 +8,7 @@ asked, and nothing typed or uploaded is saved.
 |---|---|---|
 | Almanac Check | [/tools/domain-check/](https://freedomoftechnology.com/tools/domain-check/) | Checks a domain's saved DNS records file against what's live on the internet, record by record. |
 | Email protection check | [/tools/email-check/](https://freedomoftechnology.com/tools/email-check/) | Says whether someone can send email pretending to be a domain: its SPF, DKIM and DMARC records, and when its registration runs out. |
+| Contact card maker | [/tools/contact-card/](https://freedomoftechnology.com/tools/contact-card/) | Turns contact details, and a logo if wanted, into a "Scan to save" QR code, a card picture for a phone and a contact file. |
 
 ## Nothing you give a tool is kept
 
@@ -96,6 +97,23 @@ The same three public services as Almanac Check: Google Public DNS for the domai
 records, its DMARC record, a few DKIM names and the names its SPF record includes; IANA's list of
 registries; and the domain's registry, for the registration's end date.
 
+## Contact card maker
+
+An owner types their name, business, job title, phone, email and website, and can add a logo. The
+page makes a "Scan to save" QR code that holds the contact itself as a vCard, so it works with no
+server and never expires, plus a phone-sized card picture with the logo, and a `.vcf` contact file.
+
+- **Nothing is sent anywhere.** The details and the logo are read in the browser, and the files are
+  made there. The page's own security settings (`connect-src 'none'`) block it from connecting
+  anywhere. Nothing is hosted either, so no one can use the tool to put words on FreeOT's site.
+- **Every code is test-scanned before it's offered.** The finished picture, logo and all, is read
+  back with jsQR and must hold exactly the contact typed, byte for byte.
+- **A logo in the middle of the code** is optional. The code then uses the highest error
+  correction (H, which can lose 30%), and the logo covers a fifth of its width.
+
+The QR code comes from qrcode-generator and the test-scan from jsQR, kept as published in
+`public/tools/shared/qr/vendor/`, one pinned version each (its `README.md` lists them).
+
 ## Layout
 
 | Path | What it is |
@@ -106,6 +124,8 @@ registries; and the domain's registry, for the registration's end date.
 | `public/tools/email-check/` | The email protection check. `check/email.js` is the checking code; `app.js` is the page. |
 | `src/worker.js` | The Cloudflare Worker in front of the files: it redirects Almanac Check's old address, check.freeot.com, and adds the security headers. |
 | `wrangler.toml` | How Cloudflare runs the Worker, including the addresses it answers on. |
+| `public/tools/contact-card/` | The contact card maker. `card/vcard.js` writes the contact; `app.js` is the page, including the card picture. |
+| `public/tools/shared/qr/` | QR codes for the tools that make them: `qr.js` makes, draws and test-scans a code, on the libraries in `vendor/`. |
 | `cli/check.mjs` | Almanac Check from the command line. |
 | `test/` | Tests. They run the code in `public/`, `src/` and `cli/`, on made-up records files. |
 
@@ -133,5 +153,7 @@ GitHub runs the tests on every change, and checks that Cloudflare would accept `
 ## License
 
 The code is under the MIT license (`LICENSE`). The fonts in `public/tools/shared/brand/fonts/` are
-under the SIL Open Font License (`OFL.txt` beside each). The FreeOT name and logo belong to FreeOT
+under the SIL Open Font License (`OFL.txt` beside each). The libraries in
+`public/tools/shared/qr/vendor/` keep their own licenses, beside them: MIT for qrcode-generator,
+Apache 2.0 for jsQR. The FreeOT name and logo belong to FreeOT
 and aren't covered by the MIT license.
