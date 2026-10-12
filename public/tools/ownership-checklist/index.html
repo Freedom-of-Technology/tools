@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data:; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-Loll56SFkbiYdqnaybJ47Q3ACO5om2bYp9IEl1SMq/A='; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data:; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-ddY5YEN0UJRZqmN+o9s7ePgL55uMtKvm9MiIdqqNUk4='; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light dark">
   <title>Is your business's technology in your name? Free ownership checklist · FreeOT</title>
@@ -15,16 +15,16 @@
   <link rel="stylesheet" href="/tools/shared/brand/colors.css" integrity="sha384-A8JhEkDP4F+fCD859gLzp3YqMVFgc5juCHG1se7/lcxwsD9TjimGVi+2hPPFv2bA">
   <link rel="stylesheet" href="/tools/shared/brand/pieces.css" integrity="sha384-1EmzCFb5xwhj9z4KmhAOHpL9JCJAx398hM3HhtciXrkEzdo+jqk+oJ1bujdAMKqT">
   <link rel="stylesheet" href="/tools/shared/tool.css" integrity="sha384-DkdLbh2rnvkOo/aZUuoYk8nQhSwGUrzU3HjZqSVMqY9MJaLQmmLKVk3O6xmWFJqR">
-  <link rel="stylesheet" href="/tools/ownership-checklist/style.css" integrity="sha384-AA/wqvCK235wcEIWN2eeh8Mw4tBotd+LKvB/Iceu/TWRuwVUp+b0q2XILxySpd2q">
+  <link rel="stylesheet" href="/tools/ownership-checklist/style.css" integrity="sha384-lfN4OTSfoAhaglrHfw/1WxVl7Iap2GndMOcC/JiKFZBxpkeosE5I3SeXuA0oUR+3">
   <script type="importmap">
 {
   "integrity": {
-    "/tools/ownership-checklist/check/accounts.js": "sha384-QssIw5hnG7xhUGp/mdh9lOeoTd3KrtHGX/dgz+BRHxAQZz6dKQsaKM2UNG2JYxQ4",
-    "/tools/shared/page.js": "sha384-zJdjiX+1UXtj/EnRIsIFwU4KNT3MZFnbJGDxlkENgN09gMDcHNI5RvREq6LFSKNE"
+    "/tools/ownership-checklist/check/accounts.js": "sha384-Siy6rWmhkzCiZcEvHDc+eHOf6zYrFxSM8BT/ata0t1ZC4NZr7sEcaf4/zaUcJy+h",
+    "/tools/shared/page.js": "sha384-DiRpNsdBnznziKWV+/y5lUiGLFuHZ+6JIGZLvZ1WmV0xl0bwAaw4ZevUTp8jFg2p"
   }
 }
   </script>
-  <script type="module" src="/tools/ownership-checklist/app.js" integrity="sha384-DEipINpNVeI5SjnAKArbGrCfwBWuDhul/MP6OsxmuOhS8gve251+yPyekn03rUYV"></script>
+  <script type="module" src="/tools/ownership-checklist/app.js" integrity="sha384-hjKmPnsf0Fh7zohfkkNjcrXHsqW9+SDQYbHTx4y9ujf8lUbwrYyYx2Ku0/xLWs+B"></script>
 </head>
 <body>
   <header class="top">
@@ -62,8 +62,9 @@
       <p class="fo-eyebrow">The Ownership Checklist</p>
       <h1 class="fo-h1">Is your business's technology in your name?</h1>
       <p class="fo-p">Ten accounts every small business should hold in its own name, from your web
-        address to your passwords. Say who holds each one now, and this page lists what to move into
-        your name, and how. It takes a few minutes, and it asks only what you already know.</p>
+        address to your passwords. Say who holds each one now, and this page writes your plan: who to
+        ask for what, with the message to send, and what to find out first. It takes a few minutes, in
+        three short steps, and it asks only what you already know.</p>
     </section>
 
     <form class="ask" id="checklist-form" aria-labelledby="ask-title" novalidate>
@@ -71,10 +72,19 @@
       <p class="fo-p"><strong>In my name</strong> means the account belongs to you or your business,
         and you can sign in to it yourself. An account in an employee's, a relative's or your web
         designer's name is someone else's, even if they'd hand it over.</p>
+      <p class="fo-p">Three short steps, then your plan shows right here on this page. No email, no
+        sign-up. Or see every question at once:</p>
+      <div class="fo-row"><button type="button" class="fo-btn fo-btn-outline show-all" aria-pressed="false">Show all</button></div>
       <div class="accounts" id="accounts">
         <noscript><p class="fo-p">This checklist needs JavaScript turned on in your browser.</p></noscript>
       </div>
-      <div class="fo-row"><button type="submit" class="fo-btn">See my result</button></div>
+      <p class="step-note" id="step-note" aria-live="polite"></p>
+      <div class="fo-row steps-nav">
+        <button type="button" class="fo-btn fo-btn-outline" id="prev">Back</button>
+        <button type="button" class="fo-btn" id="next">Next</button>
+        <button type="submit" class="fo-btn" id="see">See my result</button>
+        <button type="button" class="fo-btn fo-btn-outline show-all" aria-pressed="false">Show all</button>
+      </div>
       <div class="privacy">
         <p><strong>Your information stays with you.</strong> This tool runs in your browser. Nothing
           you choose is saved, and FreeOT doesn't collect, keep, sell or share it. Close the page and
@@ -112,17 +122,18 @@
           changed. Getting each account into your name while everyone is still friendly is far easier
           than getting it back later.</dd>
         <dt id="means-order">Where to start</dt>
-        <dd>Your result lists what to do in the same order as the checklist, which starts with your
-          web address and your email. Whoever holds those two can reset the passwords for almost
-          everything else, so they come first.</dd>
+        <dd>Your result starts with your web address and your email. Whoever holds those two can reset
+          the passwords for almost everything else, so they come first. Then it lists who to ask for
+          what, what to find out first, and what to set up, each in the checklist's order.</dd>
         <dt id="means-asking">Asking for an account</dt>
-        <dd>Ask in writing, and kindly: most people who set things up meant well. Ask for the account
-          to be moved into your name, or for an owner login of your own, rather than for their
+        <dd>Ask in writing, and kindly: most people who set things up meant well. Your result writes
+          the message for you, one for each person, listing every account they hold. It asks for each
+          account to be moved into your name, or for an owner login of your own, rather than for their
           password. Once it's yours, change the password, turn on two-step sign-in, and keep the
           recovery codes somewhere safe, such as a password manager.</dd>
         <dt id="means-share">Sharing your result</dt>
         <dd>Your result comes with a link. It holds your answers, so whoever you send it to, such as
-          the person who helps with your technology, sees the same list. The answers ride after the
+          the person who helps with your technology, sees the same plan. The answers ride after the
           <code>#</code> in the link, the part your browser never sends to any website.</dd>
         <dt id="means-audit">This checklist and an audit</dt>
         <dd>This checklist asks what you know. An ownership audit finds out: it starts from the
@@ -138,8 +149,9 @@
 
       <h3 class="fo-h3" id="sent-not">What it doesn't do</h3>
       <ul>
-        <li>It doesn't look anything up. It never asks for your web address, your business's name or
-          any login.</li>
+        <li>It doesn't look anything up. It never asks for your web address, your business's name,
+          anyone's name or any login. "Who holds it?" is a choice such as "A web designer or agency",
+          never a name.</li>
         <li>It doesn't send your answers anywhere. When you see your result, your answers are added
           after the <code>#</code> in the page's address, so you can share it; browsers never send
           that part to the website.</li>
