@@ -1,0 +1,48 @@
+/* The contact card maker's own styles, on top of the layout every tool shares (../shared/tool.css). */
+
+/* ---- The form ---- */
+
+.ask {
+  background: var(--band);
+  border-radius: var(--panel-corner);
+  padding: var(--space-card);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.ask .fo-p { color: var(--text); }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 14px 18px; max-width: 46em; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field.wide { grid-column: 1 / -1; }
+.ask input[type="text"], .ask input[type="tel"], .ask input[type="email"] {
+  width: 100%;
+  font: inherit;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--label);
+  border-radius: var(--button-corner);
+  padding: 12px 14px;
+}
+.ask input:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+.logo { border: 0; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.logo legend { padding: 0; margin-bottom: 6px; }
+.logo input[type="file"] { font: inherit; font-size: var(--size-label); color: var(--text); max-width: 100%; }
+.check { display: inline-flex; gap: 10px; align-items: center; font-weight: 600; }
+.check input { width: 20px; height: 20px; margin: 0; accent-color: var(--button); }
+.check:has(input:disabled) { color: var(--label); }
+
+/* ---- The result ---- */
+
+.made { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
+@media (min-width: 768px) { .made { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 40px; } }
+.made-picture img {
+  display: block; width: 100%; height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--panel-corner);
+  background: #ffffff;
+}
+.made-picture p { margin: 10px 0 0; font-size: var(--size-label); }
+.downloads { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.downloads .fo-btn { min-width: 15em; justify-content: flex-start; }
+.passed { font-weight: 600; }
+.badge-passed { border-color: var(--text); }
+.badge-failed { background: var(--text); border-color: var(--text); color: var(--page); }
