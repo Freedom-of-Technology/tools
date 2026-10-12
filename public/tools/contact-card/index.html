@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-ckM+Wix4WsfcLoQ79+ZJWm2en/gQxVPeFiXpGQrvLTQ='; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-S/0/GH/s8gVM9MNIrkOXg02MEyFLxcqN9k4M8LTKyYU='; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light dark">
   <title>Make a QR code that saves your contact: free contact card maker · FreeOT</title>
@@ -14,20 +14,24 @@
   <link rel="stylesheet" href="/tools/shared/brand/fonts.css" integrity="sha384-6XFRTf3kr/+m/ibUtlHsPnZ436L326lBEGENWb/u2a7SP1Ybw9XahXpl5h5ceW6o">
   <link rel="stylesheet" href="/tools/shared/brand/colors.css" integrity="sha384-A8JhEkDP4F+fCD859gLzp3YqMVFgc5juCHG1se7/lcxwsD9TjimGVi+2hPPFv2bA">
   <link rel="stylesheet" href="/tools/shared/brand/pieces.css" integrity="sha384-1EmzCFb5xwhj9z4KmhAOHpL9JCJAx398hM3HhtciXrkEzdo+jqk+oJ1bujdAMKqT">
-  <link rel="stylesheet" href="/tools/shared/tool.css" integrity="sha384-kLJExGLzZDNTzF+DPLtyuZakkxVlZyA8fDGE3+ocxXW3sUytIfuY3Bl5TN5DYFdR">
-  <link rel="stylesheet" href="/tools/contact-card/style.css" integrity="sha384-bLiV/bhrfa9WQo8GPRAchGGF41Ro/cIfD9zMKmmYLvY9UetpKKRFSHqwooda1O6Z">
+  <link rel="stylesheet" href="/tools/shared/tool.css" integrity="sha384-vqxHrUsvrZoY8lPl862cU4IfkcngEgrL6Vis+yiRqctlg+SnbJ+rCPjwM2ZIYdiW">
+  <link rel="stylesheet" href="/tools/shared/maker.css" integrity="sha384-Jh54JQqS0twpGvYc7GAIBqT4qjI6uP0CBVQ4dgC3n+IOcOLkAywATAEsKKvOO8IZ">
   <script type="importmap">
 {
   "integrity": {
-    "/tools/contact-card/card/logo.js": "sha384-TM/UfLVmg9h+IkvTOdkw/xxQeWPHuw8FyK02bZtHFpdXFdkM+9KvC0WcTcIimSRp",
-    "/tools/contact-card/card/vcard.js": "sha384-222PG5hQosf3JiHcqGlo27VhSq8AzpnCAu3BwqZp5kgh65ZBs1RfUl4Pi17LE8Pq",
+    "/tools/contact-card/card/vcard.js": "sha384-bcNo3GIeWFe/4l04Zxu+VzFgNjb8tQxd38Q3ulvw4qV9+M63s/N0cUxsw+nD8QYU",
+    "/tools/shared/column.js": "sha384-lL10/bh+4BgxzMy/krgkUeYMRjkkC7vtJDusvKq+4hzku51soyhIvF/Xarj+T5aE",
+    "/tools/shared/logo/read.js": "sha384-rg8FI54rzyq5Hyc1caToS2q7Km66CSWuRoOBqf8s5dd3Ysiy3GlUJnNHpH9dwtb9",
+    "/tools/shared/logo/rules.js": "sha384-T9YGT4oEZ1/jX7fjEikRZypAdOGunZRbYjX7uG9/ldxGLGw/+SK/U5iwW5YOx2t5",
+    "/tools/shared/page.js": "sha384-Dhao05Ved49By6qrnmuKmB2UHvEsE0RKZfolPwDV9lPhpIXWY89geFEdA/J3Az+Z",
+    "/tools/shared/qr/picture.js": "sha384-n0B02hL54Hw+XYmVxGrRpjXYheTCtU885Oqrkx9uW8gy8Fd1gaAaJqK/CXq26hKm",
     "/tools/shared/qr/qr.js": "sha384-GwPhZ+ZGhbJv9erEjXN3OJSN3mmW2bPB9TfYmhw6EWBtoFAQmBTyi70VRI0x3+St",
     "/tools/shared/qr/vendor/qrcode-generator-2.0.4.mjs": "sha384-xHtsZTi0cOhTiha4kloGDUR5e5A8ixkKsF1Mmpqq3tkDpAhkA4YOKIDua/Tc0Ecd"
   }
 }
   </script>
   <script src="/tools/shared/qr/vendor/jsQR-1.4.0.js" integrity="sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx" defer></script>
-  <script type="module" src="/tools/contact-card/app.js" integrity="sha384-7jWVIzAyNQI/4s9kQ6uk9sv+EuWTztxsDqHGHEO9ik/hPK505ghtHcpT5NW4wRqF"></script>
+  <script type="module" src="/tools/contact-card/app.js" integrity="sha384-acVOHEUA6OJTvh2ToVFO6Ib3SwvrSGkNln+wbmlGCdaCRsQVBgLGMKKdsGFAeEKK"></script>
 </head>
 <body>
   <header class="top">

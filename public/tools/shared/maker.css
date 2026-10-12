@@ -1,4 +1,5 @@
-/* The contact card maker's own styles, on top of the layout every tool shares (../shared/tool.css). */
+/* The tools that make something, such as a QR code: their form, the picture they make and its
+   downloads. On top of the layout every tool shares (tool.css). */
 
 /* ---- The form ---- */
 
@@ -23,23 +24,6 @@
 }
 .ask input:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 
-.logo { border: 0; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-.logo legend { padding: 0; margin-bottom: 6px; }
-/* The file picker is hidden; its label is the button. Keyboard focus on the picker shows on the button. */
-.logo label.fo-btn { cursor: pointer; }
-.logo label.fo-btn:has(+ #logo:focus-visible) { outline: 2px solid var(--link); outline-offset: 2px; }
-.logo-chosen { font-size: var(--size-label); color: var(--text); overflow-wrap: anywhere; min-width: 0; }
-.logo-remove {
-  font: 600 var(--size-label)/1.4 var(--font-text);
-  color: var(--link);
-  background: none; border: 0; padding: 0;
-  text-decoration: underline; text-underline-offset: 2px;
-  cursor: pointer;
-}
-.logo-remove:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-.check { display: inline-flex; gap: 10px; align-items: center; font-weight: 600; }
-.check input { width: 20px; height: 20px; margin: 0; accent-color: var(--button); }
-.check:has(input:disabled) { color: var(--label); }
 
 /* ---- The result ---- */
 

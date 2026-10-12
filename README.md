@@ -110,7 +110,7 @@ server and never expires, plus a phone-sized card picture with the logo, and a `
   back with jsQR and must hold exactly the contact typed, byte for byte.
 - **A large logo is copied down** in the browser to 1,200 pixels on its longest side (a JPG stays a
   JPG), and every file uses the copy, so the downloads stay small. An SVG logo stays as drawn
-  unless the file is over 1 MB. The rules are in `public/tools/contact-card/card/logo.js`.
+  unless the file is over 1 MB. The rules are in `public/tools/shared/logo/rules.js`.
 - **A logo in the middle of the code** is optional. The code then uses the highest error
   correction (H, which can lose 30%), and the logo covers a fifth of its width.
 
@@ -122,13 +122,14 @@ The QR code comes from qrcode-generator and the test-scan from jsQR, kept as pub
 | Path | What it is |
 |---|---|
 | `public/` | Every file the site serves, at the same path: `public/tools/domain-check/index.html` is `/tools/domain-check/`. No build step. |
-| `public/tools/shared/` | What every tool page shares: `tool.css` (the page layout, the tools menu and result cards), `live.js` (the public lookups: Google Public DNS, IANA and the registry) and `brand/` (FreeOT's color and font settings, fonts and logos, copied from FreeOT's brand kit). |
+| `public/tools/shared/` | What every tool page shares: `tool.css` (the page layout, the tools menu and result cards), `live.js` (the public lookups: Google Public DNS, IANA and the registry), `page.js` (showing a result and offering its files), `column.js` (drawing a card picture), `maker.css` (the form and downloads of the tools that make something) and `brand/` (FreeOT's color and font settings, fonts and logos, copied from FreeOT's brand kit). |
 | `public/tools/domain-check/` | Almanac Check. `check/` is the checking code: `zone.js` reads a records file, `compare.js` compares it with what's live. `app.js` is the page. |
 | `public/tools/email-check/` | The email protection check. `check/email.js` is the checking code; `app.js` is the page. |
 | `src/worker.js` | The Cloudflare Worker in front of the files: it redirects Almanac Check's old address, check.freeot.com, and adds the security headers. |
 | `wrangler.toml` | How Cloudflare runs the Worker, including the addresses it answers on. |
 | `public/tools/contact-card/` | The contact card maker. `card/vcard.js` writes the contact; `app.js` is the page, including the card picture. |
-| `public/tools/shared/qr/` | QR codes for the tools that make them: `qr.js` makes, draws and test-scans a code, on the libraries in `vendor/`. |
+| `public/tools/shared/logo/` | A logo the visitor adds, for the tools that take one: `rules.js` (which files, and when to make a smaller copy) and `read.js` (the copy, drawing it, and the "Choose your logo" picker). |
+| `public/tools/shared/qr/` | QR codes for the tools that make them: `qr.js` makes, draws and test-scans a code, on the libraries in `vendor/`; `picture.js` draws it in the browser and test-scans the finished picture. |
 | `cli/check.mjs` | Almanac Check from the command line. |
 | `scripts/fingerprints.mjs` | Writes into each page a fingerprint of every script and style it loads (see below). |
 | `test/` | Tests. They run the code in `public/`, `src/`, `cli/` and `scripts/`, on made-up records files and contacts. |

@@ -8,6 +8,8 @@
 // details: { first, last, org, title, phone, email, website }, every one optional, but there has
 // to be a name or a business name.
 
+import { fileSlug } from '../../shared/page.js';
+
 export class ContactError extends Error {}
 
 const clean = (s) => String(s ?? '').replace(/\s+/g, ' ').trim();
@@ -49,9 +51,4 @@ export function contactCard(d) {
   return lines.join('\r\n');
 }
 
-export function fileName(d) {
-  const base = fullName(d)
-    .normalize('NFKD').replace(/[̀-ͯ]/g, '')
-    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-  return base || 'contact';
-}
+export const fileName = (d) => fileSlug(fullName(d), 'contact');

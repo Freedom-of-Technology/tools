@@ -1,5 +1,5 @@
-// What the page does with the visitor's logo before drawing it: which files it takes, and when it
-// makes a smaller copy. The copy is made in the browser (app.js) and used everywhere, the print file
+// The logo rules every tool that takes a logo follows: which files it takes, and when it makes a
+// smaller copy. The copy is made in the browser (read.js) and used everywhere, the print file
 // included, so a large logo never makes a large download. The visitor's own file isn't changed.
 //
 //   checkFile({ type, size })                    -> throws LogoError when the page can't use the file
