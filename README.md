@@ -6,6 +6,7 @@ asked, and nothing typed or uploaded is saved.
 
 | Tool | Address | What it does |
 |---|---|---|
+| The Ownership Checklist | [/tools/ownership-checklist/](https://freedomoftechnology.com/tools/ownership-checklist/) | Ten accounts every small business should hold in its own name: the owner says who holds each, and the page lists what to move into their name, and how. |
 | Almanac Check | [/tools/domain-check/](https://freedomoftechnology.com/tools/domain-check/) | Checks a domain's saved DNS records file against what's live on the internet, record by record. |
 | Email protection check | [/tools/email-check/](https://freedomoftechnology.com/tools/email-check/) | Says whether someone can send email pretending to be a domain: its SPF, DKIM and DMARC records, and when its registration runs out. |
 | Contact card maker | [/tools/contact-card/](https://freedomoftechnology.com/tools/contact-card/) | Turns contact details, and a logo if wanted, into a "Scan to save" QR code, a card picture for a phone and a contact file. |
@@ -16,6 +17,20 @@ asked, and nothing typed or uploaded is saved.
 Every tool runs in the browser. What you type or upload is read there and never sent to FreeOT.
 There's no tracking, no cookies and nothing stored. Each page lists every outside service it asks,
 and the code here is what runs.
+
+## The Ownership Checklist
+
+An owner says who holds each of ten accounts: their web address and its settings, email, website,
+Google Business Profile, social pages, payments, accounting, backups and passwords. The page scores
+how many are in their name and lists what to do about the rest, in the checklist's order, which
+starts with the accounts that open the others. It asks what the owner knows and looks nothing up.
+
+- **Nothing is sent anywhere.** The answers stay in the browser, and `connect-src 'none'` blocks the
+  page from connecting anywhere.
+- **A result can be shared.** The answers ride after the `#` in the address, which browsers never
+  send. `check/accounts.js` reads only the rows and answers it knows from a shared link.
+- **A business isn't marked down for what it doesn't use,** such as accounting software. Backups and
+  passwords are the exception: every business needs them, so not having one goes on the list.
 
 ## Almanac Check
 
@@ -144,6 +159,7 @@ code.
 | `public/tools/email-check/` | The email protection check. `check/email.js` is the checking code; `app.js` is the page. |
 | `src/worker.js` | The Cloudflare Worker in front of the files: it redirects Almanac Check's old address, check.freeot.com, and adds the security headers. |
 | `wrangler.toml` | How Cloudflare runs the Worker, including the addresses it answers on. |
+| `public/tools/ownership-checklist/` | The Ownership Checklist. `check/accounts.js` holds the rows, the score, the to-do list and the shared link; `app.js` is the page. |
 | `public/tools/contact-card/` | The contact card maker. `card/vcard.js` writes the contact; `app.js` is the page, including the card picture. |
 | `public/tools/review-link/` | The review link maker. `card/link.js` checks the review link; `app.js` is the page, including the counter card. |
 | `public/tools/shared/logo/` | A logo the visitor adds, for the tools that take one: `rules.js` (which files, and when to make a smaller copy) and `read.js` (the copy, drawing it, and the "Choose your logo" picker). |
