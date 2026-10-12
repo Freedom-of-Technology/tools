@@ -7,6 +7,7 @@
 
 import { BORDER, logoBox, makeCode, readsBack, toPixels, toSVG } from '../shared/qr/qr.js';
 import { ContactError, contactCard, fileName, fullName } from './card/vcard.js';
+import { LogoError, checkFile, copySize } from './card/logo.js';
 
 const form = document.getElementById('card-form');
 const results = document.getElementById('results');
@@ -22,7 +23,6 @@ const CODE_PIXELS = 1200;
 // The card picture: tall, like a phone screen, with the code up to this many pixels wide on it.
 const CARD = { width: 1080, height: 1920, side: 96 };
 const CARD_CODE = 720;
-const LARGEST_LOGO = 5 * 1024 * 1024;
 
 function h(tag, attrs = {}, ...children) {
   const el = document.createElement(tag);
@@ -38,8 +38,6 @@ function h(tag, attrs = {}, ...children) {
   return el;
 }
 
-class LogoError extends Error {}
-
 // ---- The logo, read in the browser -------------------------------------------------------------
 
 function readAsDataURL(file) {
@@ -51,15 +49,7 @@ function readAsDataURL(file) {
   });
 }
 
-async function readLogo(file) {
-  if (!file) return null;
-  if (!/^image\/(png|jpeg|svg\+xml|webp)$/.test(file.type)) {
-    throw new LogoError('That file isn\'t a picture this page can use. Pick a PNG, JPG or SVG file.');
-  }
-  if (file.size > LARGEST_LOGO) {
-    throw new LogoError('That logo file is over 5 MB. Pick a smaller copy of it.');
-  }
-  const href = await readAsDataURL(file);
+async function decoded(href) {
   const image = new Image();
   image.src = href;
   try {
@@ -67,10 +57,32 @@ async function readLogo(file) {
   } catch {
     throw new LogoError('Your browser couldn\'t open that logo file. Try saving it as a PNG.');
   }
+  return image;
+}
+
+// The logo, or a smaller copy of it (card/logo.js says when), drawn smoothly in the browser. The
+// copy is what every file uses, the print file included.
+async function readLogo(file) {
+  if (!file) return null;
+  checkFile(file);
+  const href = await readAsDataURL(file);
+  const image = await decoded(href);
   // An SVG with no size of its own reports 0; it's drawn to fit, so any shape will do.
   const width = image.naturalWidth || 300;
   const height = image.naturalHeight || 150;
-  return { image, href, width, height };
+  const copy = copySize({ width, height, vector: file.type === 'image/svg+xml', bytes: file.size });
+  if (!copy) return { image, href, width, height };
+
+  const canvas = document.createElement('canvas');
+  canvas.width = copy.width;
+  canvas.height = copy.height;
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(image, 0, 0, copy.width, copy.height);
+  // A photo stays a JPG, which is far smaller for photos; everything else becomes a PNG, which keeps
+  // a see-through background.
+  const smaller = file.type === 'image/jpeg' ? canvas.toDataURL('image/jpeg', 0.9) : canvas.toDataURL('image/png');
+  return { image: await decoded(smaller), href: smaller, width: copy.width, height: copy.height };
 }
 
 // Draws the logo fitted inside a box, centered.

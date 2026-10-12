@@ -108,6 +108,9 @@ server and never expires, plus a phone-sized card picture with the logo, and a `
   anywhere. Nothing is hosted either, so no one can use the tool to put words on FreeOT's site.
 - **Every code is test-scanned before it's offered.** The finished picture, logo and all, is read
   back with jsQR and must hold exactly the contact typed, byte for byte.
+- **A large logo is copied down** in the browser to 1,200 pixels on its longest side (a JPG stays a
+  JPG), and every file uses the copy, so the downloads stay small. An SVG logo stays as drawn
+  unless the file is over 1 MB. The rules are in `public/tools/contact-card/card/logo.js`.
 - **A logo in the middle of the code** is optional. The code then uses the highest error
   correction (H, which can lose 30%), and the logo covers a fifth of its width.
 
