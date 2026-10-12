@@ -57,6 +57,26 @@ for (const [name, dmarc, code] of [
   });
 }
 
+for (const [name, rua, expected] of [
+  ['an address at the domain itself', 'mailto:reports@maple-street-bakery.com',
+    [{ address: 'reports@maple-street-bakery.com', at: 'maple-street-bakery.com', yours: true, service: null }]],
+  ['GoDaddy\'s address, from its own setup guide', 'mailto:dmarc_rua@onsecureserver.net;',
+    [{ address: 'dmarc_rua@onsecureserver.net', at: 'onsecureserver.net', yours: false, service: 'GoDaddy' }]],
+  ['two addresses, one with a size limit, one elsewhere', 'mailto:Owner@Mail.Maple-Street-Bakery.com!10m, mailto:dmarc@reports.example-service.test',
+    [{ address: 'owner@mail.maple-street-bakery.com', at: 'mail.maple-street-bakery.com', yours: true, service: null },
+      { address: 'dmarc@reports.example-service.test', at: 'reports.example-service.test', yours: false, service: null }]],
+]) {
+  test(`the owner is told who receives the domain's DMARC reports, and whether it's them, without it changing the verdict: ${name}`, async () => {
+    const internet = protectedBakery();
+    internet.records[`_dmarc.${DOMAIN} TXT`] = [`v=DMARC1; p=quarantine; rua=${rua}`];
+    const report = await check(internet);
+    const finding = report.checks.dmarc.findings.find((f) => f.code === 'reports-to');
+    assert.deepEqual(finding?.to, expected);
+    assert.equal(report.checks.dmarc.result, 'good');
+    assert.equal(report.verdict, 'hard');
+  });
+}
+
 for (const [name, spf, extra, code] of [
   ['two SPF records, which mail servers ignore', ['v=spf1 include:_spf.google.com ~all', 'v=spf1 include:servers.mcsv.net ~all'], {}, 'two-records'],
   ['an ending that lets anyone send', ['v=spf1 include:_spf.google.com +all'], {}, 'allows-anyone'],

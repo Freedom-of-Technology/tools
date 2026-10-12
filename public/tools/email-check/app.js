@@ -77,6 +77,16 @@ const SAYS = {
     reject: () => 'Fake email from your domain is refused ("p=reject").',
     partial: (f) => `Your DMARC record applies to only ${f.pct}% of failing email ("pct=${f.pct}"). The rest still gets delivered.`,
     'no-reports': () => 'Your DMARC record doesn\'t ask for reports, so you won\'t hear if someone is faking your email. Add "rua=mailto:" and an address that collects them.',
+    'reports-to': (f) => {
+      const list = f.to.map((r) => r.address).join(', ');
+      const others = f.to.filter((r) => !r.yours);
+      if (!others.length) return `Reports about email sent as your domain go to ${list}, at your own domain.`;
+      const whose = (r) => (r.service ? `${r.service}'s address, not yours` : `at ${r.at}, not at your domain`);
+      const which = f.to.length === 1
+        ? `That's ${whose(others[0])}.`
+        : `Of those, ${others.map((r) => `${r.address} is ${whose(r)}`).join('; ')}.`;
+      return `Reports about email sent as your domain go to ${list}. ${which} Only whoever reads them hears when someone tries to fake your email. If that isn't you or a service you chose, add your own address to the record's "rua=" list.`;
+    },
     failed: () => tryAgain,
   },
   expiry: {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https:; img-src 'self'; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-JQRPIzXFLRJRzrkGbyusaJAmqD2fwMepHlBTo8c5BuY='; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https:; img-src 'self'; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-PIm8DqK7YidW5e38szplKWOH4S+EmCVl+b7oP+tkTxg='; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light dark">
   <title>Check your domain's email protection: SPF, DKIM and DMARC · FreeOT</title>
@@ -19,12 +19,12 @@
   <script type="importmap">
 {
   "integrity": {
-    "/tools/email-check/check/email.js": "sha384-nuTuJdd6NjfVBOOIzNaui+FFE+R0ke05FEtbGGOSlU4xdOhFryzC3qkxlzrHcgcH",
+    "/tools/email-check/check/email.js": "sha384-CSdWZGkuv3J4cACN7uR78QDdv3rTICeHbtgf8a1LxsoQy0gB4lJAqdBS1Uz4l/tA",
     "/tools/shared/live.js": "sha384-gwxcSZl4HqkV3fjpjmFltFCxUj/8qrFs0FwjbcagIf5bYX6aPIkBiKMNpGX99OnH"
   }
 }
   </script>
-  <script type="module" src="/tools/email-check/app.js" integrity="sha384-K9l6GjFGZ03ptwB3QOdIF+VCYRUBuuGIJ1G3XIrt2EULlAx5igYD6k2JVgZvoSHW"></script>
+  <script type="module" src="/tools/email-check/app.js" integrity="sha384-Y18BE7B6WRKP3aWKTbeWdwiPtAYxOW3v87imfoL/SK6RHdx4wIabxat2HtNC1G34"></script>
 </head>
 <body>
   <header class="top">
@@ -106,7 +106,11 @@
           two checks: deliver it anyway ("p=none", watching only), send it to spam ("quarantine"), or
           refuse it ("reject"). Without it, fake email gets delivered. Start at "p=none" with
           reports turned on, check that all your real email passes for a few weeks, then move to
-          "quarantine". Only one DMARC record is allowed; with two, mail servers ignore both.</dd>
+          "quarantine". Only one DMARC record is allowed; with two, mail servers ignore both.
+          The record also says who gets the reports ("rua="): daily emails from mail servers listing
+          every server that sent email as you, and whether it passed. The page shows who that is.
+          If you set up your domain at a company such as GoDaddy, the reports may go to them rather
+          than to you; add your own address so you can see them too.</dd>
         <dt id="means-spf">Who can send email as you (SPF)</dt>
         <dd>A list of the servers allowed to send email for your domain, such as your email
           service and a newsletter service. Only one SPF record is allowed: with two, mail servers
