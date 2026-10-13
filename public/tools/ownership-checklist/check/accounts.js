@@ -5,89 +5,27 @@
 //   ACCOUNTS                    -> the rows, in the order the page shows them and the plan follows
 //   STEPS                       -> the rows grouped into the form's steps, in the same order
 //   ANSWERS                     -> the answer an owner can give for each row
-//   HOLDERS                     -> who holds a row that's someone else's, when the owner says
+//   HOLDERS                     -> who holds a row that's someone else's, when the owner says (shared/ask.js)
 //   KEY                         -> the rows whose holder can reset the passwords for the rest
 //   unanswered(answers)         -> the rows with no answer yet
 //   plan(answers, holders)      -> { inName, counted, yours, key, ask, find, setup } (see plan below)
 //   message(ask)                -> the message asking one holder for their accounts
-//   linkPieces(text)            -> advice split into words and links, for the page to draw
+//   linkPieces(text)            -> advice split into words and links, for the page to draw (shared/ask.js)
 //   toHash(answers, holders)    -> the answers as the part of a shared link after "#"
 //   fromHash(hash)              -> { answers, holders } from a shared link; anything unknown is dropped
 //
 // answers: { [account id]: one of ANSWERS' ids }. holders: { [account id]: one of HOLDERS' ids },
 // kept only for a row answered "other".
 
+import { HOLDERS, linkPieces, message as written } from '../../shared/ask.js';
+
+export { HOLDERS, linkPieces };
+
 export const ANSWERS = [
   { id: 'mine', label: 'In my name' },
   { id: 'other', label: 'Someone else\'s' },
   { id: 'unsure', label: 'Not sure' },
   { id: 'none', label: 'Don\'t have one' },
-];
-
-// Categories, never names: a shared link carries them, and the page never asks for anyone's name.
-// `someone` is also where a row goes when the owner doesn't say who. Links made when `staff` meant
-// "an employee or former employee" open as an employee.
-//
-// Each holder's message is written for who they are to the owner (message below). Where a sentence
-// depends on how many accounts it asks for, it's a pair: [one account, more than one]. `request`
-// introduces a list of accounts; a message about one account asks for it on its own. `before` is a
-// note shown above the message, for a holder the owner may have an agreement with.
-export const HOLDERS = [
-  {
-    id: 'designer',
-    label: 'A web designer or agency',
-    heading: 'Your web designer or agency',
-    before: 'Still working with them, or have a bill open with them? Check your agreement before you send this: it may say what\'s handed over to you, and when.',
-    greeting: 'Hi,',
-    opening: 'I\'m getting every account the business runs on into the business\'s own name, so nothing depends on any one person. It\'s something I\'m doing for all our accounts, not just the ones you look after.',
-    request: 'Could you help with these?',
-    closing: 'You\'re welcome to keep access for the work you do for us. No need to send any passwords: an account or login of my own is all I need.',
-    signoff: 'Thanks,',
-  },
-  {
-    id: 'staff',
-    label: 'An employee',
-    heading: 'An employee',
-    greeting: 'Hi,',
-    opening: 'I\'m putting every account the business runs on in the business\'s own name, so nothing depends on any one of us.',
-    request: 'Could you help with these when you have a moment?',
-    closing: 'You\'ll keep the access you need for your work. Please don\'t send me any passwords: a login of my own is all I need.',
-    signoff: 'Thanks,',
-  },
-  {
-    id: 'former',
-    label: 'A former employee',
-    heading: 'A former employee',
-    greeting: 'Hi,',
-    opening: ['I hope you\'re doing well. I\'m tidying up the business\'s accounts, and one is still set up under you.',
-      'I hope you\'re doing well. I\'m tidying up the business\'s accounts, and a few are still set up under you.'],
-    request: 'Could you help me move them over?',
-    closing: ['Once that\'s done, you can take yourself off it, so none of it is on you anymore. Please don\'t send me any passwords: a login of my own is all I need.',
-      'Once that\'s done, you can take yourself off them, so none of it is on you anymore. Please don\'t send me any passwords: a login of my own is all I need.'],
-    signoff: 'Thank you for your help.',
-  },
-  {
-    id: 'family',
-    label: 'A relative or friend',
-    heading: 'A relative or friend',
-    greeting: 'Hi,',
-    opening: 'Thank you again for setting up the business\'s accounts for me. I\'m getting them into the business\'s own name now, so it doesn\'t all depend on you.',
-    request: 'Could you help me with these when you get a chance?',
-    closing: 'No need to send me any passwords. Once I\'m added, I can take it from there.',
-    signoff: 'Thank you!',
-  },
-  {
-    id: 'someone',
-    label: 'Someone else',
-    heading: 'Whoever holds them',
-    before: 'If you have an agreement with them, such as with an IT company, check it before you send this: it may say what\'s handed over to you, and when.',
-    greeting: 'Hello,',
-    opening: ['I\'m making sure every account the business runs on is in the business\'s own name. As far as I know, this one is set up under you.',
-      'I\'m making sure every account the business runs on is in the business\'s own name. As far as I know, the ones below are set up under you.'],
-    request: 'Could you help move them over?',
-    closing: 'Please don\'t send any passwords: an account or login of my own is all I need.',
-    signoff: 'Thank you,',
-  },
 ];
 
 // Each row: what it is; what to do when it's someone else's (other) or the owner isn't sure
@@ -152,8 +90,8 @@ export const ACCOUNTS = [
     id: 'google',
     name: 'Your Google Business Profile',
     what: 'Your listing on Google Search and Maps.',
-    other: 'A profile has one primary owner. Ask whoever that is to add you as an owner, then, a week later, to make you the primary owner, in the profile\'s settings under People and access. Google makes new owners wait 7 days. If they won\'t, Google has a way to [request ownership](https://support.google.com/business/answer/4566671).',
-    unsure: 'Signed in to your Google account, search Google for your business\'s name. If your profile\'s controls appear, you manage it, and People and access, in its settings, shows who owns it.',
+    other: 'A profile has one primary owner. Ask whoever that is to add you as an owner, then, a week later, to make you the primary owner, in the profile\'s settings under People and access. Google makes new owners wait 7 days. If they won\'t, Google has a way to [request ownership](https://support.google.com/business/answer/4566671). [Who owns your Google profile?](https://freedomoftechnology.com/tools/google-profile-owner/) walks you through it.',
+    unsure: 'Signed in to the Google account you use for the business, go to business.google.com. If your profile opens with its controls, you manage it, and People and access, in its settings, shows who owns it. [Who owns your Google profile?](https://freedomoftechnology.com/tools/google-profile-owner/) walks you through checking.',
     ask: 'Our Google Business Profile: could you add me as an owner, and a week later make me the primary owner? Google makes new owners wait 7 days. Both are under People and access in the profile\'s settings.',
     pitfalls: [
       'Google makes a new owner wait 7 days before they can become primary owner, so it takes two steps a week apart. [Google: transferring primary ownership](https://support.google.com/business/answer/3415281)',
@@ -276,30 +214,9 @@ export function plan(answers, holders = {}) {
   return { inName: yours.length, counted, yours, key, ask, find, setup };
 }
 
-// Written for who the holder is to the owner. One account is asked for on its own; more than one
-// come as a list after the holder's request.
+// The message for one holder in the plan, asking for each of their accounts.
 export function message({ holder, items }) {
-  const one = items.length === 1;
-  const pick = (text) => (Array.isArray(text) ? text[one ? 0 : 1] : text);
-  return [
-    holder.greeting,
-    pick(holder.opening),
-    one ? items[0].account.ask : `${holder.request}\n\n${items.map(({ account }) => `- ${account.ask}`).join('\n')}`,
-    pick(holder.closing),
-    holder.signoff,
-  ].join('\n\n');
-}
-
-export function linkPieces(text) {
-  const pieces = [];
-  let at = 0;
-  for (const match of String(text).matchAll(/\[([^\]]+)\]\((https:\/\/[^)\s]+)\)/g)) {
-    if (match.index > at) pieces.push({ text: text.slice(at, match.index) });
-    pieces.push({ text: match[1], href: match[2] });
-    at = match.index + match[0].length;
-  }
-  if (at < text.length) pieces.push({ text: text.slice(at) });
-  return pieces;
+  return written(holder, items.map(({ account }) => account.ask));
 }
 
 // A row someone else holds carries who, as `<id>-by`. Links made before the checklist asked who

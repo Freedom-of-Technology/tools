@@ -6,7 +6,8 @@
 // A result can be shared: the answers ride in the part of the address after "#", which browsers
 // never send to the server.
 
-import { ACCOUNTS, ANSWERS, HOLDERS, KEY, STEPS, fromHash, linkPieces, message, plan, toHash, unanswered } from './check/accounts.js';
+import { ACCOUNTS, ANSWERS, HOLDERS, KEY, STEPS, fromHash, message, plan, toHash, unanswered } from './check/accounts.js';
+import { foldedMessage, linked } from '../shared/ask-page.js';
 import { copyButton, h, show } from '../shared/page.js';
 
 const form = document.getElementById('checklist-form');
@@ -136,12 +137,6 @@ form.addEventListener('change', (event) => {
 
 // ---- The plan ------------------------------------------------------------------------------------
 
-function advice(text) {
-  return h('p', {}, linkPieces(text).map((piece) => piece.href
-    ? h('a', { class: 'fo-link', href: piece.href, target: '_blank', rel: 'noopener' }, piece.text)
-    : piece.text));
-}
-
 function card(title, ...children) {
   return h('article', { class: 'problem' }, h('h4', { class: 'problem-title' }, title), ...children);
 }
@@ -150,7 +145,7 @@ function card(title, ...children) {
 // wrong is in the guide.
 function lasting(account) {
   if (!account.lasting) return null;
-  const line = advice(account.lasting);
+  const line = linked(account.lasting);
   line.className = 'lasting';
   line.prepend(h('strong', {}, 'Can\'t be undone: '));
   line.append(' ', h('a', { class: 'fo-link', href: `#watch-${account.id}` }, 'What else can go wrong'));
@@ -158,27 +153,14 @@ function lasting(account) {
 }
 
 // The message stays folded until the owner opens it, so the plan reads as a list of people and
-// accounts. Copying it opens it too, so what's copied is on the page.
+// accounts.
 function askCard(ask) {
-  const body = message(ask);
-  const id = `message-${ask.holder.id}`;
-  const shown = h('p', { class: 'message', id, hidden: true }, body);
-  const toggle = h('button', { type: 'button', class: 'fo-btn fo-btn-outline', 'aria-expanded': 'false', 'aria-controls': id }, 'Show the message');
-  const open = (on) => {
-    shown.hidden = !on;
-    toggle.setAttribute('aria-expanded', String(on));
-    toggle.textContent = on ? 'Hide the message' : 'Show the message';
-  };
-  toggle.addEventListener('click', () => open(shown.hidden));
-  const copy = copyButton(body, shown, 'Copy message');
-  copy.addEventListener('click', () => open(true));
   return card(ask.holder.heading,
     h('ul', { class: 'asks' }, ask.items.map(({ account, advice: text }) =>
-      h('li', {}, h('strong', {}, account.name), advice(text), lasting(account)))),
+      h('li', {}, h('strong', {}, account.name), linked(text), lasting(account)))),
     ask.holder.before ? h('p', { class: 'before' }, ask.holder.before, ' ',
       h('a', { class: 'fo-link', href: '#means-agreements' }, 'Agreements and open bills')) : null,
-    h('div', { class: 'fo-row' }, toggle, copy),
-    shown);
+    foldedMessage(message(ask), `message-${ask.holder.id}`));
 }
 
 function section(title, lead, cards) {
@@ -222,9 +204,9 @@ function showResult(answers, holders) {
     section('Who to ask', 'One message for each person, asking for every account they hold. Ask kindly, and in writing.',
       result.ask.map(askCard)),
     section('Find out first', 'You weren\'t sure who holds these. Here\'s how to check.',
-      result.find.map(({ account, advice: text }) => card(account.name, advice(text)))),
+      result.find.map(({ account, advice: text }) => card(account.name, linked(text)))),
     section('Set up', 'Every business needs these, whatever its size.',
-      result.setup.map(({ account, advice: text }) => card(account.name, advice(text)))),
+      result.setup.map(({ account, advice: text }) => card(account.name, linked(text)))),
     result.yours.length ? h('div', { class: 'yours' },
       h('h3', { class: 'fo-h3' }, 'Already in your name'),
       h('ul', {}, result.yours.map((account) => h('li', {}, account.name)))) : null,
@@ -274,9 +256,9 @@ function fromAddress() {
 // One fold-out per account, the mistake that can't be undone first. A link to one, from the plan,
 // opens it.
 const watch = ACCOUNTS.filter((a) => a.lasting || a.pitfalls?.length).map((account) => {
-  const items = (account.pitfalls ?? []).map((text) => h('li', {}, advice(text)));
+  const items = (account.pitfalls ?? []).map((text) => h('li', {}, linked(text)));
   if (account.lasting) {
-    const line = advice(account.lasting);
+    const line = linked(account.lasting);
     line.prepend(h('strong', {}, 'Can\'t be undone: '));
     items.unshift(h('li', { class: 'lasting' }, line));
   }
