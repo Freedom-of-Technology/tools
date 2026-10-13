@@ -146,15 +146,39 @@ function card(title, ...children) {
   return h('article', { class: 'problem' }, h('h4', { class: 'problem-title' }, title), ...children);
 }
 
+// A mistake that can't be undone is said in the plan, beside the account; the rest of what can go
+// wrong is in the guide.
+function lasting(account) {
+  if (!account.lasting) return null;
+  const line = advice(account.lasting);
+  line.className = 'lasting';
+  line.prepend(h('strong', {}, 'Can\'t be undone: '));
+  line.append(' ', h('a', { class: 'fo-link', href: `#watch-${account.id}` }, 'What else can go wrong'));
+  return line;
+}
+
+// The message stays folded until the owner opens it, so the plan reads as a list of people and
+// accounts. Copying it opens it too, so what's copied is on the page.
 function askCard(ask) {
   const body = message(ask);
-  const shown = h('p', { class: 'message' }, body);
+  const id = `message-${ask.holder.id}`;
+  const shown = h('p', { class: 'message', id, hidden: true }, body);
+  const toggle = h('button', { type: 'button', class: 'fo-btn fo-btn-outline', 'aria-expanded': 'false', 'aria-controls': id }, 'Show the message');
+  const open = (on) => {
+    shown.hidden = !on;
+    toggle.setAttribute('aria-expanded', String(on));
+    toggle.textContent = on ? 'Hide the message' : 'Show the message';
+  };
+  toggle.addEventListener('click', () => open(shown.hidden));
+  const copy = copyButton(body, shown, 'Copy message');
+  copy.addEventListener('click', () => open(true));
   return card(ask.holder.heading,
     h('ul', { class: 'asks' }, ask.items.map(({ account, advice: text }) =>
-      h('li', {}, h('strong', {}, account.name), advice(text)))),
-    h('h5', { class: 'fo-label' }, 'A message to send'),
-    shown,
-    h('div', { class: 'fo-row' }, copyButton(body, shown, 'Copy message')));
+      h('li', {}, h('strong', {}, account.name), advice(text), lasting(account)))),
+    ask.holder.before ? h('p', { class: 'before' }, ask.holder.before, ' ',
+      h('a', { class: 'fo-link', href: '#means-agreements' }, 'Agreements and open bills')) : null,
+    h('div', { class: 'fo-row' }, toggle, copy),
+    shown);
 }
 
 function section(title, lead, cards) {
@@ -244,6 +268,28 @@ function fromAddress() {
   note.textContent = '';
   if (!unanswered(shared.answers).length) showResult(shared.answers, shared.holders);
 }
+
+// ---- The guide: what can go wrong, account by account ---------------------------------------------
+
+// One fold-out per account, the mistake that can't be undone first. A link to one, from the plan,
+// opens it.
+const watch = ACCOUNTS.filter((a) => a.lasting || a.pitfalls?.length).map((account) => {
+  const items = (account.pitfalls ?? []).map((text) => h('li', {}, advice(text)));
+  if (account.lasting) {
+    const line = advice(account.lasting);
+    line.prepend(h('strong', {}, 'Can\'t be undone: '));
+    items.unshift(h('li', { class: 'lasting' }, line));
+  }
+  return h('details', { class: 'watch', id: `watch-${account.id}` },
+    h('summary', {}, account.name),
+    h('ul', {}, items));
+});
+document.getElementById('watch-list').replaceChildren(...watch);
+
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('a[href^="#watch-"]');
+  if (link) document.getElementById(link.getAttribute('href').slice(1)).open = true;
+});
 
 draw();
 window.addEventListener('hashchange', fromAddress);
