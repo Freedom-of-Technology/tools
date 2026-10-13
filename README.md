@@ -26,8 +26,10 @@ An owner says who holds each of ten accounts, in three short steps or all at onc
 and its settings, email, website, Google Business Profile, social pages, payments, accounting,
 backups and passwords. The result leads with the web address and email, whose holder can reset the
 rest. Then it groups the other accounts by who holds them, with one message for each holder asking
-for every account they hold, and lists what to find out first and what to set up. It asks what the
-owner knows and looks nothing up.
+for every account they hold, written for who they are to the owner, and lists what to find out first
+and what to set up. A mistake that can't be undone is named beside its account, and the guide below
+lists what can go wrong with each one, linked to the company's own help page. It asks what the owner
+knows and looks nothing up.
 
 - **Nothing is sent anywhere.** The answers stay in the browser, and `connect-src 'none'` blocks the
   page from connecting anywhere.

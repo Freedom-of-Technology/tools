@@ -19,16 +19,23 @@ const optional = ids.filter((id) => !needed.includes(id)).at(-1);
 // Rows outside KEY, so a test about the plan's parts isn't also about the headline.
 const plain = ids.filter((id) => !KEY.includes(id) && !needed.includes(id));
 
-test('every row says what it is, what to do for each answer and what to ask its holder, sits in one step, and links only to secure pages, so no result shows an empty card, a skipped row or stray markup', () => {
+test('every row says what it is, what to do for each answer and what to ask its holder, sits in one step, and links only to secure pages, and every holder\'s message has each of its parts, so no result shows an empty card, a skipped row, a gap in a message or stray markup', () => {
   const gaps = [];
   for (const account of ACCOUNTS) {
     for (const field of ['name', 'what', 'other', 'unsure', 'ask']) {
       if (!String(account[field] ?? '').trim()) gaps.push(`${account.id}.${field}`);
     }
-    for (const field of ['what', 'other', 'unsure', 'none']) {
-      for (const piece of linkPieces(account[field] ?? '')) {
+    const linked = [...['what', 'other', 'unsure', 'none', 'lasting'].map((f) => [f, account[f]]), ...(account.pitfalls ?? []).map((text, i) => [`pitfalls[${i}]`, text])];
+    for (const [field, text] of linked) {
+      for (const piece of linkPieces(text ?? '')) {
         if (piece.href ? !piece.href.startsWith('https://') : /\]\(/.test(piece.text)) gaps.push(`${account.id}.${field} link`);
       }
+    }
+  }
+  for (const holder of HOLDERS) {
+    for (const field of ['label', 'heading', 'greeting', 'opening', 'request', 'closing', 'signoff']) {
+      const text = holder[field];
+      if (Array.isArray(text) ? text.length !== 2 || !text.every((t) => t.trim()) : !String(text ?? '').trim()) gaps.push(`${holder.id}.${field}`);
     }
   }
   assert.ok(needed.length > 0, 'found the rows every business needs');
@@ -85,6 +92,33 @@ test('accounts held by the same person are asked for in one message that names e
   const text = message(ask[0]);
   const lines = text.split('\n').filter((line) => line.startsWith('- '));
   assert.deepEqual(lines, [a, c].map((id) => `- ${ACCOUNTS.find((x) => x.id === id).ask}`));
+});
+
+test('each person\'s message is written for who they are to the owner, so a relative never gets the agency\'s wording', () => {
+  const [a, b] = plain;
+  const answers = { ...all('mine'), [a]: 'other', [b]: 'other' };
+  const texts = HOLDERS.map((holder) => {
+    const { ask } = plan(answers, { [a]: holder.id, [b]: holder.id });
+    assert.equal(ask[0].holder, holder);
+    return message(ask[0]);
+  });
+  assert.equal(new Set(texts).size, HOLDERS.length, 'no two holders get the same message');
+  HOLDERS.forEach((holder, i) => {
+    assert.ok(texts[i].startsWith(holder.greeting), `${holder.id} is greeted their own way`);
+    assert.ok(texts[i].endsWith(holder.signoff), `${holder.id} is thanked their own way`);
+  });
+});
+
+test('a message about one account asks for it on its own, not as a list of one', () => {
+  const [a] = plain;
+  const ask = ACCOUNTS.find((x) => x.id === a).ask;
+  for (const holder of HOLDERS) {
+    const { ask: [one] } = plan({ ...all('mine'), [a]: 'other' }, { [a]: holder.id });
+    const text = message(one);
+    assert.ok(text.split('\n\n').includes(ask), `${holder.id}: the account is asked for in its own paragraph`);
+    assert.ok(!text.split('\n').some((line) => line.startsWith('- ')), `${holder.id}: no one-line list`);
+    assert.ok(!text.includes(holder.request), `${holder.id}: no "help with these" before a single account`);
+  }
 });
 
 test('an account someone else holds, with no answer to who, is still asked for, under whoever holds it', () => {
