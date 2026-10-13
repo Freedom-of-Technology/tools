@@ -9,6 +9,7 @@ asked, and nothing typed or uploaded is saved.
 | Tool | Address | What it does |
 |---|---|---|
 | The Ownership Checklist | [/tools/ownership-checklist/](https://freedomoftechnology.com/tools/ownership-checklist/) | Ten accounts every small business should hold in its own name: the owner says who holds each, and the page writes the plan: who to ask for what, with a message to send, and what to find out first. |
+| Who owns your Google profile? | [/tools/google-profile-owner/](https://freedomoftechnology.com/tools/google-profile-owner/) | The owner says what they see on their Google Business Profile, and the page says who can take it from them and what to do, with a message for whoever holds it. |
 | Almanac Check | [/tools/domain-check/](https://freedomoftechnology.com/tools/domain-check/) | Checks a domain's saved DNS records file against what's live on the internet, record by record. |
 | Email protection check | [/tools/email-check/](https://freedomoftechnology.com/tools/email-check/) | Says whether someone can send email pretending to be a domain: its SPF, DKIM and DMARC records, and when its registration runs out. |
 | Contact card maker | [/tools/contact-card/](https://freedomoftechnology.com/tools/contact-card/) | Turns contact details, and a logo if wanted, into a "Scan to save" QR code, a card picture for a phone and a contact file. |
@@ -39,6 +40,16 @@ knows and looks nothing up.
   shared link carries no one's name.
 - **A business isn't marked down for what it doesn't use,** such as accounting software. Backups and
   passwords are the exception: every business needs them, so not having one goes on the list.
+
+## Who owns your Google profile?
+
+An owner says whether they can open their Google Business Profile, what People and access lists
+them as, and whether anyone there shouldn't be. The page says where they stand: safe, someone to
+take off, or someone else as primary owner, who can take everyone else off it. When someone else
+holds it, the page writes the message asking for it, for whoever that is, and gives Google's
+ownership request for when they won't hand it over. Every step about Google's menus links to
+Google's own help page. Like the checklist, it asks what the owner sees, looks nothing up and never
+signs in to Google; a shared result keeps the answers after the `#`.
 
 ## Almanac Check
 
@@ -173,7 +184,9 @@ code.
 | `public/tools/email-check/` | The email protection check. `check/email.js` is the checking code; `app.js` is the page. |
 | `src/worker.js` | The Cloudflare Worker in front of the files: it redirects Almanac Check's old address, check.freeot.com, and adds the security headers. |
 | `wrangler.toml` | How Cloudflare runs the Worker, including the addresses it answers on. |
-| `public/tools/ownership-checklist/` | The Ownership Checklist. `check/accounts.js` holds the rows, the steps, the plan, the messages and the shared link; `app.js` is the page. |
+| `public/tools/ownership-checklist/` | The Ownership Checklist. `check/accounts.js` holds the rows, the steps, the plan and the shared link; `app.js` is the page. |
+| `public/tools/google-profile-owner/` | Who owns your Google profile? `check/profile.js` holds the questions, the results and the shared link; `app.js` is the page. |
+| `public/tools/shared/ask.js`, `ask-page.js` | What the Ownership tools share: who holds an account, the message asking them for it, advice with links in it, and the folded message on the page. |
 | `public/tools/contact-card/` | The contact card maker. `card/vcard.js` writes the contact; `app.js` is the page, including the card picture. |
 | `public/tools/review-link/` | The review link maker. `card/link.js` checks the review link; `app.js` is the page, including the counter card. |
 | `public/tools/shared/logo/` | A logo the visitor adds, for the tools that take one: `rules.js` (which files, and when to make a smaller copy) and `read.js` (the copy, drawing it, and the "Choose your logo" picker). |
