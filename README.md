@@ -14,6 +14,7 @@ asked, and nothing typed or uploaded is saved.
 | Email protection check | [/tools/email-check/](https://freedomoftechnology.com/tools/email-check/) | Says whether someone can send email pretending to be a domain: its SPF, DKIM and DMARC records, and when its registration runs out. |
 | Contact card maker | [/tools/contact-card/](https://freedomoftechnology.com/tools/contact-card/) | Turns contact details, and a logo if wanted, into a "Scan to save" QR code, a card picture for a phone and a contact file. |
 | Review link maker | [/tools/review-link/](https://freedomoftechnology.com/tools/review-link/) | Turns a business's Google review link, and a logo if wanted, into a QR code and a 5x7 counter card. |
+| Before you pay | [/tools/before-you-pay/](https://freedomoftechnology.com/tools/before-you-pay/) | Four scams that cost small businesses money, what each looks like, the habit that stops it, and what to do if one got through, on one printable page. |
 
 ## Nothing you give a tool is kept
 
@@ -50,6 +51,14 @@ holds it, the page writes the message asking for it, for whoever that is, and gi
 ownership request for when they won't hand it over. Every step about Google's menus links to
 Google's own help page. Like the checklist, it asks what the owner sees, looks nothing up and never
 signs in to Google; a shared result keeps the answers after the `#`.
+
+## Before you pay
+
+Four scams the FTC and the FBI warn small businesses about: a fake invoice, changed bank details, a
+gift-card request and a fake sign-in page. Each card says what the scam looks like and the one habit
+that stops it, and links to the FTC, FBI or CISA page it comes from. Below them is what to do if one
+already got through. The page has nothing to type. Its Print button fits the four cards and the next
+steps onto one Letter page, in black on white, for the wall where bills get paid.
 
 ## Almanac Check
 
@@ -186,6 +195,7 @@ code.
 | `wrangler.toml` | How Cloudflare runs the Worker, including the addresses it answers on. |
 | `public/tools/ownership-checklist/` | The Ownership Checklist. `check/accounts.js` holds the rows, the steps, the plan and the shared link; `app.js` is the page. |
 | `public/tools/google-profile-owner/` | Who owns your Google profile? `check/profile.js` holds the questions, the results and the shared link; `app.js` is the page. |
+| `public/tools/before-you-pay/` | Before you pay. All content: `index.html` holds the four scams, `style.css` the printed page, and `app.js` only the Print button. |
 | `public/tools/shared/ask.js`, `ask-page.js` | What the Ownership tools share: who holds an account, the message asking them for it, advice with links in it, and the folded message on the page. |
 | `public/tools/contact-card/` | The contact card maker. `card/vcard.js` writes the contact; `app.js` is the page, including the card picture. |
 | `public/tools/review-link/` | The review link maker. `card/link.js` checks the review link; `app.js` is the page, including the counter card. |

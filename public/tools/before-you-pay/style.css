@@ -1,0 +1,63 @@
+/* Before you pay's own styles, on top of the layout every tool shares (../shared/tool.css).
+   Printed, the page fits the four scams and what to do next onto one Letter page. */
+
+.print-row { margin-top: 6px; }
+.print-row .privacy { flex: 1 1 22em; }
+.print-only { display: none; }
+
+/* ---- The four scams ---- */
+
+.scams { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-gap); }
+.scam {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--accent);
+  border-radius: var(--panel-corner);
+  padding: 20px var(--space-card);
+  display: flex; flex-direction: column; gap: 10px;
+  min-width: 0;
+}
+.scam p { margin: 0; }
+.scam-name { margin: 0; font-family: var(--font-headings); font-size: var(--size-heading-3); letter-spacing: var(--heading-tracking); line-height: 1.2; }
+.habit { font-weight: 700; background: var(--band); border-radius: var(--panel-corner); padding: 12px 14px; }
+.source { font-size: var(--size-label); margin-top: auto !important; }
+
+/* ---- If one already got through ---- */
+
+.after {
+  margin-top: 28px;
+  background: var(--band);
+  border-radius: var(--panel-corner);
+  padding: var(--space-card);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.after h2 { margin: 0; }
+.after ul { margin: 0; padding-left: 1.3em; max-width: 46em; display: flex; flex-direction: column; gap: 8px; }
+
+/* ---- Printed: one Letter page, black on white, without the menu, buttons and guide ---- */
+
+@media print {
+  @page { size: letter; margin: 0.5in; }
+
+  :root {
+    --page: #FFFFFF; --panel: #FFFFFF; --band: #FFFFFF;
+    --text: #000000; --text-soft: #000000; --label: #000000; --link: #000000;
+    --line: #000000; --accent: #000000;
+    --size-heading-1: 24pt; --size-heading-3: 14pt; --size-paragraph: 11pt; --size-label: 9pt;
+  }
+  body { background: #FFFFFF; color: #000000; line-height: 1.35; }
+  main { max-width: none; padding: 0; }
+
+  .top, .bottom, .trail, .print-row, .screen-only, .ai-check, .guide, .source { display: none; }
+  .print-only { display: block; }
+
+  .intro { padding: 0 0 12pt; gap: 6pt; }
+  .intro .fo-p { max-width: none; }
+  .scams { grid-template-columns: 1fr 1fr; gap: 10pt; }
+  .scam { padding: 10pt 12pt; gap: 6pt; break-inside: avoid; }
+  .habit { border: 1.5pt solid #000000; padding: 6pt 8pt; font-size: 12pt; }
+  .after { margin-top: 12pt; padding: 10pt 12pt; border: 1pt solid #000000; gap: 6pt; break-inside: avoid; }
+  .after ul { max-width: none; gap: 3pt; }
+  .after a { text-decoration: none; font-weight: 600; }
+  .print-from { margin: 10pt 0 0; font-size: 9pt; }
+}
