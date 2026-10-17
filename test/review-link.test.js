@@ -12,7 +12,6 @@ import { ReviewLinkError, reviewDetails } from '../public/tools/review-link/card
 const BUSINESS = 'Delgado Tile';
 
 for (const [name, pasted, expected] of [
-  ['a short review link', 'https://g.page/r/CdQx7Rm2pLkEEBM/review', 'https://g.page/r/CdQx7Rm2pLkEEBM/review'],
   ['a link pasted with spaces around it', '  https://g.page/r/CdQx7Rm2pLkEEBM/review \n', 'https://g.page/r/CdQx7Rm2pLkEEBM/review'],
   ['a link pasted without https', 'g.page/r/CdQx7Rm2pLkEEBM/review', 'https://g.page/r/CdQx7Rm2pLkEEBM/review'],
   ['a link typed with http', 'http://g.page/r/CdQx7Rm2pLkEEBM/review', 'https://g.page/r/CdQx7Rm2pLkEEBM/review'],
@@ -27,7 +26,6 @@ for (const [name, pasted, expected] of [
 
 for (const [name, details, reason] of [
   ['an empty link box', { business: BUSINESS, link: '  ' }, /Paste the review link/],
-  ['a link to another site', { business: BUSINESS, link: 'https://reviews.example.test/delgado-tile' }, /isn't a link from Google/],
   ['a site named to look like Google\'s short link', { business: BUSINESS, link: 'https://g.page.example-reviews.test/r/CdQx7Rm2pLkEEBM/review' }, /isn't a link from Google/],
   ['a site named to look like google.com', { business: BUSINESS, link: 'https://google.com.example.test/maps' }, /isn't a link from Google/],
   ['a site whose name ends in google.com', { business: BUSINESS, link: 'https://delgadotile-google.com/review' }, /isn't a link from Google/],

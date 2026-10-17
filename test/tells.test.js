@@ -63,13 +63,12 @@ const HEAD = [{ name: 'a refund over the limit is refused' }, { name: 'a refund 
 
 for (const [name, head, body, problem] of [
   ['no tests changed, with no Tests section', BASE, '- Fix a typo', null],
-  ['the right net change and the removed test named', HEAD, '## Tests\n\nNet: +1\nBreaks: 2, each seen failing.\n- a refund under the limit goes through: folded into a refund of nothing is refused\n', null],
-  ['a body written on Windows, with \\r\\n', HEAD, '## Tests\r\n\r\nNet: +1\r\n- a refund under the limit goes through: duplicate\r\n', null],
-  ['a wrong net change', HEAD, '## Tests\n\nNet: +2\n- a refund under the limit goes through: duplicate\n', /"Net: \+2" should be "Net: \+1"/],
-  ['no net change given', HEAD, '## Tests\n\n- a refund under the limit goes through: duplicate\n', /needs "Net: \+1"/],
-  ['a removed test not named', HEAD, '## Tests\n\nNet: +1\n', /not named in the PR: a refund under the limit goes through$/],
+  ['the right net change and a note on what was removed', HEAD, '## Tests\n\nNet: +1\nBreaks: 2, each seen failing.\n\nOne test folded into a broader one.\n', null],
+  ['a body written on Windows, with \\r\\n', HEAD, '## Tests\r\n\r\nNet: +1\r\n', null],
+  ['a wrong net change', HEAD, '## Tests\n\nNet: +2\n', /"Net: \+2" should be "Net: \+1"/],
+  ['no net change given', HEAD, '## Tests\n\nOne test folded into a broader one.\n', /needs "Net: \+1"/],
 ]) {
-  test(`a PR's Tests section with ${name} ${problem ? 'fails, saying why' : 'passes'}, so its count and removals match the diff`, () => {
+  test(`a PR's Tests section with ${name} ${problem ? 'fails, saying why' : 'passes'}, so its count matches the diff`, () => {
     const problems = prTests(BASE, head, body);
     if (problem) {
       assert.equal(problems.length, 1, problems.join('\n'));

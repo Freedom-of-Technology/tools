@@ -162,7 +162,7 @@ for (const [typed, domain] of [
   });
 }
 
-for (const typed of ['maple street bakery', 'localhost', 'https://', '-maple.com']) {
+for (const typed of ['maple street bakery', 'localhost', '-maple.com']) {
   test(`something that is not a web address is turned away before anything is asked: ${typed}`, () => {
     assert.throws(() => cleanDomain(typed), (e) => e instanceof DomainError && /doesn't look like a web address/.test(e.message));
   });

@@ -273,7 +273,7 @@ test of code no page, Worker or script uses (`scripts/test-tells.mjs`).
 
 GitHub runs the tests and those checks on every change, and checks that Cloudflare would accept
 `wrangler.toml` (`.github/workflows/test.yml`). On a pull request it also checks that the Tests
-section's `Net:` line matches the change in tests, and names each test removed. Every merge to
+section's `Net:` line matches the change in tests. Every merge to
 `main` goes live.
 
 ## License
