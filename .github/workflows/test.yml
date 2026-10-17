@@ -27,8 +27,8 @@ jobs:
       - run: npm run tells
       - run: npm run deploy-check
       # Runs the base branch's tests for their names, with this branch's reporter, and compares them
-      # with this branch's (docs/TESTING.md, section 8). The description is passed as a variable, never
-      # pasted into the script.
+      # with this branch's (docs/TESTING.md, The checks on the tests). The description is passed as
+      # a variable, never pasted into the script.
       - name: Check the PR's Tests section
         if: github.event_name == 'pull_request'
         env:
