@@ -1,4 +1,4 @@
-// The cheap tells of a bloated or weak test suite (docs/TESTING.md, sections 7 and 8), checked on
+// The cheap tells of a bloated or weak test suite (docs/TESTING.md, The checks on the tests), checked on
 // every change by GitHub's check.
 //
 //   node scripts/test-tells.mjs test-names.jsonl          the suite: names, refusals, reach
