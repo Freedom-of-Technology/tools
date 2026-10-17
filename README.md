@@ -10,6 +10,7 @@ asked, and nothing typed or uploaded is saved.
 |---|---|---|
 | The Ownership Checklist | [/tools/ownership-checklist/](https://freedomoftechnology.com/tools/ownership-checklist/) | Ten accounts every small business should hold in its own name: the owner says who holds each, and the page writes the plan: who to ask for what, with a message to send, and what to find out first. |
 | Who owns your Google profile? | [/tools/google-profile-owner/](https://freedomoftechnology.com/tools/google-profile-owner/) | The owner says what they see on their Google Business Profile, and the page says who can take it from them and what to do, with a message for whoever holds it. |
+| Before you sign an SEO contract | [/tools/seo-proposal-check/](https://freedomoftechnology.com/tools/seo-proposal-check/) | The owner ticks what an SEO agency's proposal says, and sees the red flags, why each one matters with its source, and the questions to send the agency. |
 | Almanac Check | [/tools/domain-check/](https://freedomoftechnology.com/tools/domain-check/) | Checks a domain's saved DNS records file against what's live on the internet, record by record. |
 | Email protection check | [/tools/email-check/](https://freedomoftechnology.com/tools/email-check/) | Says whether someone can send email pretending to be a domain: its SPF, DKIM and DMARC records, and when its registration runs out. |
 | Contact card maker | [/tools/contact-card/](https://freedomoftechnology.com/tools/contact-card/) | Turns contact details, and a logo if wanted, into a "Scan to save" QR code, a card picture for a phone and a contact file. |
@@ -52,6 +53,21 @@ holds it, the page writes the message asking for it, for whoever that is, and gi
 ownership request for when they won't hand it over. Every step about Google's menus links to
 Google's own help page. Like the checklist, it asks what the owner sees, looks nothing up and never
 signs in to Google; a shared result keeps the answers after the `#`.
+
+## Before you sign an SEO contract
+
+The owner ticks what an SEO agency's proposal, contract or salesperson says, from fourteen red flags
+in four groups: what they promise, whose name the accounts are in, the contract and reports, and how
+they'd do the work. Each red flag ticked shows why it matters and the question it raises, and the
+questions to copy and send the agency keep up.
+
+- **Every reason holds up on its own,** and links its source where one says it: Google's guide to
+  hiring an SEO, its spam and review policies, its Google Ads guide for working with an agency, and
+  the FTC's rule on fake reviews. A reason no outside source states, such as what happens to email
+  when a web address lapses, stands on plain logic.
+- **Nothing is read or sent.** The owner never uploads the proposal or names the agency, and the
+  ticks never go in the page's address, so there's no shared link.
+- `check/proposal.js` holds the red flags, their groups, and the questions; `app.js` is the page.
 
 ## Before you pay
 
@@ -213,6 +229,7 @@ summary to copy lists what to fix and where.
 | `wrangler.toml` | How Cloudflare runs the Worker, including the addresses it answers on. |
 | `public/tools/ownership-checklist/` | The Ownership Checklist. `check/accounts.js` holds the rows, the steps, the plan and the shared link; `app.js` is the page. |
 | `public/tools/google-profile-owner/` | Who owns your Google profile? `check/profile.js` holds the questions, the results and the shared link; `app.js` is the page. |
+| `public/tools/seo-proposal-check/` | Before you sign an SEO contract. `check/proposal.js` holds the red flags, why each matters, and the questions to send; `app.js` is the page. |
 | `public/tools/listing-check/` | Are my details right everywhere? `check/listings.js` holds the places to check, their look-up and fix links, and the summary; `app.js` is the page. |
 | `public/tools/before-you-pay/` | Before you pay. All content: `index.html` holds the four scams, `style.css` the printed page, and `app.js` only the Print button. |
 | `public/tools/shared/ask.js`, `ask-page.js` | What the Ownership tools share: who holds an account, the message asking them for it, advice with links in it, and the folded message on the page. |
