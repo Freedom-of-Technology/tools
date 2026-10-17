@@ -14,6 +14,7 @@ asked, and nothing typed or uploaded is saved.
 | Email protection check | [/tools/email-check/](https://freedomoftechnology.com/tools/email-check/) | Says whether someone can send email pretending to be a domain: its SPF, DKIM and DMARC records, and when its registration runs out. |
 | Contact card maker | [/tools/contact-card/](https://freedomoftechnology.com/tools/contact-card/) | Turns contact details, and a logo if wanted, into a "Scan to save" QR code, a card picture for a phone and a contact file. |
 | Review link maker | [/tools/review-link/](https://freedomoftechnology.com/tools/review-link/) | Turns a business's Google review link, and a logo if wanted, into a QR code and a 5x7 counter card. |
+| Are my details right everywhere? | [/tools/listing-check/](https://freedomoftechnology.com/tools/listing-check/) | The owner types their correct name, town, address, phone and web address, and gets a list of where those show up: their own website, maps, review and directory sites and the data suppliers, each with a link to look themselves up, where to fix it, and a summary to copy. |
 | Before you pay | [/tools/before-you-pay/](https://freedomoftechnology.com/tools/before-you-pay/) | Four scams that cost small businesses money, what each looks like, the habit that stops it, and what to do if one got through, on one printable page. |
 
 ## Nothing you give a tool is kept
@@ -183,6 +184,23 @@ code.
 - **Every code is test-scanned** and must hold exactly the link. The logo works as it does in the
   contact card maker, with the same shared code (`public/tools/shared/logo/`).
 
+## Are my details right everywhere?
+
+The owner types their details as they should be. The page lists eleven places to check, in four
+groups: their own website; Google, Apple Maps and Bing; Yelp, Facebook, the BBB, Nextdoor and Angi;
+and the data suppliers Data Axle and Foursquare. Each has a link to look the business up and a link
+to where the owner fixes it. The owner marks each Right, Wrong, Not there or Not for us, and the
+summary to copy lists what to fix and where.
+
+- **The owner looks; the page never does.** It doesn't fetch the owner's website or any listing,
+  and keeps `connect-src 'none'` like every other tool. Each link opens in a new tab, with the
+  business name and town in that site's own search (a Google search of the site for Facebook,
+  Nextdoor and Angi, which have no search open without signing in). The website row opens
+  schema.org's checker with the web address, which reads what the site tells search engines.
+- **The phone and street address never leave the page,** except in the summary the owner copies.
+  Nothing goes in the page's address, so there's no shared link.
+- `check/listings.js` holds the places, their links, and the summary; `app.js` is the page.
+
 ## Layout
 
 | Path | What it is |
@@ -195,6 +213,7 @@ code.
 | `wrangler.toml` | How Cloudflare runs the Worker, including the addresses it answers on. |
 | `public/tools/ownership-checklist/` | The Ownership Checklist. `check/accounts.js` holds the rows, the steps, the plan and the shared link; `app.js` is the page. |
 | `public/tools/google-profile-owner/` | Who owns your Google profile? `check/profile.js` holds the questions, the results and the shared link; `app.js` is the page. |
+| `public/tools/listing-check/` | Are my details right everywhere? `check/listings.js` holds the places to check, their look-up and fix links, and the summary; `app.js` is the page. |
 | `public/tools/before-you-pay/` | Before you pay. All content: `index.html` holds the four scams, `style.css` the printed page, and `app.js` only the Print button. |
 | `public/tools/shared/ask.js`, `ask-page.js` | What the Ownership tools share: who holds an account, the message asking them for it, advice with links in it, and the folded message on the page. |
 | `public/tools/contact-card/` | The contact card maker. `card/vcard.js` writes the contact; `app.js` is the page, including the card picture. |

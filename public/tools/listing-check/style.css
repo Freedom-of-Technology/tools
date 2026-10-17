@@ -1,0 +1,23 @@
+/* Are my details right everywhere?'s own styles, on top of the layout every tool shares
+   (../shared/tool.css) and the form of the tools that take details (../shared/maker.css). Marks are
+   always words, never color alone. */
+
+.form-note { margin: 0; font-weight: 600; }
+.form-note:empty { display: none; }
+
+/* ---- The list ---- */
+
+.listing-group { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.listing-group > .hint { margin: 0; max-width: 46em; }
+.listing {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--panel-corner);
+  padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.listing-name { margin: 0; font-family: var(--font-headings); font-size: var(--size-heading-3); letter-spacing: var(--heading-tracking); line-height: 1.2; }
+.listing-why { margin: 0; max-width: 46em; }
+.listing .fo-row { align-items: center; }
+.fix { font-weight: 600; }
+.marks { border: 0; margin: 0; padding: 0; min-width: 0; }
