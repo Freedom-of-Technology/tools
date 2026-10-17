@@ -202,6 +202,7 @@ code.
 | `public/tools/shared/logo/` | A logo the visitor adds, for the tools that take one: `rules.js` (which files, and when to make a smaller copy) and `read.js` (the copy, drawing it, and the "Choose your logo" picker). |
 | `public/tools/shared/qr/` | QR codes for the tools that make them: `qr.js` makes, draws and test-scans a code, on the libraries in `vendor/`; `picture.js` draws it in the browser and test-scans the finished picture. |
 | `cli/check.mjs` | Almanac Check from the command line. |
+| `scripts/test-names.mjs`, `scripts/test-tells.mjs` | The checks on the tests themselves: `npm test` writes each test's file and name, and `npm run tells` checks them and the test files. |
 | `scripts/fingerprints.mjs` | Writes into each page a fingerprint of every script and style it loads (see below). |
 | `test/` | Tests. They run the code in `public/`, `src/`, `cli/` and `scripts/`, on made-up records files and contacts. |
 
@@ -214,6 +215,7 @@ Install once, with Node 24.19.0 (what GitHub's check uses):
 Then:
 
     npm test          # the tests, including the Worker on Cloudflare's own runtime
+    npm run tells     # after npm test: the checks on the tests themselves
     npm run dev       # the site at http://localhost:8787/tools/
     npm run fingerprints   # after changing any script or style
 
@@ -229,8 +231,14 @@ attribute on its own tags, and an import map listing the files its scripts impor
 refuses any file that doesn't match, so comparing a page's source with GitHub checks everything it
 runs. After changing a script or style, run `npm run fingerprints`; a test fails until you do.
 
-GitHub runs the tests on every change, and checks that Cloudflare would accept `wrangler.toml`
-(`.github/workflows/test.yml`). Every merge to `main` goes live.
+How tests are written here, and what each level covers, is in [docs/TESTING.md](docs/TESTING.md).
+`npm run tells` fails on a test name used in two files, a refusal tested without its reason, and a
+test of code no page, Worker or script uses (`scripts/test-tells.mjs`).
+
+GitHub runs the tests and those checks on every change, and checks that Cloudflare would accept
+`wrangler.toml` (`.github/workflows/test.yml`). On a pull request it also checks that the Tests
+section's `Net:` line matches the change in tests, and names each test removed. Every merge to
+`main` goes live.
 
 ## License
 

@@ -1,9 +1,12 @@
-# Runs the tests, and checks Cloudflare would accept wrangler.toml, on every change.
+# Runs the tests and the checks on them, and checks Cloudflare would accept wrangler.toml, on every
+# change. On a pull request it also checks the Tests section against the change in tests.
 name: Test
 
 on:
   push:
   pull_request:
+    # "edited" reruns the check when the PR's description changes.
+    types: [opened, edited, synchronize, reopened]
   workflow_dispatch:
 
 permissions:
@@ -13,7 +16,7 @@ jobs:
   test:
     runs-on: ubuntu-24.04
     # A Worker that can't start fails its tests but can keep the run from ending; this ends it.
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -21,4 +24,24 @@ jobs:
           node-version: 24.19.0
       - run: npm ci
       - run: npm test
+      - run: npm run tells
       - run: npm run deploy-check
+      # Runs the base branch's tests for their names, with this branch's reporter, and compares them
+      # with this branch's (docs/TESTING.md, section 8). The description is passed as a variable, never
+      # pasted into the script.
+      - name: Check the PR's Tests section
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          git fetch --depth 1 origin "$BASE"
+          git worktree add ../base "$BASE"
+          cd ../base
+          npm ci
+          node --test --test-force-exit \
+            --test-reporter="file://$GITHUB_WORKSPACE/scripts/test-names.mjs" \
+            --test-reporter-destination="$GITHUB_WORKSPACE/base-names.jsonl" \
+            test/*.test.js
+          cd "$GITHUB_WORKSPACE"
+          node scripts/test-tells.mjs pr base-names.jsonl test-names.jsonl
