@@ -3,12 +3,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test --test-force-exit test/*.test.js",
+    "test": "node --test --test-force-exit --test-reporter=spec --test-reporter-destination=stdout --test-reporter=./scripts/test-names.mjs --test-reporter-destination=test-names.jsonl test/*.test.js",
     "dev": "wrangler dev",
     "deploy-check": "wrangler deploy --dry-run",
-    "fingerprints": "node scripts/fingerprints.mjs"
+    "fingerprints": "node scripts/fingerprints.mjs",
+    "tells": "node scripts/test-tells.mjs test-names.jsonl"
   },
   "devDependencies": {
+    "acorn": "8.18.0",
     "wrangler": "4.146.0"
   }
 }

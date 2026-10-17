@@ -187,5 +187,6 @@ test("an owner's own note about a record travels with it, so a problem says what
 test('a file that is not a records file is turned away with the reason', async () => {
   await assert.rejects(check('Dear Sam, here are the photos from Saturday.\n', bakeryLive()), {
     name: 'ZoneError',
+    message: /comes before the file says which domain it's for/,
   });
 });
