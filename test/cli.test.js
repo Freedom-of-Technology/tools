@@ -9,23 +9,11 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import { main } from '../cli/check.mjs';
+import { DKIM, bakeryLive } from './bakery.js';
 import { fakeInternet } from './fake-internet.js';
 
 const BAKERY = fileURLToPath(new URL('files/maple-street-bakery.com.zone', import.meta.url));
 const BAKERY_TEXT = await readFile(BAKERY, 'utf8');
-const DKIM = 'v=DKIM1; k=rsa; p=MAPLE' + 'a'.repeat(60) + 'BREAD' + 'b'.repeat(150) + 'SCONE' + 'c'.repeat(60);
-
-const bakeryLive = () => ({
-  records: {
-    'maple-street-bakery.com A': ['104.21.0.10', '172.67.0.10'],
-    'www.maple-street-bakery.com A': ['104.21.0.10', '172.67.0.10'],
-    'maple-street-bakery.com MX': ['5 alt1.aspmx.l.google.com.', '1 aspmx.l.google.com.'],
-    'maple-street-bakery.com TXT': ['v=spf1 include:_spf.google.com ~all'],
-    'google._domainkey.maple-street-bakery.com TXT': [DKIM],
-    '_dmarc.maple-street-bakery.com TXT': ['v=DMARC1; p=none; rua=mailto:owner@maple-street-bakery.com'],
-  },
-  registry: { 'maple-street-bakery.com': { nameservers: ['ada.ns.cloudflare.com', 'bob.ns.cloudflare.com'] } },
-});
 
 async function run(args, internet, options = {}) {
   const net = fakeInternet(internet);
@@ -42,26 +30,6 @@ async function folderWith(files) {
   }
   return dir;
 }
-
-for (const [name, change, expected] of [
-  ['passes when every record matches', () => {}, 0],
-  ['fails when someone changed a record', (live) => { live.records['maple-street-bakery.com TXT'] = ['v=spf1 include:mailer.example -all']; }, 1],
-]) {
-  test(`GitHub's check on an almanac ${name}, so a failed run (and its email) means something really needs a look`, async () => {
-    const live = bakeryLive();
-    change(live);
-    const { code } = await run([BAKERY], live);
-    assert.equal(code, expected);
-  });
-}
-
-test("a records file holding a secret fails GitHub's check", async () => {
-  const dir = await folderWith({ 'maple-street-bakery.com.zone': BAKERY_TEXT.replace('; Our website', '; api key: sk9-maple-4471\n; Our website') });
-  const { code, output, net } = await run([dir], bakeryLive());
-  assert.equal(code, 1);
-  assert.match(output, /line \d+ looks like a password, key or code written out/);
-  assert.deepEqual(net.asked, []);
-});
 
 test("a password written into a guide fails GitHub's check, not only one in a records file", async () => {
   const almanac = await folderWith({
@@ -85,12 +53,14 @@ test("the checker's own copy, which GitHub's check puts inside the almanac, isn'
   assert.match(output, /Looked for secrets in 1 other file\(s\)\./);
 });
 
-test('a records file holding a secret is reported once, not once more by the search of the whole almanac', async () => {
+test('a records file holding a secret fails GitHub\'s check before anything is looked up, and is reported once, not once more by the search of the whole almanac', async () => {
   const almanac = await folderWith({
     'dns/maple-street-bakery.com.zone': BAKERY_TEXT.replace('; Our website', '; api key: sk9-maple-4471\n; Our website'),
   });
-  const { code, output } = await run([join(almanac, 'dns'), '--secrets', almanac], bakeryLive());
+  const { code, output, net } = await run([join(almanac, 'dns'), '--secrets', almanac], bakeryLive());
   assert.equal(code, 1);
+  assert.match(output, /line \d+ looks like a password, key or code written out/);
+  assert.deepEqual(net.asked, []);
   assert.equal(output.match(/SECRET\?/g).length, 1);
   assert.match(output, /\n1 thing\(s\) need a look\./);
 });

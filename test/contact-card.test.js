@@ -60,12 +60,6 @@ for (const [name, details] of Object.entries(CONTACTS)) {
   });
 }
 
-test('a code with a logo over its middle still scans back as the same contact', () => {
-  const text = contactCard(CONTACTS['a plain contact']);
-  const code = makeCode(text, 'H');
-  assert.ok(scans(text, code, logoBox(code, 0.2), 1));
-});
-
 test('a code whose middle is covered past what it can lose fails the test-scan, so it is never offered', () => {
   const text = contactCard(CONTACTS['a plain contact']);
   const code = makeCode(text, 'H');

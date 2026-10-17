@@ -9,25 +9,11 @@ import { test } from 'node:test';
 
 import { checkFile } from '../public/tools/domain-check/check/compare.js';
 import { createLookup } from '../public/tools/shared/live.js';
+import { bakeryLive } from './bakery.js';
 import { fakeInternet } from './fake-internet.js';
 
 const BAKERY = readFileSync(new URL('files/maple-street-bakery.com.zone', import.meta.url), 'utf8');
 const GODADDY = readFileSync(new URL('files/godaddy-export.txt', import.meta.url), 'utf8');
-
-const DKIM = 'v=DKIM1; k=rsa; p=MAPLE' + 'a'.repeat(60) + 'BREAD' + 'b'.repeat(150) + 'SCONE' + 'c'.repeat(60);
-
-// What's live for the bakery when nothing has gone wrong.
-const bakeryLive = () => ({
-  records: {
-    'maple-street-bakery.com A': ['104.21.0.10', '172.67.0.10'], // Cloudflare's addresses
-    'www.maple-street-bakery.com A': ['104.21.0.10', '172.67.0.10'],
-    'maple-street-bakery.com MX': ['5 alt1.aspmx.l.google.com.', '1 aspmx.l.google.com.'],
-    'maple-street-bakery.com TXT': ['v=spf1 include:_spf.google.com ~all'],
-    'google._domainkey.maple-street-bakery.com TXT': [DKIM],
-    '_dmarc.maple-street-bakery.com TXT': ['v=DMARC1; p=none; rua=mailto:owner@maple-street-bakery.com'],
-  },
-  registry: { 'maple-street-bakery.com': { nameservers: ['ada.ns.cloudflare.com', 'bob.ns.cloudflare.com'] } },
-});
 
 async function check(text, internet) {
   const net = fakeInternet(internet);

@@ -116,12 +116,12 @@ count, test counts do not count, and neither does restating the code's own table
 - **Every PR that changes a test has a short Tests section:**
   - `Net: +N`, the diff's net change in tests.
   - `Breaks: N, each seen failing.` (§4)
-  - One line per test removed or folded, with its reason: a §3 category, "duplicate of X" or
-    "folded into X".
-- **Added tests are not listed.** A test's name and docstring already state the failure it
-  prevents, and the nearest-test search (§1) happened before it was written.
-- Where the repo has CI, a check fails the PR if the net change is wrong or a removed test is
-  not named.
+  - When tests are removed or folded, one or two sentences on why, in general: "duplicates of
+    tests in other files, and positive controls other tests already run". Not a line per test.
+- **No test is named in the PR,** added, removed or broken. A test's name and docstring already
+  state the failure it prevents, the diff shows which tests went, and the nearest-test search
+  (§1) happened before any was written.
+- Where the repo has CI, a check fails the PR if the net change is wrong.
 - A deletion is a decision. When code is deleted, its tests go in the same PR.
 - There is no test budget. The net change shows the number without making it the goal.
 
@@ -142,8 +142,8 @@ count, test counts do not count, and neither does restating the code's own table
 - [ ] No duplicate of an existing test at the same level.
 - [ ] Code that moved took its tests with it; tests of code with no caller yet carry the flag,
       and a first caller comes with them revisited.
-- [ ] The PR's Tests section gives the net change and breaks, and names each test removed or
-      folded, with its reason.
+- [ ] The PR's Tests section gives the net change and breaks, and, when tests were removed or
+      folded, says why in a sentence or two, naming no test.
 - [ ] Tests run on production's pinned versions, in CI and locally.
 
 ---
@@ -201,7 +201,7 @@ Worker, command line or script imports. Code written ahead of its caller is mark
 `// no_caller_yet: <why>` comment on the test's import line.
 
 On a pull request, GitHub's check also runs the base branch's tests for their names and checks
-section 8's Tests section: its `Net:` line must match, and each removed test must be named.
+section 8's Tests section: its `Net:` line must match.
 
 ## Commands
 

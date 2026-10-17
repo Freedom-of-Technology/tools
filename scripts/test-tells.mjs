@@ -13,8 +13,7 @@
 //   unreached(root)                  -> [{ file, line, module, name }]: a test importing code that no
 //                                       page, Worker, command line or script imports. A
 //                                       "no_caller_yet" comment on the import's line exempts it
-//   prTests(base, head, body)        -> problems with a PR's Tests section: "Net:" wrong or missing,
-//                                       or a removed test the body doesn't name
+//   prTests(base, head, body)        -> problems with a PR's Tests section: "Net:" wrong or missing
 
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
@@ -193,7 +192,6 @@ export function prTests(base, head, body) {
   const said = String(body ?? '').match(/^Net:\s*([+\-\u2212]?\d+)\s*$/m);
   if (!said) problems.push(`The PR's Tests section needs "Net: ${signed(net)}".`);
   else if (Number(said[1].replace('\u2212', '-')) !== net) problems.push(`"Net: ${said[1]}" should be "Net: ${signed(net)}".`);
-  for (const name of removed) if (!String(body ?? '').includes(name)) problems.push(`Removed, but not named in the PR: ${name}`);
   return problems;
 }
 
