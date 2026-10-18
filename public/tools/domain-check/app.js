@@ -9,8 +9,6 @@ const lookup = createLookup();
 const results = document.getElementById('results');
 const freeot = document.getElementById('freeot');
 
-// ---- Building the page's pieces ---------------------------------------------------------------
-
 function h(tag, attrs = {}, ...children) {
   const el = document.createElement(tag);
   for (const [key, value] of Object.entries(attrs)) {
@@ -73,8 +71,6 @@ function minutes(seconds) {
   return m === 1 ? '1 minute' : `${m} minutes`;
 }
 
-// ---- What each problem means, in words ----------------------------------------------------------
-
 function explainRecord(row) {
   const parts = [];
   if (row.note) parts.push(h('p', { class: 'note' }, h('span', { class: 'fo-label' }, 'Note in your file:'), ' ', row.note));
@@ -131,8 +127,6 @@ function explainDnssec(d) {
   return [h('p', {}, `Your file says DNSSEC (a lock on your records that some companies turn on) is ${word(d.file)}, but the registry says it's ${word(d.live)}. ` +
     `If nobody changed it on purpose, get help. With an almanac from FreeOT, follow its guide "${GUIDE_RESTORE}".`)];
 }
-
-// ---- One file's results -------------------------------------------------------------------------
 
 function problemCard(title, status, body, means = MEANS[status]) {
   return h('article', { class: 'problem' },
@@ -202,8 +196,6 @@ function renderMessage(fileName, title, ...body) {
     body.map((p) => h('p', { class: 'fo-p' }, p)));
 }
 
-// ---- Running a check ----------------------------------------------------------------------------
-
 async function check(fileName, text) {
   const slot = h('div', {}, h('p', { class: 'checking' }, `Checking ${fileName}…`));
   const run = async () => {
@@ -239,8 +231,6 @@ async function checkFiles(files) {
   for (const file of files) await check(file.name, await file.text());
   results.querySelector('.result')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-
-// ---- Getting the file in ------------------------------------------------------------------------
 
 const drop = document.getElementById('drop');
 const input = document.getElementById('file');

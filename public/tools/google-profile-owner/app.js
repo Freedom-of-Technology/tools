@@ -17,8 +17,6 @@ const note = document.getElementById('form-note');
 const results = document.getElementById('results');
 const freeot = document.getElementById('freeot');
 
-// ---- The questions -------------------------------------------------------------------------------
-
 function choice(name, id, value, label) {
   return h('label', { class: 'answer', for: id },
     h('input', { type: 'radio', id, name, value }),
@@ -50,8 +48,6 @@ form.addEventListener('change', () => {
   note.textContent = '';
   showQuestions();
 });
-
-// ---- The result ----------------------------------------------------------------------------------
 
 function showResult(answers) {
   const { title, hint, steps, ask } = result(answers);

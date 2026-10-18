@@ -6,8 +6,8 @@
 //   linkPieces(text)        -> advice split into words and links, for the page to draw
 
 // Categories, never names: a shared link carries them, and the page never asks for anyone's name.
-// `someone` is also where an account goes when the owner doesn't say who. The Ownership Checklist's
-// links made when `staff` meant "an employee or former employee" open as an employee.
+// `someone` is also where an account goes when the owner doesn't say who. Ids never change: shared
+// links carry them.
 //
 // Each holder's message is written for who they are to the owner (message below). Where a sentence
 // depends on how many accounts it asks for, it's a pair: [one account, more than one]. `request`

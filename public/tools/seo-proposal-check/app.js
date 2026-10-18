@@ -14,8 +14,6 @@ const list = document.getElementById('flags');
 const results = document.getElementById('results');
 const freeot = document.getElementById('freeot');
 
-// ---- The ticks -----------------------------------------------------------------------------------
-
 list.replaceChildren(...GROUPS.map((group) => h('fieldset', { class: 'question' },
   h('legend', { class: 'question-name' }, group.title),
   group.help ? h('p', { class: 'question-help' }, group.help) : null,
@@ -24,8 +22,6 @@ list.replaceChildren(...GROUPS.map((group) => h('fieldset', { class: 'question' 
     h('span', {}, flag.says)))))));
 
 const ticked = () => [...form.querySelectorAll('input[name="flag"]:checked')].map((input) => input.value);
-
-// ---- The result ----------------------------------------------------------------------------------
 
 // Redrawn on every tick, without moving focus, so the owner can keep ticking. Only the count, the
 // result's heading, is read out (#flag-count is a live region).

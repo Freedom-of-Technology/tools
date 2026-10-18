@@ -13,7 +13,7 @@ export const STATUS = {
   proxied: 'proxied', // Cloudflare answers for it (orange cloud); the name answering is all that can be seen
   godaddySite: 'godaddy-site', // GoDaddy's website builder answers for it
   paste: 'paste', // the file's copy-ready "paste:" note disagrees with its record
-  unsupported: 'unsupported', // a record type this page doesn't check yet
+  unsupported: 'unsupported', // a record type this page doesn't check
   failed: 'failed', // the lookup itself didn't work
 };
 export const NEEDS_A_LOOK = new Set([STATUS.different, STATUS.missing, STATUS.paste, STATUS.failed]);

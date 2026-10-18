@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Almanac Check from the command line, for FreeOT and for the check GitHub runs on each almanac.
+// Almanac Check from the command line, for the check GitHub runs on each almanac, and by hand.
 // It runs the page's own checking code (public/tools/domain-check/check/ and the shared lookups in
 // public/tools/shared/live.js), so the page and this can't disagree.
 //
@@ -145,7 +145,7 @@ function report(result, { log, server }) {
         line(word(row.status), row.type, name, `the "paste:" note on line ${row.pasteLines.join(' and ')} doesn't match the record below it`);
         break;
       case STATUS.unsupported:
-        line('not checked', row.type, name, "this record type isn't checked yet");
+        line('not checked', row.type, name, "this record type isn't checked");
         break;
       case STATUS.failed:
         line(word(row.status), row.type, name, row.reason);
@@ -199,8 +199,8 @@ function templateVersion(text) {
   return found && { major: Number(found[1]), minor: Number(found[2]), name: `v${found[1]}.${found[2]}`, date: found[3]?.trim() };
 }
 
-// Says whether the almanac's guides are behind the template. Only ever a notice: a client who
-// stops working with FreeOT keeps the version they have, and it still works.
+// Says whether the almanac's guides are behind the template. Only ever a notice: an almanac on an
+// older version still works.
 async function templateNotice(almanac, { fetch, log }) {
   let front;
   try {
@@ -222,7 +222,7 @@ async function templateNotice(almanac, { fetch, log }) {
   }
   const behind = current.major > copied.major || (current.major === copied.major && current.minor > copied.minor);
   log(behind
-    ? `\nNotice: the guides are from almanac template ${copied.name}, and ${current.name}${current.date ? ` (${current.date})` : ''} is out. FreeOT copies the changed guides in by pull request. This doesn't fail the check.`
+    ? `\nNotice: the guides are from almanac template ${copied.name}, and ${current.name}${current.date ? ` (${current.date})` : ''} is out. Ask FreeOT to bring the guides up to date. This doesn't fail the check.`
     : `\nThe guides are from almanac template ${copied.name}, the current version.`);
 }
 

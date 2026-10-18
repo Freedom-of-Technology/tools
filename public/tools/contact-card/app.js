@@ -27,8 +27,6 @@ const CODE_PIXELS = 1200;
 const CARD = { width: 1080, height: 1920, side: 96 };
 const CARD_CODE = 720;
 
-// ---- The card picture ----------------------------------------------------------------------------
-
 async function cardPicture(details, code, logo) {
   await Promise.all([document.fonts.load(`700 76px ${FONT}`), document.fonts.load(`400 40px ${FONT}`)]);
   const canvas = document.createElement('canvas');
@@ -57,8 +55,6 @@ async function cardPicture(details, code, logo) {
   col.draw();
   return canvas;
 }
-
-// ---- Showing the result --------------------------------------------------------------------------
 
 const files = downloads();
 

@@ -51,10 +51,8 @@ asserted without what the error says, and a test importing code that no page scr
 command line or script imports. Code written ahead of its caller is marked with a
 `// no_caller_yet: <why>` comment on the test's import line.
 
-Every PR that changes a test has a short Tests section: `Net: +N`, the change in the number of
-tests; `Breaks: N, each seen failing.`, the rules broken once to watch their tests fail; and,
-when tests were removed or folded, a sentence or two on why. It names no test. GitHub's check
-runs the base branch's tests for their names and fails the PR if the `Net:` line is wrong.
+On a pull request, GitHub's check runs the base branch's tests for their names and fails the PR if
+its Tests section's `Net:` line doesn't match the change in tests.
 
 ## Commands
 

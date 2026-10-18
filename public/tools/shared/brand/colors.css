@@ -1,20 +1,20 @@
-/* FreeOT color and font settings. Built from colors.json by scripts/colors.py; edit that file, not this one. */
+/* FreeOT color and font settings, copied from FreeOT's brand kit. Change them there, not here. */
 
 :root {
-  --freeot-white: #FFFFFF;  /* White */
-  --freeot-night: #0E1A24;  /* Night */
-  --freeot-slate: #2B3945;  /* Slate */
-  --freeot-gray: #4A5A68;  /* Gray */
-  --freeot-river: #1F5F8B;  /* River */
-  --freeot-sky: #DCEBF5;  /* Sky */
-  --freeot-azure: #0091FF;  /* Azure */
-  --freeot-line: #D5E2EC;  /* Line */
-  --freeot-mist: #F3F6FA;  /* Mist */
-  --freeot-deep: #15242F;  /* Deep */
-  --freeot-deep-river: #17354D;  /* Deep river */
-  --freeot-pale-gray: #A9BCCB;  /* Pale gray */
-  --freeot-light-azure: #66BDFF;  /* Light azure */
-  --freeot-sky-fade: linear-gradient(to bottom right, var(--freeot-white), var(--freeot-sky));  /* Sky fade */
+  --freeot-white: #FFFFFF;
+  --freeot-night: #0E1A24;
+  --freeot-slate: #2B3945;
+  --freeot-gray: #4A5A68;
+  --freeot-river: #1F5F8B;
+  --freeot-sky: #DCEBF5;
+  --freeot-azure: #0091FF;
+  --freeot-line: #D5E2EC;
+  --freeot-mist: #F3F6FA;
+  --freeot-deep: #15242F;
+  --freeot-deep-river: #17354D;
+  --freeot-pale-gray: #A9BCCB;
+  --freeot-light-azure: #66BDFF;
+  --freeot-sky-fade: linear-gradient(to bottom right, var(--freeot-white), var(--freeot-sky));
 
   --page: var(--freeot-white);
   --panel: var(--freeot-white);

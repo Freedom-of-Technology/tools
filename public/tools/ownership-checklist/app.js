@@ -22,8 +22,6 @@ const freeot = document.getElementById('freeot');
 
 const byId = Object.fromEntries(ACCOUNTS.map((a) => [a.id, a]));
 
-// ---- The rows ------------------------------------------------------------------------------------
-
 function choice(name, id, value, label) {
   return h('label', { class: 'answer', for: id },
     h('input', { type: 'radio', id, name, value }),
@@ -70,8 +68,6 @@ function fillIn({ answers, holders }) {
   }
   showHolders();
 }
-
-// ---- Steps ---------------------------------------------------------------------------------------
 
 // One step at a time, or every row at once. "Show all", at the top and bottom of the form, is for an
 // owner who'd rather see every question before answering, and for the person helping them.
@@ -134,8 +130,6 @@ for (const button of showAll) {
 form.addEventListener('change', (event) => {
   if (event.target.name in byId) showHolders();
 });
-
-// ---- The plan ------------------------------------------------------------------------------------
 
 function card(title, ...children) {
   return h('article', { class: 'problem' }, h('h4', { class: 'problem-title' }, title), ...children);
@@ -250,8 +244,6 @@ function fromAddress() {
   note.textContent = '';
   if (!unanswered(shared.answers).length) showResult(shared.answers, shared.holders);
 }
-
-// ---- The guide: what can go wrong, account by account ---------------------------------------------
 
 // One fold-out per account, the mistake that can't be undone first. A link to one, from the plan,
 // opens it.
