@@ -14,8 +14,8 @@ export function h(tag, attrs = {}, ...children) {
   const el = document.createElement(tag);
   for (const [key, value] of Object.entries(attrs)) {
     if (value === false || value == null) continue;
-    if (key === 'class') el.className = value;
-    else el.setAttribute(key, value === true ? '' : value);
+    if (key === "class") el.className = value;
+    else el.setAttribute(key, value === true ? "" : value);
   }
   for (const child of children.flat()) {
     if (child == null || child === false) continue;
@@ -26,20 +26,29 @@ export function h(tag, attrs = {}, ...children) {
 
 // Focus goes to the result's heading, so a screen reader reads it out and the page scrolls to it.
 export function show(results, ...children) {
-  results.replaceChildren(h('div', { class: 'result' }, ...children));
-  const heading = results.querySelector('h2');
+  results.replaceChildren(h("div", { class: "result" }, ...children));
+  const heading = results.querySelector("h2");
   if (heading) {
-    heading.setAttribute('tabindex', '-1');
+    heading.setAttribute("tabindex", "-1");
     heading.focus({ preventScroll: false });
   }
 }
 
 export function notMade(results, title, message) {
-  show(results, h('div', { class: 'problem' },
-    h('div', { class: 'problem-head' },
-      h('span', { class: 'badge badge-failed' }, 'Not made'),
-      h('h2', { class: 'problem-title' }, title)),
-    h('p', {}, message)));
+  show(
+    results,
+    h(
+      "div",
+      { class: "problem" },
+      h(
+        "div",
+        { class: "problem-head" },
+        h("span", { class: "badge badge-failed" }, "Not made"),
+        h("h2", { class: "problem-title" }, title),
+      ),
+      h("p", {}, message),
+    ),
+  );
 }
 
 // Each new result lets go of the last one's files.
@@ -58,23 +67,23 @@ export function downloads() {
   };
 }
 
-export const pngOf = (canvas) => new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+export const pngOf = (canvas) => new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
 
 export function download(label, url, name) {
-  return h('a', { class: 'fo-btn fo-btn-outline', href: url, download: name }, label);
+  return h("a", { class: "fo-btn fo-btn-outline", href: url, download: name }, label);
 }
 
 // Copies the text, and says so on the button, since nothing else on the page changes. Where the
 // browser won't let a page copy, it selects the text shown instead, ready to copy by hand.
-export function copyButton(text, shown, label = 'Copy link') {
-  const button = h('button', { type: 'button', class: 'fo-btn fo-btn-outline' }, label);
-  button.addEventListener('click', async () => {
+export function copyButton(text, shown, label = "Copy link") {
+  const button = h("button", { type: "button", class: "fo-btn fo-btn-outline" }, label);
+  button.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(text);
-      button.textContent = 'Copied';
+      button.textContent = "Copied";
     } catch {
       window.getSelection().selectAllChildren(shown);
-      button.textContent = 'Selected above: copy it from there';
+      button.textContent = "Selected above: copy it from there";
     }
   });
   return button;
@@ -83,8 +92,11 @@ export function copyButton(text, shown, label = 'Copy link') {
 // Lowercase letters, digits and dashes, accents dropped. The fallback is for when nothing is left,
 // such as a name in another alphabet.
 export function fileSlug(text, fallback) {
-  const slug = String(text ?? '')
-    .normalize('NFKD').replace(/[̀-ͯ]/g, '')
-    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  const slug = String(text ?? "")
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
   return slug || fallback;
 }

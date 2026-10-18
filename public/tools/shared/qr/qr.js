@@ -13,7 +13,7 @@
 // jsQR is a classic script: the page loads vendor/jsQR-1.4.0.js before this file, and it sets
 // globalThis.jsQR. Tests load the same file the same way.
 
-import qrcode from './vendor/qrcode-generator-2.0.4.mjs';
+import qrcode from "./vendor/qrcode-generator-2.0.4.mjs";
 
 // The white border every scanner needs around a code, in squares.
 export const BORDER = 4;
@@ -24,9 +24,9 @@ function byteString(text) {
   return String.fromCharCode(...new TextEncoder().encode(text));
 }
 
-export function makeCode(text, level = 'M') {
+export function makeCode(text, level = "M") {
   const qr = qrcode(0, level);
-  qr.addData(byteString(text), 'Byte');
+  qr.addData(byteString(text), "Byte");
   qr.make();
   const size = qr.getModuleCount();
   return { size, level, dark: (x, y) => qr.isDark(y, x) };
@@ -41,7 +41,8 @@ export function logoBox(code, share) {
   return { x: at, y: at, size: cut };
 }
 
-const inBox = (box, x, y) => box && x >= box.x && x < box.x + box.size && y >= box.y && y < box.y + box.size;
+const inBox = (box, x, y) =>
+  box && x >= box.x && x < box.x + box.size && y >= box.y && y < box.y + box.size;
 
 export function toPixels(code, scale, box = null) {
   const side = (code.size + BORDER * 2) * scale;
@@ -63,10 +64,13 @@ export function toPixels(code, scale, box = null) {
 
 // Squares on a row merged into runs, so the file is small and shows no hairline seams.
 function path(code, box) {
-  let d = '';
+  let d = "";
   for (let y = 0; y < code.size; y++) {
-    for (let x = 0; x < code.size;) {
-      if (!code.dark(x, y) || inBox(box, x, y)) { x++; continue; }
+    for (let x = 0; x < code.size; ) {
+      if (!code.dark(x, y) || inBox(box, x, y)) {
+        x++;
+        continue;
+      }
       let end = x;
       while (end + 1 < code.size && code.dark(end + 1, y) && !inBox(box, end + 1, y)) end++;
       d += `M${x + BORDER} ${y + BORDER}h${end - x + 1}v1h-${end - x + 1}z`;
@@ -76,13 +80,17 @@ function path(code, box) {
   return d;
 }
 
-const attr = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const attr = (s) =>
+  String(s).replace(
+    /[&<>"]/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+  );
 
 // logo: { href, width, height }, href a data: address so the file stands alone. It's fitted inside
 // the box with half a square of room on every side.
 export function toSVG(code, { box = null, logo = null } = {}) {
   const side = code.size + BORDER * 2;
-  let image = '';
+  let image = "";
   if (box && logo) {
     const room = box.size - 1;
     const fit = Math.min(room / logo.width, room / logo.height);
@@ -101,7 +109,7 @@ export function toSVG(code, { box = null, logo = null } = {}) {
 
 // The test-scan: does this picture of a code read back as exactly this text, byte for byte?
 export function readsBack(rgba, width, height, text) {
-  const found = globalThis.jsQR(rgba, width, height, { inversionAttempts: 'dontInvert' });
+  const found = globalThis.jsQR(rgba, width, height, { inversionAttempts: "dontInvert" });
   if (!found) return false;
   const want = new TextEncoder().encode(text);
   const got = found.binaryData;

@@ -7,11 +7,21 @@
   background: var(--band);
   border-radius: var(--panel-corner);
   padding: var(--space-card);
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-.ask .fo-p { color: var(--text); max-width: 46em; margin: 0; }
+.ask .fo-p {
+  color: var(--text);
+  max-width: 46em;
+  margin: 0;
+}
 
-.accounts { display: flex; flex-direction: column; gap: 12px; }
+.accounts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 .account {
   margin: 0;
   min-width: 0;
@@ -19,51 +29,167 @@
   border: 1px solid var(--line);
   border-radius: var(--panel-corner);
   padding: 16px 18px;
-  display: flex; flex-direction: column; gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 /* Floated, so the browser draws the row's title inside the card rather than on its border. */
-.account-name { float: left; width: 100%; margin: 0; padding: 0; font-weight: 700; font-size: var(--size-heading-3); font-family: var(--font-headings); letter-spacing: var(--heading-tracking); }
-.account-what { clear: both; margin: 0; font-size: var(--size-label); max-width: 46em; }
+.account-name {
+  float: left;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-weight: 700;
+  font-size: var(--size-heading-3);
+  font-family: var(--font-headings);
+  letter-spacing: var(--heading-tracking);
+}
+.account-what {
+  clear: both;
+  margin: 0;
+  font-size: var(--size-label);
+  max-width: 46em;
+}
 
 /* "Who holds it?", inside a row answered "Someone else's". */
-.holder { margin: 8px 0 0; padding: 12px 0 0; border: 0; border-top: 1px solid var(--line); min-width: 0; }
-.holder-name { float: left; width: 100%; padding: 0; font-weight: 600; font-size: var(--size-label); }
-.holder .answers { clear: both; }
+.holder {
+  margin: 8px 0 0;
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  min-width: 0;
+}
+.holder-name {
+  float: left;
+  width: 100%;
+  padding: 0;
+  font-weight: 600;
+  font-size: var(--size-label);
+}
+.holder .answers {
+  clear: both;
+}
 
 /* ---- Steps ---- */
 
-.ask [hidden] { display: none; }
-.step { display: flex; flex-direction: column; gap: 12px; }
-.step + .step { margin-top: 12px; }
-.step-title { margin: 0; font-family: var(--font-headings); font-size: var(--size-heading-3); letter-spacing: var(--heading-tracking); }
-.step-count { display: block; font-family: var(--font-text); font-size: var(--size-label); font-weight: 600; letter-spacing: 0; color: var(--label); }
+.ask [hidden] {
+  display: none;
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.step + .step {
+  margin-top: 12px;
+}
+.step-title {
+  margin: 0;
+  font-family: var(--font-headings);
+  font-size: var(--size-heading-3);
+  letter-spacing: var(--heading-tracking);
+}
+.step-count {
+  display: block;
+  font-family: var(--font-text);
+  font-size: var(--size-label);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--label);
+}
 /* Every row at once has no steps to count. */
-.accounts.all .step-count { display: none; }
-.step-note { margin: 0; font-weight: 600; }
-.step-note:empty { display: none; }
+.accounts.all .step-count {
+  display: none;
+}
+.step-note {
+  margin: 0;
+  font-weight: 600;
+}
+.step-note:empty {
+  display: none;
+}
 /* Show all sits apart from Back and Next, at the far end of the row. */
-.steps-nav .show-all { margin-left: auto; }
+.steps-nav .show-all {
+  margin-left: auto;
+}
 
 /* ---- The result ---- */
 
-.score { font-weight: 600; }
-.plan-part { display: flex; flex-direction: column; gap: 10px; }
-.plan-part > .hint { margin: 0; }
-.asks { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 10px; }
-.asks strong { display: block; }
+.score {
+  font-weight: 600;
+}
+.plan-part {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.plan-part > .hint {
+  margin: 0;
+}
+.asks {
+  margin: 0;
+  padding-left: 1.2em;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.asks strong {
+  display: block;
+}
 /* A mistake that can't be undone, beside its account: marked in words, and set apart by a rule. */
-.asks .lasting { margin-top: 6px; padding-left: 12px; border-left: 3px solid var(--accent); }
-.asks .lasting strong { display: inline; }
-.yours ul { margin: 0; padding-left: 1.2em; }
+.asks .lasting {
+  margin-top: 6px;
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
+}
+.asks .lasting strong {
+  display: inline;
+}
+.yours ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
 
 /* ---- The guide: what can go wrong, one fold-out per account ---- */
 
-.watch-list { display: flex; flex-direction: column; gap: 8px; max-width: 46em; }
-.watch { border: 1px solid var(--line); border-radius: var(--panel-corner); padding: 12px 16px; scroll-margin-top: 16px; }
-.watch > summary { cursor: pointer; font-weight: 700; }
-.watch > summary:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-.watch ul { margin: 10px 0 0; }
-.watch .lasting { padding-left: 10px; border-left: 3px solid var(--accent); list-style: none; margin-left: -1.3em; }
-.yours li + li { margin-top: 4px; }
-.share { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
-.share p { margin: 0; }
+.watch-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 46em;
+}
+.watch {
+  border: 1px solid var(--line);
+  border-radius: var(--panel-corner);
+  padding: 12px 16px;
+  scroll-margin-top: 16px;
+}
+.watch > summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.watch > summary:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+.watch ul {
+  margin: 10px 0 0;
+}
+.watch .lasting {
+  padding-left: 10px;
+  border-left: 3px solid var(--accent);
+  list-style: none;
+  margin-left: -1.3em;
+}
+.yours li + li {
+  margin-top: 4px;
+}
+.share {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+.share p {
+  margin: 0;
+}

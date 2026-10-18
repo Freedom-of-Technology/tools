@@ -6,30 +6,43 @@
 // A result can be shared: the answers ride in the part of the address after "#", which browsers
 // never send to the server.
 
-import { QUESTIONS, asked, fromHash, result, toHash, unanswered } from './check/profile.js';
-import { HOLDERS, message } from '../shared/ask.js';
-import { foldedMessage, linked } from '../shared/ask-page.js';
-import { copyButton, h, show } from '../shared/page.js';
+import { QUESTIONS, asked, fromHash, result, toHash, unanswered } from "./check/profile.js";
+import { HOLDERS, message } from "../shared/ask.js";
+import { foldedMessage, linked } from "../shared/ask-page.js";
+import { copyButton, h, show } from "../shared/page.js";
 
-const form = document.getElementById('profile-form');
-const list = document.getElementById('questions');
-const note = document.getElementById('form-note');
-const results = document.getElementById('results');
-const freeot = document.getElementById('freeot');
+const form = document.getElementById("profile-form");
+const list = document.getElementById("questions");
+const note = document.getElementById("form-note");
+const results = document.getElementById("results");
+const freeot = document.getElementById("freeot");
 
 function choice(name, id, value, label) {
-  return h('label', { class: 'answer', for: id },
-    h('input', { type: 'radio', id, name, value }),
-    h('span', {}, label));
+  return h(
+    "label",
+    { class: "answer", for: id },
+    h("input", { type: "radio", id, name, value }),
+    h("span", {}, label),
+  );
 }
 
-const fieldsets = QUESTIONS.map((q) => h('fieldset', { class: 'question', id: `q-${q.id}` },
-  h('legend', { class: 'question-name' }, q.question),
-  h('p', { class: 'question-help' }, q.help),
-  h('div', { class: 'answers' }, q.answers.map((a) => choice(q.id, `${q.id}-${a.id}`, a.id, a.label)))));
+const fieldsets = QUESTIONS.map((q) =>
+  h(
+    "fieldset",
+    { class: "question", id: `q-${q.id}` },
+    h("legend", { class: "question-name" }, q.question),
+    h("p", { class: "question-help" }, q.help),
+    h(
+      "div",
+      { class: "answers" },
+      q.answers.map((a) => choice(q.id, `${q.id}-${a.id}`, a.id, a.label)),
+    ),
+  ),
+);
 list.replaceChildren(...fieldsets);
 
-const answersOnPage = () => Object.fromEntries(QUESTIONS.map((q) => [q.id, form.elements[q.id].value]));
+const answersOnPage = () =>
+  Object.fromEntries(QUESTIONS.map((q) => [q.id, form.elements[q.id].value]));
 
 // Only the questions this owner is asked show; the rest wait for the answer that leads to them.
 function showQuestions() {
@@ -39,13 +52,14 @@ function showQuestions() {
 
 function fillIn(answers) {
   for (const q of QUESTIONS) {
-    for (const input of form.querySelectorAll(`input[name="${q.id}"]`)) input.checked = input.value === answers[q.id];
+    for (const input of form.querySelectorAll(`input[name="${q.id}"]`))
+      input.checked = input.value === answers[q.id];
   }
   showQuestions();
 }
 
-form.addEventListener('change', () => {
-  note.textContent = '';
+form.addEventListener("change", () => {
+  note.textContent = "";
   showQuestions();
 });
 
@@ -53,35 +67,60 @@ function showResult(answers) {
   const { title, hint, steps, ask } = result(answers);
   const hash = toHash(answers);
   const link = `${location.origin}${location.pathname}#${hash}`;
-  history.replaceState(null, '', `#${hash}`);
-  const shown = h('p', { class: 'shown-link' }, link);
+  history.replaceState(null, "", `#${hash}`);
+  const shown = h("p", { class: "shown-link" }, link);
   // Whoever the owner named, or "Whoever holds them" when they didn't say.
   const holder = HOLDERS.find((x) => x.id === answers.holder) ?? HOLDERS.at(-1);
 
   freeot.hidden = false;
-  show(results,
-    h('div', { class: 'result-head' },
-      h('div', {},
-        h('h2', { class: 'fo-h2' }, title),
-        h('p', { class: 'hint' }, hint))),
-    ask ? h('article', { class: 'problem' },
-      h('h3', { class: 'problem-title' }, 'A message to send'),
-      h('p', { class: 'hint' }, `Written for ${holder.label[0].toLowerCase()}${holder.label.slice(1)}.`),
-      holder.before ? h('p', { class: 'before' }, holder.before) : null,
-      ...foldedMessage(message(holder, [ask]), 'message')) : null,
-    h('section', { class: 'plan-part' },
-      h('h3', { class: 'fo-h3' }, ask ? 'Then' : 'What to do'),
-      h('ol', { class: 'steps-list' }, steps.map((text) => h('li', {}, linked(text))))),
-    h('div', { class: 'share' },
-      h('h3', { class: 'fo-h3' }, 'Share this result'),
-      h('p', { class: 'hint' }, 'The link holds your answers, so whoever you send it to sees the same result. ',
-        h('a', { class: 'fo-link', href: '#means-share' }, 'How the link works')),
+  show(
+    results,
+    h(
+      "div",
+      { class: "result-head" },
+      h("div", {}, h("h2", { class: "fo-h2" }, title), h("p", { class: "hint" }, hint)),
+    ),
+    ask
+      ? h(
+          "article",
+          { class: "problem" },
+          h("h3", { class: "problem-title" }, "A message to send"),
+          h(
+            "p",
+            { class: "hint" },
+            `Written for ${holder.label[0].toLowerCase()}${holder.label.slice(1)}.`,
+          ),
+          holder.before ? h("p", { class: "before" }, holder.before) : null,
+          ...foldedMessage(message(holder, [ask]), "message"),
+        )
+      : null,
+    h(
+      "section",
+      { class: "plan-part" },
+      h("h3", { class: "fo-h3" }, ask ? "Then" : "What to do"),
+      h(
+        "ol",
+        { class: "steps-list" },
+        steps.map((text) => h("li", {}, linked(text))),
+      ),
+    ),
+    h(
+      "div",
+      { class: "share" },
+      h("h3", { class: "fo-h3" }, "Share this result"),
+      h(
+        "p",
+        { class: "hint" },
+        "The link holds your answers, so whoever you send it to sees the same result. ",
+        h("a", { class: "fo-link", href: "#means-share" }, "How the link works"),
+      ),
       shown,
-      h('div', { class: 'fo-row' }, copyButton(link, shown))),
+      h("div", { class: "fo-row" }, copyButton(link, shown)),
+    ),
   );
 }
 
-form.addEventListener('submit', (event) => {
+form.addEventListener("submit", (event) => {
   event.preventDefault();
   const answers = answersOnPage();
   const missing = unanswered(answers);
@@ -106,5 +145,5 @@ function fromAddress() {
 }
 
 showQuestions();
-window.addEventListener('hashchange', fromAddress);
+window.addEventListener("hashchange", fromAddress);
 fromAddress();

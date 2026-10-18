@@ -8,14 +8,14 @@
 //   col.piece(height, draw)                   -> anything else; draw(y) gets the piece's top edge
 //   col.draw()                                -> paints the picture white and draws the column
 
-export const INK = '#111418';
-export const SOFT = '#3d4550';
-export const FONT = 'Figtree, system-ui, sans-serif';
+export const INK = "#111418";
+export const SOFT = "#3d4550";
+export const FONT = "Figtree, system-ui, sans-serif";
 
 function wrap(ctx, text, width) {
   const lines = [];
-  let line = '';
-  for (const word of text.split(' ')) {
+  let line = "";
+  for (const word of text.split(" ")) {
     const next = line ? `${line} ${word}` : word;
     if (line && ctx.measureText(next).width > width) {
       lines.push(line);
@@ -44,17 +44,20 @@ export function column(ctx, { width, height, side }) {
     text(value, font, color, lineHeight) {
       ctx.font = font;
       for (const line of wrap(ctx, value, inner)) {
-        pieces.push({ height: lineHeight, draw(y) {
-          ctx.font = font;
-          ctx.fillStyle = color;
-          ctx.fillText(line, middle, y + lineHeight * 0.78);
-        } });
+        pieces.push({
+          height: lineHeight,
+          draw(y) {
+            ctx.font = font;
+            ctx.fillStyle = color;
+            ctx.fillText(line, middle, y + lineHeight * 0.78);
+          },
+        });
       }
     },
     draw() {
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, 0, width, height);
-      ctx.textAlign = 'center';
+      ctx.textAlign = "center";
       const total = pieces.reduce((sum, p) => sum + p.height, 0);
       let y = Math.max(side, (height - total) / 2);
       for (const piece of pieces) {

@@ -4,12 +4,12 @@
 //
 //   node --test --test-reporter=./scripts/test-names.mjs --test-reporter-destination=test-names.jsonl
 
-import { relative } from 'node:path';
+import { relative } from "node:path";
 
 export default async function* testNames(source) {
   for await (const { type, data } of source) {
-    if ((type === 'test:pass' || type === 'test:fail') && data.nesting === 0 && data.file) {
-      yield `${JSON.stringify({ file: relative(process.cwd(), data.file).split('\\').join('/'), name: data.name })}\n`;
+    if ((type === "test:pass" || type === "test:fail") && data.nesting === 0 && data.file) {
+      yield `${JSON.stringify({ file: relative(process.cwd(), data.file).split("\\").join("/"), name: data.name })}\n`;
     }
   }
 }

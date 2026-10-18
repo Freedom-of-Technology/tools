@@ -13,22 +13,24 @@
 //
 //   npm run fingerprints     rewrite every page in public/
 
-import { createHash } from 'node:crypto';
-import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { createHash } from "node:crypto";
+import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 
-export const PUBLIC = fileURLToPath(new URL('../public/', import.meta.url));
+export const PUBLIC = fileURLToPath(new URL("../public/", import.meta.url));
 
-const fileOf = (address) => join(PUBLIC, address.replace(/^\//, ''));
-const addressOf = (file) => '/' + relative(PUBLIC, file).split(sep).join('/');
-const sri = (bytes) => 'sha384-' + createHash('sha384').update(bytes).digest('base64');
+const fileOf = (address) => join(PUBLIC, address.replace(/^\//, ""));
+const addressOf = (file) => "/" + relative(PUBLIC, file).split(sep).join("/");
+const sri = (bytes) => "sha384-" + createHash("sha384").update(bytes).digest("base64");
 
 // Every module a script imports, and what those import, as site addresses.
 function imports(address, seen = new Set()) {
   const file = fileOf(address);
-  const code = readFileSync(file, 'utf8');
-  for (const [, from, bare] of code.matchAll(/\bfrom\s+['"]([^'"]+)['"]|^\s*import\s+['"]([^'"]+)['"]/gm)) {
+  const code = readFileSync(file, "utf8");
+  for (const [, from, bare] of code.matchAll(
+    /\bfrom\s+['"]([^'"]+)['"]|^\s*import\s+['"]([^'"]+)['"]/gm,
+  )) {
     const target = addressOf(join(dirname(file), from ?? bare));
     if (seen.has(target)) continue;
     seen.add(target);
@@ -38,28 +40,37 @@ function imports(address, seen = new Set()) {
 }
 
 function withIntegrity(tag, address) {
-  const plain = tag.replace(/\s+integrity="[^"]*"/, '');
-  return plain.replace(/(\s(?:src|href)="[^"]+")/, `$1 integrity="${sri(readFileSync(fileOf(address)))}"`);
+  const plain = tag.replace(/\s+integrity="[^"]*"/, "");
+  return plain.replace(
+    /(\s(?:src|href)="[^"]+")/,
+    `$1 integrity="${sri(readFileSync(fileOf(address)))}"`,
+  );
 }
 
 // The page as it should be, fingerprints included. Running it on an up-to-date page changes nothing.
 export function fingerprinted(html) {
-  let page = html.replace(/\n  <script type="importmap">[\s\S]*?<\/script>/, '');
+  let page = html.replace(/\n  <script type="importmap">[\s\S]*?<\/script>/, "");
 
-  page = page.replace(/<script\b[^>]*\ssrc="(\/[^"]+)"[^>]*>/g, (tag, address) => withIntegrity(tag, address));
+  page = page.replace(/<script\b[^>]*\ssrc="(\/[^"]+)"[^>]*>/g, (tag, address) =>
+    withIntegrity(tag, address),
+  );
   page = page.replace(/<link\b[^>]*\srel="stylesheet"[^>]*>/g, (tag) => {
     const address = tag.match(/\shref="(\/[^"]+)"/)?.[1];
     return address ? withIntegrity(tag, address) : tag;
   });
 
-  const modules = [...page.matchAll(/<script type="module"[^>]*\ssrc="(\/[^"]+)"/g)].map((m) => m[1]);
+  const modules = [...page.matchAll(/<script type="module"[^>]*\ssrc="(\/[^"]+)"/g)].map(
+    (m) => m[1],
+  );
   const imported = new Set(modules.flatMap((address) => [...imports(address)]));
-  page = page.replace(/ 'sha256-[^']+'/g, '');
+  page = page.replace(/ 'sha256-[^']+'/g, "");
   if (imported.size === 0) return page;
 
-  const integrity = Object.fromEntries([...imported].sort().map((address) => [address, sri(readFileSync(fileOf(address)))]));
+  const integrity = Object.fromEntries(
+    [...imported].sort().map((address) => [address, sri(readFileSync(fileOf(address)))]),
+  );
   const map = `\n${JSON.stringify({ integrity }, null, 2)}\n  `;
-  const hash = createHash('sha256').update(map).digest('base64');
+  const hash = createHash("sha256").update(map).digest("base64");
   page = page.replace(/(script-src 'self')/, `$1 'sha256-${hash}'`);
   return page.replace(/\n  <script\b/, `\n  <script type="importmap">${map}</script>$&`);
 }
@@ -68,13 +79,13 @@ export function pages(dir = PUBLIC) {
   return readdirSync(dir).flatMap((name) => {
     const path = join(dir, name);
     if (statSync(path).isDirectory()) return pages(path);
-    return path.endsWith('.html') ? [path] : [];
+    return path.endsWith(".html") ? [path] : [];
   });
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   for (const page of pages()) {
-    const html = readFileSync(page, 'utf8');
+    const html = readFileSync(page, "utf8");
     const updated = fingerprinted(html);
     if (updated !== html) {
       writeFileSync(page, updated);
