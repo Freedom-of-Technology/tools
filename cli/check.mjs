@@ -34,7 +34,7 @@ import { LookupError, createLookup } from '../public/tools/shared/live.js';
 import { ZoneError, findSecrets } from '../public/tools/domain-check/check/zone.js';
 
 // The template every almanac is copied from. Its front page names the current version.
-const TEMPLATE_FRONT_PAGE = 'https://raw.githubusercontent.com/Freedom-of-Technology/almanac-template/main/README.md';
+export const TEMPLATE_FRONT_PAGE = 'https://raw.githubusercontent.com/Freedom-of-Technology/almanac-template/main/README.md';
 
 const bare = (host) => host.replace(/\.$/, '').toLowerCase();
 
