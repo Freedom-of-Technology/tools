@@ -317,10 +317,10 @@ code {
 .result-head p {
   margin: 0;
 }
-.summary {
+.result-head .summary {
   font-size: var(--size-heading-3);
   font-weight: 600;
-  margin-top: 8px !important;
+  margin-top: 8px;
 }
 .hint {
   color: var(--text);

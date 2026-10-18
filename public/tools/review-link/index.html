@@ -1,12 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-PelGvxtHxeDlEaPhjAC76vpiNAu6IYDt7UBES0bmHTc='; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; script-src 'self' 'sha256-CkRXHSuSiUfZpKhYbmLKpcWHikozboj0cEzBxOvLvgA='; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light dark">
-  <title>Make a QR code that asks for a Google review: free review link maker · FreeOT</title>
+  <title>Free review link maker: a QR code for Google reviews · FreeOT</title>
   <meta name="description" content="Free: turn your Google review link into a QR code and a 5x7 counter card with your business name and logo. It uses Google's own link, so it never expires. Nothing is saved or uploaded.">
   <link rel="canonical" href="https://freedomoftechnology.com/tools/review-link/">
   <link rel="icon" href="/tools/shared/brand/logo/freeot-icon-32.svg" type="image/svg+xml">
@@ -14,24 +14,24 @@
   <link rel="stylesheet" href="/tools/shared/brand/fonts.css" integrity="sha384-omaMK/oZZ6afPuYo9Qxz73fgJZfIHZh1rU5E7HFjdhWuPoSP/U2W42D5T3oOD9sc">
   <link rel="stylesheet" href="/tools/shared/brand/colors.css" integrity="sha384-F7K4wRkuAFiuU7yE17f4FlwqD68EGry+Ytpw9cxT/6ppr7PV8PhwtN+guJvyTJfs">
   <link rel="stylesheet" href="/tools/shared/brand/pieces.css" integrity="sha384-uyy5haeUtuD5U8B1pX3GTPW8yjtKa/YTZh7UbP6CQAwZc26mKgazZwdOtVX54eN0">
-  <link rel="stylesheet" href="/tools/shared/tool.css" integrity="sha384-HkGWFsub9VsIgqt3QDjQopNQGnm9M0lTyIoRKwBGHhsdYIj8/soxCQiqQ9TA9PLF">
+  <link rel="stylesheet" href="/tools/shared/tool.css" integrity="sha384-4d2MYxjAYiDkHLQvhKgPLfRt6iBGMsDZsNe18zrTlsyuL0SmaJsrKM7C5QKH2czQ">
   <link rel="stylesheet" href="/tools/shared/maker.css" integrity="sha384-dve+Hz0tpQMlOmybzz3CZbknmmPOo38XMU9fUpwWVlt1Ly5vlv2v+qaoDAnlVPyz">
   <script type="importmap">
 {
   "integrity": {
     "/tools/review-link/card/link.js": "sha384-ypNnzYqBjgX2Do1A4w0imarrxDx4Q+WqMQEI4EdbXv0ugbEGC8dzrqWqOQCp9bdJ",
     "/tools/shared/column.js": "sha384-OGuPAo8aX7X3aaPp0DyQl9N7EZmtkGlmR13uSfRRV+n3PKYaHeZFl/uBJG/2NZQI",
-    "/tools/shared/logo/read.js": "sha384-SNC7bIcUkclvB+bHAAHdoiWKn7x+bDT2bkxlXIVCXPy2w/OXjUv0SJcjwvhgbPOe",
+    "/tools/shared/logo/read.js": "sha384-qv0cuwgTlA3rdlpRegg5NRoSVAS7VvImtve8rD8wJgKkbAAesGSjgfAU851irtxP",
     "/tools/shared/logo/rules.js": "sha384-qm2ocPdZt4dSAJY64F9kcKJihyVLN16e5w1BHK3uKyz6uXIIaP+QYe5EBZbMeXNo",
     "/tools/shared/page.js": "sha384-HryW+HlOSpkOCE5x50NsFcYr+0dKSIuzfzJZ6fGRvtkXCccMNyK0d1gevRW8VQhm",
-    "/tools/shared/qr/picture.js": "sha384-HNLR/SbYoO4tw4g2f20yCZSkMQy+GRWA4SOLaqNtqqzEsdreOGEBZ8VMHoXWFAYb",
+    "/tools/shared/qr/picture.js": "sha384-zajF52K2w3GEnkl8SpNCDyenzdhqiWCyZj/p7wM+lb+kfS1CGHkW65gJfiK7vgxg",
     "/tools/shared/qr/qr.js": "sha384-8ugklyVPAWP2Cafec7sVJaM0EAqo7fqOY5mvbXvwcMB60BO72hmEu/D5QchrQ3QR",
     "/tools/shared/qr/vendor/qrcode-generator-2.0.4.mjs": "sha384-xHtsZTi0cOhTiha4kloGDUR5e5A8ixkKsF1Mmpqq3tkDpAhkA4YOKIDua/Tc0Ecd"
   }
 }
   </script>
   <script src="/tools/shared/qr/vendor/jsQR-1.4.0.js" integrity="sha384-b5Ya4Bq3qCyz39m2ISh+4DxjAIljdeFwK/BsXLuj9gugaNwAcj/ia15fxNZL9Nlx" defer></script>
-  <script type="module" src="/tools/review-link/app.js" integrity="sha384-T5HNE8pEmpAGWBvJ4noMugoIJcp1NT8EY2oueB61Fun2Zg4qBMcWvXqB30cJLuVl"></script>
+  <script type="module" src="/tools/review-link/app.js" integrity="sha384-ByQDi6XyB96RlqdgRHfyPaiXyc1PFuOar/svwTPnped3hYiO4XFdidvKVmrAzq+N"></script>
 </head>
 <body>
   <header class="top">
@@ -112,7 +112,7 @@
           <span class="logo-chosen" id="logo-chosen">No logo chosen</span>
           <button type="button" class="logo-remove" id="logo-remove" hidden>Remove</button>
         </div>
-        <label class="check" for="logo-in-code">
+        <label class="check">
           <input id="logo-in-code" name="logo-in-code" type="checkbox" disabled>
           Also put it in the middle of the code
         </label>

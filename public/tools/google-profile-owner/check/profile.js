@@ -133,7 +133,7 @@ const RESULTS = {
     steps: [
       `If you were made an owner in the last 7 days, Google makes you wait until the 7 days are up. [Google: transferring primary ownership](${HELP.primary})`,
       RULES,
-      "Once you're primary owner, take off anyone who shouldn't be there. " + REMOVE,
+      `Once you're primary owner, take off anyone who shouldn't be there. ${REMOVE}`,
     ],
   },
   owner: {
@@ -143,7 +143,7 @@ const RESULTS = {
     steps: [
       `Google makes a new owner wait 7 days before they can be made primary owner, so it takes two steps a week apart. [Google: transferring primary ownership](${HELP.primary})`,
       RULES,
-      "Once you're primary owner, take off anyone who shouldn't be there. " + REMOVE,
+      `Once you're primary owner, take off anyone who shouldn't be there. ${REMOVE}`,
     ],
   },
 };

@@ -45,9 +45,9 @@
   border-radius: var(--panel-corner);
   padding: 12px 14px;
 }
-.source {
+.scam .source {
   font-size: var(--size-label);
-  margin-top: auto !important;
+  margin-top: auto;
 }
 
 /* ---- If one already got through ---- */

@@ -6,11 +6,8 @@
 // The code is offered only when the finished picture, logo and all, scans back as exactly the
 // link (scansBack in ../shared/qr/picture.js).
 
-import { BORDER, logoBox, makeCode, toSVG } from "../shared/qr/qr.js";
-import { codeCanvas, scaleFor, scansBack } from "../shared/qr/picture.js";
-import { ReviewLinkError, reviewDetails } from "./card/link.js";
-import { LogoError, drawFitted, logoPicker, readLogo } from "../shared/logo/read.js";
-import { FONT, INK, SOFT, column } from "../shared/column.js";
+import { column, FONT, INK, SOFT } from "../shared/column.js";
+import { drawFitted, LogoError, logoPicker, readLogo } from "../shared/logo/read.js";
 import {
   copyButton,
   download,
@@ -21,6 +18,9 @@ import {
   pngOf,
   show,
 } from "../shared/page.js";
+import { codeCanvas, scaleFor, scansBack } from "../shared/qr/picture.js";
+import { BORDER, logoBox, makeCode, toSVG } from "../shared/qr/qr.js";
+import { ReviewLinkError, reviewDetails } from "./card/link.js";
 
 const form = document.getElementById("review-form");
 const results = document.getElementById("results");

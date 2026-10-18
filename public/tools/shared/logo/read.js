@@ -6,7 +6,7 @@
 //   drawFitted(ctx, logo, x, y, w, h)    -> draws the logo centered in the box, keeping its shape
 //   logoPicker({ input, chosen, remove, inCode }) -> wires the picker's button, file name and Remove
 
-import { LogoError, checkFile, copySize } from "./rules.js";
+import { checkFile, copySize, LogoError } from "./rules.js";
 
 function readAsDataURL(file) {
   return new Promise((resolve, reject) => {

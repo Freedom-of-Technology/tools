@@ -6,10 +6,10 @@
 // A result can be shared: the answers ride in the part of the address after "#", which browsers
 // never send to the server.
 
-import { QUESTIONS, asked, fromHash, result, toHash, unanswered } from "./check/profile.js";
 import { HOLDERS, message } from "../shared/ask.js";
 import { foldedMessage, linked } from "../shared/ask-page.js";
 import { copyButton, h, show } from "../shared/page.js";
+import { asked, fromHash, QUESTIONS, result, toHash, unanswered } from "./check/profile.js";
 
 const form = document.getElementById("profile-form");
 const list = document.getElementById("questions");

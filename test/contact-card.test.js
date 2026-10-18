@@ -7,7 +7,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
-
+import { ContactError, contactCard, fileName } from "../public/tools/contact-card/card/vcard.js";
 import {
   BORDER,
   logoBox,
@@ -16,7 +16,6 @@ import {
   toPixels,
   toSVG,
 } from "../public/tools/shared/qr/qr.js";
-import { ContactError, contactCard, fileName } from "../public/tools/contact-card/card/vcard.js";
 
 // The page loads jsQR as a classic script, which sets globalThis.jsQR; this runs the same file
 // the same way.

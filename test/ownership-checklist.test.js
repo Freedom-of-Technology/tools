@@ -10,13 +10,13 @@ import { test } from "node:test";
 import {
   ACCOUNTS,
   ANSWERS,
+  fromHash,
   HOLDERS,
   KEY,
-  STEPS,
-  fromHash,
   linkPieces,
   message,
   plan,
+  STEPS,
   toHash,
   unanswered,
 } from "../public/tools/ownership-checklist/check/accounts.js";

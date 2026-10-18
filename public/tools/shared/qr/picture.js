@@ -5,8 +5,8 @@
 //   scaleFor(code, pixels)             -> whole pixels per square for a code about that many pixels wide
 //   scansBack(canvas, text)            -> whether the finished picture scans as exactly that text
 
-import { BORDER, readsBack, toPixels } from "./qr.js";
 import { drawFitted } from "../logo/read.js";
+import { BORDER, readsBack, toPixels } from "./qr.js";
 
 // scale: pixels per square, whole, so every square is sharp.
 export function codeCanvas(code, box, logo, scale) {

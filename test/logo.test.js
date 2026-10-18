@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { LogoError, checkFile, copySize } from "../public/tools/shared/logo/rules.js";
+import { checkFile, copySize, LogoError } from "../public/tools/shared/logo/rules.js";
 
 const MB = 1024 * 1024;
 

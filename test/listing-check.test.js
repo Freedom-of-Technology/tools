@@ -8,10 +8,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
+  details,
   LISTINGS,
   ListingError,
   MARKS,
-  details,
   summary,
 } from "../public/tools/listing-check/check/listings.js";
 
@@ -115,7 +115,10 @@ test("the summary lists every place exactly once, grouped by what the owner mark
   );
   // Each part's listings sit in one block, and no two parts share one.
   const blocksByPart = {};
-  for (const listing of LISTINGS) (blocksByPart[part(listing)] ??= new Set()).add(blockOf(listing));
+  for (const listing of LISTINGS) {
+    blocksByPart[part(listing)] ??= new Set();
+    blocksByPart[part(listing)].add(blockOf(listing));
+  }
   const used = Object.values(blocksByPart);
   assert.deepEqual(used.filter((set) => set.size !== 1).length, 0);
   assert.equal(new Set(used.map((set) => [...set][0])).size, used.length);

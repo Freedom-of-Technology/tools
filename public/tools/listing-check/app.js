@@ -7,8 +7,8 @@
 // Nothing is kept: the details and marks live in this page until it's closed, and never go in the
 // page's address.
 
-import { GROUPS, LISTINGS, ListingError, MARKS, details, summary } from "./check/listings.js";
 import { copyButton, h, show } from "../shared/page.js";
+import { details, GROUPS, LISTINGS, ListingError, MARKS, summary } from "./check/listings.js";
 
 const form = document.getElementById("listing-form");
 const note = document.getElementById("form-note");

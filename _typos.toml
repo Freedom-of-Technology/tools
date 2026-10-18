@@ -1,0 +1,12 @@
+[default]
+# Fingerprints (SRI hashes) in the pages are random letters.
+extend-ignore-re = ['sha(256|384)-[A-Za-z0-9+/=]+']
+locale = "en-us"
+
+[default.extend-identifiers]
+# FreeOT's own name, which typos splits into "Free" and "OT".
+FreeOT = "FreeOT"
+
+[default.extend-words]
+# The fo- prefix on the brand's CSS class names.
+fo = "fo"

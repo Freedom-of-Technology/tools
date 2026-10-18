@@ -5,7 +5,7 @@
 // never send to the server, and opening such a link runs the check.
 
 import { createLookup } from "../shared/live.js";
-import { DomainError, RESULT, checkEmail, cleanDomain } from "./check/email.js";
+import { checkEmail, cleanDomain, DomainError, RESULT } from "./check/email.js";
 
 const lookup = createLookup();
 const form = document.getElementById("check-form");

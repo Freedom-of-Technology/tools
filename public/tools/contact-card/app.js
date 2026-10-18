@@ -5,12 +5,12 @@
 // The code is offered only when the finished picture, logo and all, scans back as exactly the
 // contact typed (readsBack in ../shared/qr/qr.js).
 
-import { BORDER, logoBox, makeCode, toSVG } from "../shared/qr/qr.js";
-import { codeCanvas, scaleFor, scansBack } from "../shared/qr/picture.js";
-import { ContactError, contactCard, fileName, fullName } from "./card/vcard.js";
-import { LogoError, drawFitted, logoPicker, readLogo } from "../shared/logo/read.js";
-import { FONT, INK, SOFT, column } from "../shared/column.js";
+import { column, FONT, INK, SOFT } from "../shared/column.js";
+import { drawFitted, LogoError, logoPicker, readLogo } from "../shared/logo/read.js";
 import { download, downloads, h, notMade, pngOf, show } from "../shared/page.js";
+import { codeCanvas, scaleFor, scansBack } from "../shared/qr/picture.js";
+import { BORDER, logoBox, makeCode, toSVG } from "../shared/qr/qr.js";
+import { ContactError, contactCard, fileName, fullName } from "./card/vcard.js";
 
 const form = document.getElementById("card-form");
 const results = document.getElementById("results");
@@ -178,7 +178,7 @@ async function make() {
         ),
         download(
           "Contact file (.vcf)",
-          files.url(new Blob([text + "\r\n"], { type: "text/vcard" })),
+          files.url(new Blob([`${text}\r\n`], { type: "text/vcard" })),
           `${name}.vcf`,
         ),
         h(

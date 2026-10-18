@@ -5,14 +5,13 @@
 
 import assert from "node:assert/strict";
 import { test } from "node:test";
-
+import { checkEmail, cleanDomain, DomainError } from "../public/tools/email-check/check/email.js";
 import { createLookup } from "../public/tools/shared/live.js";
-import { DomainError, checkEmail, cleanDomain } from "../public/tools/email-check/check/email.js";
 import { fakeInternet } from "./fake-internet.js";
 
 const NOW = new Date("2026-10-11T12:00:00Z");
 const DOMAIN = "maple-street-bakery.com";
-const KEY = "v=DKIM1; k=rsa; p=MAPLE" + "a".repeat(200);
+const KEY = `v=DKIM1; k=rsa; p=MAPLE${"a".repeat(200)}`;
 
 // A bakery on Google Workspace with every protection in place.
 const protectedBakery = () => ({

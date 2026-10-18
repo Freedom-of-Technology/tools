@@ -14,15 +14,15 @@
 //   npm run fingerprints     rewrite every page in public/
 
 import { createHash } from "node:crypto";
-import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const PUBLIC = fileURLToPath(new URL("../public/", import.meta.url));
 
 const fileOf = (address) => join(PUBLIC, address.replace(/^\//, ""));
-const addressOf = (file) => "/" + relative(PUBLIC, file).split(sep).join("/");
-const sri = (bytes) => "sha384-" + createHash("sha384").update(bytes).digest("base64");
+const addressOf = (file) => `/${relative(PUBLIC, file).split(sep).join("/")}`;
+const sri = (bytes) => `sha384-${createHash("sha384").update(bytes).digest("base64")}`;
 
 // Every module a script imports, and what those import, as site addresses.
 function imports(address, seen = new Set()) {
@@ -49,7 +49,7 @@ function withIntegrity(tag, address) {
 
 // The page as it should be, fingerprints included. Running it on an up-to-date page changes nothing.
 export function fingerprinted(html) {
-  let page = html.replace(/\n  <script type="importmap">[\s\S]*?<\/script>/, "");
+  let page = html.replace(/\n {2}<script type="importmap">[\s\S]*?<\/script>/, "");
 
   page = page.replace(/<script\b[^>]*\ssrc="(\/[^"]+)"[^>]*>/g, (tag, address) =>
     withIntegrity(tag, address),
@@ -72,7 +72,7 @@ export function fingerprinted(html) {
   const map = `\n${JSON.stringify({ integrity }, null, 2)}\n  `;
   const hash = createHash("sha256").update(map).digest("base64");
   page = page.replace(/(script-src 'self')/, `$1 'sha256-${hash}'`);
-  return page.replace(/\n  <script\b/, `\n  <script type="importmap">${map}</script>$&`);
+  return page.replace(/\n {2}<script\b/, `\n  <script type="importmap">${map}</script>$&`);
 }
 
 export function pages(dir = PUBLIC) {

@@ -25,13 +25,13 @@
 // Needs Node 22 or later and nothing else.
 
 import { Resolver } from "node:dns/promises";
-import { readFile, readdir, stat } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { NEEDS_A_LOOK, STATUS, checkFile } from "../public/tools/domain-check/check/compare.js";
-import { LookupError, createLookup } from "../public/tools/shared/live.js";
-import { ZoneError, findSecrets } from "../public/tools/domain-check/check/zone.js";
+import { checkFile, NEEDS_A_LOOK, STATUS } from "../public/tools/domain-check/check/compare.js";
+import { findSecrets, ZoneError } from "../public/tools/domain-check/check/zone.js";
+import { createLookup, LookupError } from "../public/tools/shared/live.js";
 
 // The template every almanac is copied from. Its front page names the current version.
 export const TEMPLATE_FRONT_PAGE =

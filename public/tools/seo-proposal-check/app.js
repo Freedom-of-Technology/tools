@@ -5,9 +5,9 @@
 //
 // Nothing is kept: the ticks live in this page until it's closed, and never go in the page's address.
 
-import { FLAGS, GROUPS, flagged, questions } from "./check/proposal.js";
 import { linked } from "../shared/ask-page.js";
 import { copyButton, h } from "../shared/page.js";
+import { FLAGS, flagged, GROUPS, questions } from "./check/proposal.js";
 
 const form = document.getElementById("proposal-form");
 const list = document.getElementById("flags");

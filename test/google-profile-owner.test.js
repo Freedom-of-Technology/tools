@@ -6,16 +6,15 @@
 
 import assert from "node:assert/strict";
 import { test } from "node:test";
-
-import { linkPieces } from "../public/tools/shared/ask.js";
 import {
-  QUESTIONS,
   asked,
   fromHash,
+  QUESTIONS,
   result,
   toHash,
   unanswered,
 } from "../public/tools/google-profile-owner/check/profile.js";
+import { linkPieces } from "../public/tools/shared/ask.js";
 
 const answersTo = (id) => QUESTIONS.find((q) => q.id === id).answers.map((a) => a.id);
 

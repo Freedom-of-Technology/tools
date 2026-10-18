@@ -6,9 +6,8 @@
 
 import assert from "node:assert/strict";
 import { test } from "node:test";
-
-import { linkPieces } from "../public/tools/shared/ask.js";
 import { FLAGS, GROUPS, questions } from "../public/tools/seo-proposal-check/check/proposal.js";
+import { linkPieces } from "../public/tools/shared/ask.js";
 
 test("the questions to send hold one for each red flag ticked, in the page's order, then the ones for any agency, and none for a flag not ticked", () => {
   const asked = (ticked) =>

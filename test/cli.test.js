@@ -8,8 +8,8 @@ import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { TEMPLATE_FRONT_PAGE, main } from "../cli/check.mjs";
-import { DKIM, bakeryLive } from "./bakery.js";
+import { main, TEMPLATE_FRONT_PAGE } from "../cli/check.mjs";
+import { bakeryLive, DKIM } from "./bakery.js";
 import { fakeInternet } from "./fake-internet.js";
 
 const BAKERY = fileURLToPath(new URL("files/maple-street-bakery.com.zone", import.meta.url));

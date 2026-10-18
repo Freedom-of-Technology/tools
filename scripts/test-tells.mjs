@@ -15,7 +15,7 @@
 //                                       "no_caller_yet" comment on the import's line exempts it
 //   prTests(base, head, body)        -> problems with a PR's Tests section: "Net:" wrong or missing
 
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 

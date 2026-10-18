@@ -6,20 +6,20 @@
 // A result can be shared: the answers ride in the part of the address after "#", which browsers
 // never send to the server.
 
+import { foldedMessage, linked } from "../shared/ask-page.js";
+import { copyButton, h, show } from "../shared/page.js";
 import {
   ACCOUNTS,
   ANSWERS,
+  fromHash,
   HOLDERS,
   KEY,
-  STEPS,
-  fromHash,
   message,
   plan,
+  STEPS,
   toHash,
   unanswered,
 } from "./check/accounts.js";
-import { foldedMessage, linked } from "../shared/ask-page.js";
-import { copyButton, h, show } from "../shared/page.js";
 
 const form = document.getElementById("checklist-form");
 const list = document.getElementById("accounts");

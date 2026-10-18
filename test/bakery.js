@@ -3,8 +3,7 @@
 // A test changes its own copy.
 
 // Long enough that the records file splits it into strings of 255, as a real DKIM key is.
-export const DKIM =
-  "v=DKIM1; k=rsa; p=MAPLE" + "a".repeat(60) + "BREAD" + "b".repeat(150) + "SCONE" + "c".repeat(60);
+export const DKIM = `v=DKIM1; k=rsa; p=MAPLE${"a".repeat(60)}BREAD${"b".repeat(150)}SCONE${"c".repeat(60)}`;
 
 export const bakeryLive = () => ({
   records: {
