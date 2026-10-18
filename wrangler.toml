@@ -18,7 +18,7 @@ routes = [
   { pattern = "freedomoftechnology.com/tools/*", zone_name = "freedomoftechnology.com" },
   { pattern = "www.freedomoftechnology.com/tools", zone_name = "freedomoftechnology.com" },
   { pattern = "www.freedomoftechnology.com/tools/*", zone_name = "freedomoftechnology.com" },
-  # Almanac Check's first address, redirected to its page on the main site.
+  # check.freeot.com, redirected to Almanac Check's page on the main site.
   { pattern = "check.freeot.com/*", zone_name = "freeot.com" },
 ]
 

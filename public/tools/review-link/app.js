@@ -29,8 +29,6 @@ const CODE_PIXELS = 1200;
 const CARD = { width: 1500, height: 2100, side: 150 };
 const CARD_CODE = 960;
 
-// ---- The counter card ----------------------------------------------------------------------------
-
 async function counterCard({ business, topline }, code, logo) {
   await Promise.all([document.fonts.load(`700 104px ${FONT}`), document.fonts.load(`400 64px ${FONT}`)]);
   const canvas = document.createElement('canvas');
@@ -56,8 +54,6 @@ async function counterCard({ business, topline }, code, logo) {
   col.draw();
   return canvas;
 }
-
-// ---- Showing the result --------------------------------------------------------------------------
 
 const files = downloads();
 

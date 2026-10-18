@@ -43,7 +43,7 @@ for (const [from, to] of [
   ['/?from=flyer', 'https://freedomoftechnology.com/tools/domain-check/?from=flyer'],
   ['/app.js', 'https://freedomoftechnology.com/tools/domain-check/app.js'],
 ]) {
-  test(`a link to check.freeot.com shared before the move lands on Almanac Check's page on the main site, for good: ${from}`, async () => {
+  test(`a link to check.freeot.com lands on Almanac Check's page on the main site, for good: ${from}`, async () => {
     const response = await visit('check.freeot.com', from);
     assert.equal(response.status, 301);
     assert.equal(response.headers.get('Location'), to);

@@ -118,7 +118,7 @@ for (const [name, copied, template, expected] of [
   ["says so when it can't reach the template", 'v1.0, 12 Oct 2026', null,
     /\nNotice: couldn't find the almanac template's current version \(.+\)\. This doesn't fail the check\./],
 ]) {
-  test(`GitHub's check on an almanac ${name}, without failing, so FreeOT sees guides that are behind and a client who left keeps a passing check`, async () => {
+  test(`GitHub's check on an almanac ${name}, without failing, so guides that are behind are seen and an almanac on an older template still passes`, async () => {
     const almanac = await folderWith({ 'README.md': frontPage(copied), 'dns/maple-street-bakery.com.zone': BAKERY_TEXT });
     const internet = { ...bakeryLive(), pages: template ? { [TEMPLATE_FRONT_PAGE]: frontPage(template) } : {} };
     const { code, output } = await run([join(almanac, 'dns'), '--secrets', almanac], internet);

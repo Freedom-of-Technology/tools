@@ -42,8 +42,6 @@ const values = (list) => h('ul', { class: 'values' }, list.map((v) => h('li', {}
 const date = (d) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 const tryAgain = 'The lookup didn\'t work this time. Try again in a minute.';
 
-// ---- Each check, in words -----------------------------------------------------------------------
-
 const SAYS = {
   spf: {
     missing: () => 'Your domain doesn\'t say which servers may send its email. Add an SPF record: your email service gives you the exact line to add.',
@@ -153,8 +151,6 @@ function renderReport(report, note) {
     h('p', { class: 'hint' }, 'Have a records file for this domain? ',
       h('a', { class: 'fo-link', href: '/tools/domain-check/' }, 'Almanac Check'), ' checks every record in it.'));
 }
-
-// ---- Running a check ----------------------------------------------------------------------------
 
 async function run(text) {
   let cleaned;

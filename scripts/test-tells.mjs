@@ -50,15 +50,11 @@ function parsed(text) {
   }
 }
 
-// ---- The same name in two files ------------------------------------------------------------------
-
 export function sameNames(rows) {
   const files = new Map();
   for (const { file, name } of rows) files.set(name, new Set([...(files.get(name) ?? []), file]));
   return [...files].filter(([, set]) => set.size > 1).map(([name, set]) => ({ name, files: [...set].sort() }));
 }
-
-// ---- A refusal asserted without its reason --------------------------------------------------------
 
 const REFUSALS = new Set(['throws', 'rejects']);
 
@@ -82,8 +78,6 @@ export function refusalsWithoutReason(file, text) {
   });
   return found;
 }
-
-// ---- A test reaching code nothing else uses -------------------------------------------------------
 
 // Where an import points: a file in the repo, or null for a package such as node:fs or wrangler.
 function target(root, from, spec) {
@@ -176,8 +170,6 @@ export function unreached(root = ROOT) {
   return found;
 }
 
-// ---- A PR's Tests section -------------------------------------------------------------------------
-
 const signed = (n) => (n > 0 ? `+${n}` : String(n));
 
 export function prTests(base, head, body) {
@@ -194,8 +186,6 @@ export function prTests(base, head, body) {
   else if (Number(said[1].replace('\u2212', '-')) !== net) problems.push(`"Net: ${said[1]}" should be "Net: ${signed(net)}".`);
   return problems;
 }
-
-// ---- Run by GitHub's check ------------------------------------------------------------------------
 
 const rowsIn = (file) => readFileSync(file, 'utf8').split('\n').filter(Boolean).map((line) => JSON.parse(line));
 

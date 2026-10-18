@@ -1,5 +1,5 @@
 /* FreeOT pieces: buttons, labels, cards, the band, the horizon line, the homepage top and the price table.
-   Plain CSS on the color and font settings. Load colors/colors.css and fonts/fonts.css first. */
+   Plain CSS on the color and font settings. Load colors.css and fonts.css, beside this file, first. */
 
 .fo-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
 

@@ -115,7 +115,7 @@ split into two (`._spfm`).
 
 ### From the command line
 
-The same check, for FreeOT and for the check GitHub runs on each almanac. It needs Node 22 or later
+The same check, for the check GitHub runs on each almanac, and by hand. It needs Node 22 or later
 and nothing else, and runs the page's own checking code:
 
     node cli/check.mjs ../almanac/dns
@@ -225,7 +225,7 @@ summary to copy lists what to fix and where.
 | `public/tools/shared/` | What every tool page shares: `tool.css` (the page layout, the tools menu and result cards), `live.js` (the public lookups: Google Public DNS, IANA and the registry), `page.js` (showing a result and offering its files), `column.js` (drawing a card picture), `maker.css` (the form and downloads of the tools that make something) and `brand/` (FreeOT's color and font settings, fonts and logos, copied from FreeOT's brand kit). |
 | `public/tools/domain-check/` | Almanac Check. `check/` is the checking code: `zone.js` reads a records file, `compare.js` compares it with what's live. `app.js` is the page. |
 | `public/tools/email-check/` | The email protection check. `check/email.js` is the checking code; `app.js` is the page. |
-| `src/worker.js` | The Cloudflare Worker in front of the files: it redirects Almanac Check's old address, check.freeot.com, and adds the security headers. |
+| `src/worker.js` | The Cloudflare Worker in front of the files: it redirects check.freeot.com to Almanac Check's page, and adds the security headers. |
 | `wrangler.toml` | How Cloudflare runs the Worker, including the addresses it answers on. |
 | `public/tools/ownership-checklist/` | The Ownership Checklist. `check/accounts.js` holds the rows, the steps, the plan and the shared link; `app.js` is the page. |
 | `public/tools/google-profile-owner/` | Who owns your Google profile? `check/profile.js` holds the questions, the results and the shared link; `app.js` is the page. |
@@ -244,19 +244,10 @@ summary to copy lists what to fix and where.
 
 ## Working on it
 
-Install once, with Node 24.19.0 (what GitHub's check uses):
+Install once, with Node 24.19.0 (what GitHub's check uses), then run the site:
 
     npm ci
-
-Then:
-
-    npm test          # the tests, including the Worker on Cloudflare's own runtime
-    npm run tells     # after npm test: the checks on the tests themselves
     npm run dev       # the site at http://localhost:8787/tools/
-    npm run fingerprints   # after changing any script or style
-
-The checking code talks only to the public services above. The tests use a stand-in for them
-(`test/fake-internet.js`), so they don't need the internet.
 
 With no build step, the tools menu at the top of each page is written out on every page. A new
 tool goes into the menu on every page, and onto `/tools` under its category; a test fails until
@@ -267,14 +258,19 @@ attribute on its own tags, and an import map listing the files its scripts impor
 refuses any file that doesn't match, so comparing a page's source with GitHub checks everything it
 runs. After changing a script or style, run `npm run fingerprints`; a test fails until you do.
 
-How tests are written here, and what each level covers, is in [docs/TESTING.md](docs/TESTING.md).
-`npm run tells` fails on a test name used in two files, a refusal tested without its reason, and a
-test of code no page, Worker or script uses (`scripts/test-tells.mjs`).
+How tests are written, the commands and the checks on them are in [docs/TESTING.md](docs/TESTING.md).
 
-GitHub runs the tests and those checks on every change, and checks that Cloudflare would accept
-`wrangler.toml` (`.github/workflows/test.yml`). On a pull request it also checks that the Tests
-section's `Net:` line matches the change in tests. Every merge to
-`main` goes live.
+## How it's published
+
+Every merge to `main` deploys the Worker, `freeot-tools`, with its routes. `wrangler.toml` is the
+live setting for where the tools are served, so a route is changed there, never in Cloudflare's
+dashboard. On every change, GitHub's check confirms Cloudflare would accept it
+(`.github/workflows/test.yml`).
+
+Merges reach Cloudflare through its GitHub app, which sees only the repositories picked for it: in
+the GitHub organization's settings, GitHub Apps › Cloudflare Workers and Pages › Configure ›
+Repository access must list `tools`. If it doesn't, merges stop going live, while Cloudflare's
+build settings still look connected.
 
 ## License
 

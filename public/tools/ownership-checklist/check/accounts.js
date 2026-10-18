@@ -219,8 +219,8 @@ export function message({ holder, items }) {
   return written(holder, items.map(({ account }) => account.ask));
 }
 
-// A row someone else holds carries who, as `<id>-by`. Links made before the checklist asked who
-// have no `-by`, and open with those rows under `someone`.
+// A row someone else holds carries who, as `<id>-by`. A row without one opens under `someone`, so
+// every link already shared still opens.
 export function toHash(answers, holders = {}) {
   const pairs = [];
   for (const account of ACCOUNTS) {

@@ -1,4 +1,4 @@
-// QR codes for the tools that make them: the contact card maker, and next the review link maker.
+// QR codes for the tools that make them: the contact card maker and the review link maker.
 //
 // The code itself comes from qrcode-generator (vendor/, MIT), and the test-scan from jsQR (vendor/,
 // Apache 2.0): two well-known libraries, kept here as published, pinned to one version each. This

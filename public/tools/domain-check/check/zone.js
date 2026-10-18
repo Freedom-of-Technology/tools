@@ -168,9 +168,7 @@ export function parseZone(text) {
   return zone;
 }
 
-// ---- Secrets never belong in a records file ----------------------------------------------------
-
-// Things that grant access look like one of these. They go in the password manager instead.
+// Things that grant access look like one of these; a records file never holds one.
 const SECRET_PATTERNS = [
   [/-----BEGIN [A-Z ]*PRIVATE KEY-----/, 'a private key'],
   [/\b(?:gh[pousr]_[A-Za-z0-9]{36}|github_pat_\w{50,})/, 'a GitHub token'],

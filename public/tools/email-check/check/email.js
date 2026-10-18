@@ -13,8 +13,6 @@ const worst = (findings) => ORDER.find((r) => findings.some((f) => f.result === 
 
 export class DomainError extends Error {}
 
-// ---- What the owner typed -----------------------------------------------------------------------
-
 // Turns whatever an owner types (a web address, an email address, a page's full address) into
 // the domain to check. `wwwDropped` says the "www." was taken off, since email uses the bare domain.
 export function cleanDomain(input) {
@@ -34,8 +32,6 @@ export function cleanDomain(input) {
   const wwwDropped = labels[0] === 'www' && labels.length > 2;
   return { domain: wwwDropped ? labels.slice(1).join('.') : host, wwwDropped };
 }
-
-// ---- Which service handles the domain's email -----------------------------------------------------
 
 // `dkim` is where each service puts its signature key. Microsoft 365 always uses the same two
 // names (`fixedNames`), so nothing there means DKIM is off. Google Workspace uses "google" unless
@@ -58,8 +54,6 @@ function mailService(mx) {
   const provider = PROVIDERS.find((p) => mx.some((v) => p.mx.test(mxHost(v)))) ?? null;
   return { receives: true, nullMx: false, provider };
 }
-
-// ---- SPF: who can send email as the domain --------------------------------------------------------
 
 const isSpf = (v) => /^v=spf1(\s|$)/i.test(v);
 // Each of these terms makes a receiving server do one more lookup; past ten, SPF fails outright.
@@ -120,8 +114,6 @@ async function checkSpf(txt, mail, lookup) {
   return { findings, values: records };
 }
 
-// ---- DKIM: the signature on the domain's email ----------------------------------------------------
-
 const hasKey = (v) => /(^|;)\s*p=/.test(v);
 const keyRevoked = (v) => /(^|;)\s*p=\s*(;|$)/.test(v);
 
@@ -162,8 +154,6 @@ async function checkDkim(domain, mail, lookup) {
   if (mail.provider?.fixedNames) return { findings: [{ code: 'missing', result: RESULT.fix, provider: mail.provider.name }] };
   return { findings: [{ code: 'not-found', result: RESULT.look, provider: mail.provider?.name ?? null }] };
 }
-
-// ---- DMARC: what happens to email that fails the checks -------------------------------------------
 
 const isDmarc = (v) => /^v=DMARC1(\s*;|\s*$)/i.test(v);
 
@@ -216,8 +206,6 @@ function checkDmarc(txt, domain) {
   return { findings, values: records, policy };
 }
 
-// ---- The registration -----------------------------------------------------------------------------
-
 const DAY = 24 * 60 * 60 * 1000;
 
 function checkExpiry(registration, now) {
@@ -228,8 +216,6 @@ function checkExpiry(registration, now) {
   if (days < 30) return { findings: [{ code: 'soon', result: RESULT.fix, at, days }] };
   return { findings: [{ code: 'ok', result: RESULT.good, at, days }] };
 }
-
-// ---- The whole check ------------------------------------------------------------------------------
 
 // Runs `fn`, turning a lookup that didn't work into a "couldn't check" finding rather than an error.
 async function attempt(fn) {
