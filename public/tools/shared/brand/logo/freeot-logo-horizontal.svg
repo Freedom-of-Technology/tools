@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Logo" xmlns="http://www.w3.org/2000/svg" width="755" height="318" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 755 318">
+  <title>FreeOT logo, side by side</title>
   <defs>
     <linearGradient id="linear-gradient" x1="103.311" y1="-1083.387" x2="87.295" y2="-1235.773" gradientTransform="translate(0 -998) scale(1 -1)" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#dcebf5"/>
