@@ -95,7 +95,7 @@ for (const [tool, sample] of [['domain-check', 'means-different'], ['email-check
     const app = readFileSync(join(PUBLIC, `tools/${tool}/app.js`), 'utf8');
     const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
     const targets = [
-      ...[...app.matchAll(/'#?((?:means|what)-[a-z-]+)'/g)].map((m) => m[1]),
+      ...[...app.matchAll(/["']#?((?:means|what)-[a-z-]+)["']/g)].map((m) => m[1]),
       ...[...html.matchAll(/href="#([^"]+)"/g)].map((m) => m[1]),
     ];
     assert.ok(targets.includes(sample), 'found the links in app.js');
