@@ -8,18 +8,41 @@
   border: 2px dashed var(--line);
   border-radius: var(--panel-corner);
   padding: var(--space-card);
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-.drop .fo-p { color: var(--text); }
-.drop.dragging { border-color: var(--link); border-style: solid; }
-label.fo-btn { cursor: pointer; }
-#file:focus-visible + .fo-btn, label.fo-btn:has(+ #file:focus-visible) { outline: 2px solid var(--link); outline-offset: 2px; }
+.drop .fo-p {
+  color: var(--text);
+}
+.drop.dragging {
+  border-color: var(--link);
+  border-style: solid;
+}
+label.fo-btn {
+  cursor: pointer;
+}
+#file:focus-visible + .fo-btn,
+label.fo-btn:has(+ #file:focus-visible) {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
 
-.paste { display: flex; flex-direction: column; gap: 10px; }
-.paste[hidden] { display: none; }
+.paste {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.paste[hidden] {
+  display: none;
+}
 .paste textarea {
   width: 100%;
-  font: 14px/1.5 ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font:
+    14px / 1.5 ui-monospace,
+    "Cascadia Mono",
+    Consolas,
+    monospace;
   color: var(--text);
   background: var(--panel);
   border: 1px solid var(--label);
@@ -27,31 +50,80 @@ label.fo-btn { cursor: pointer; }
   padding: 12px;
   resize: vertical;
 }
-.paste textarea:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.paste textarea:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
 
 /* ---- Results ---- */
 
 /* Problems are filled. */
-.badge-different, .badge-missing, .badge-paste, .badge-failed {
+.badge-different,
+.badge-missing,
+.badge-paste,
+.badge-failed {
   background: var(--text);
   border-color: var(--text);
   color: var(--page);
 }
 
-.records { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); font-size: 16px; }
-.records th { text-align: left; font-size: var(--size-label); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--label); padding: 12px 14px; border-bottom: 1px solid var(--line); }
-.records td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: break-word; }
-.records td code { display: block; }
-.records td code + code { margin-top: 4px; }
-.records td:first-child { width: 1%; white-space: nowrap; }
+.records {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  font-size: 16px;
+}
+.records th {
+  text-align: left;
+  font-size: var(--size-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--label);
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.records td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  overflow-wrap: break-word;
+}
+.records td code {
+  display: block;
+}
+.records td code + code {
+  margin-top: 4px;
+}
+.records td:first-child {
+  width: 1%;
+  white-space: nowrap;
+}
 
 /* On phones each record becomes a small card, with its labels written out. */
 @media (max-width: 720px) {
-  .records thead { display: none; }
-  .records, .records tbody, .records tr, .records td { display: block; width: auto; }
-  .records tr { border-bottom: 1px solid var(--line); padding: 10px 14px; }
-  .records td { border: 0; padding: 4px 0; }
-  .records td:first-child { width: auto; }
+  .records thead {
+    display: none;
+  }
+  .records,
+  .records tbody,
+  .records tr,
+  .records td {
+    display: block;
+    width: auto;
+  }
+  .records tr {
+    border-bottom: 1px solid var(--line);
+    padding: 10px 14px;
+  }
+  .records td {
+    border: 0;
+    padding: 4px 0;
+  }
+  .records td:first-child {
+    width: auto;
+  }
   .records td:not(:first-child)::before {
     content: attr(data-label);
     display: block;
@@ -61,5 +133,13 @@ label.fo-btn { cursor: pointer; }
   }
 }
 
-.key { display: flex; flex-direction: column; gap: 6px; font-size: var(--size-label); }
-.key p { margin: 0; max-width: 60em; }
+.key {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: var(--size-label);
+}
+.key p {
+  margin: 0;
+  max-width: 60em;
+}

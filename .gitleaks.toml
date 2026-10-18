@@ -1,0 +1,7 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "The made-up key the tests give Almanac Check's secret search to find"
+regexTarget = "match"
+regexes = ['''sk9-maple-4471''']

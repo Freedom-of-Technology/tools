@@ -1,0 +1,79 @@
+minimum_pre_commit_version: "4.6.2"
+# shared/brand: copied from brand-kit, which a hook must not rewrite: change them there.
+# shared/qr/vendor: the QR libraries exactly as published, beside their licenses.
+exclude: ^public/tools/shared/(brand|qr/vendor)/
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-added-large-files
+      - id: check-illegal-windows-names
+      - id: check-shebang-scripts-are-executable
+      - id: check-executables-have-shebangs
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+      - id: no-commit-to-branch
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+        # Unpinned, pre-commit builds it with whatever Go is newest.
+        language_version: "1.27.2"
+
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.23.3
+    hooks:
+      - id: markdownlint-cli2
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+
+  - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
+    rev: v1.7.12.25
+    hooks:
+      - id: actionlint
+        additional_dependencies: [shellcheck-py==0.11.0.1]
+
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.30.1
+    hooks:
+      - id: zizmor
+        args: [--offline]
+
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.50.3
+    hooks:
+      - id: typos
+        # Reports only: a spelling fix nobody sees can break a code or a word.
+        args: [--force-exclude]
+
+  - repo: https://github.com/biomejs/pre-commit
+    rev: v2.5.15
+    hooks:
+      - id: biome-check
+        additional_dependencies: ["@biomejs/biome@2.5.15"]
+        args: [--error-on-warnings]
+
+  - repo: local
+    hooks:
+      - id: svg-has-title
+        name: every SVG names what it shows
+        language: pygrep
+        entry: '<svg[^>]*>\s*<title>[^<]+</title>'
+        args: [--negate, --multiline]
+        files: \.svg$
+      - id: html-validate
+        name: html-validate
+        entry: html-validate
+        language: node
+        additional_dependencies: ["html-validate@11.16.1"]
+        types: [html]

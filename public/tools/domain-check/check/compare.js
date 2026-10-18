@@ -3,20 +3,25 @@
 // The result is plain data: one row per record in the file, plus the domain's name servers
 // and DNSSEC. The page turns it into words; nothing here writes to the screen.
 
-import { findSecrets, parseZone } from './zone.js';
+import { findSecrets, parseZone } from "./zone.js";
 
 // Each row's status. Only the ones in NEEDS_A_LOOK count as problems.
 export const STATUS = {
-  ok: 'ok', // live matches the file
-  different: 'different', // live has other values
-  missing: 'missing', // nothing live
-  proxied: 'proxied', // Cloudflare answers for it (orange cloud); the name answering is all that can be seen
-  godaddySite: 'godaddy-site', // GoDaddy's website builder answers for it
-  paste: 'paste', // the file's copy-ready "paste:" note disagrees with its record
-  unsupported: 'unsupported', // a record type this page doesn't check
-  failed: 'failed', // the lookup itself didn't work
+  ok: "ok", // live matches the file
+  different: "different", // live has other values
+  missing: "missing", // nothing live
+  proxied: "proxied", // Cloudflare answers for it (orange cloud); the name answering is all that can be seen
+  godaddySite: "godaddy-site", // GoDaddy's website builder answers for it
+  paste: "paste", // the file's copy-ready "paste:" note disagrees with its record
+  unsupported: "unsupported", // a record type this page doesn't check
+  failed: "failed", // the lookup itself didn't work
 };
-export const NEEDS_A_LOOK = new Set([STATUS.different, STATUS.missing, STATUS.paste, STATUS.failed]);
+export const NEEDS_A_LOOK = new Set([
+  STATUS.different,
+  STATUS.missing,
+  STATUS.paste,
+  STATUS.failed,
+]);
 
 const same = (a, b) => a.length === b.length && a.every((v) => b.includes(v));
 
@@ -54,7 +59,11 @@ async function checkRecord(entry, lookup) {
       return { ...row, status: entry.proxied ? STATUS.proxied : STATUS.godaddySite };
     }
     const { values, ttl } = await lookup.records(entry.name, entry.type);
-    const status = same(entry.values, values) ? STATUS.ok : values.length ? STATUS.different : STATUS.missing;
+    const status = same(entry.values, values)
+      ? STATUS.ok
+      : values.length
+        ? STATUS.different
+        : STATUS.missing;
     return { ...row, status, live: values, ttl };
   } catch (err) {
     return { ...row, status: STATUS.failed, reason: err.message };
@@ -70,7 +79,8 @@ async function checkRegistry(zone, lookup) {
         file: fileServers,
         live: live.nameservers,
         // A file that doesn't name its name servers has nothing to disagree with.
-        status: !fileServers.length || same(fileServers, live.nameservers) ? STATUS.ok : STATUS.different,
+        status:
+          !fileServers.length || same(fileServers, live.nameservers) ? STATUS.ok : STATUS.different,
       },
       dnssec: {
         file: zone.dnssec,

@@ -24,20 +24,29 @@ const TYPES = /^image\/(png|jpeg|svg\+xml|webp)$/;
 
 export function checkFile({ type, size }) {
   if (!TYPES.test(type)) {
-    throw new LogoError('That file isn\'t a picture this page can use. Pick a PNG, JPG or SVG file.');
+    throw new LogoError(
+      "That file isn't a picture this page can use. Pick a PNG, JPG or SVG file.",
+    );
   }
   if (size > LOGO.largestFile) {
-    throw new LogoError('That logo file is over 25 MB, more than a logo needs. Pick a smaller copy of it.');
+    throw new LogoError(
+      "That logo file is over 25 MB, more than a logo needs. Pick a smaller copy of it.",
+    );
   }
 }
 
 export function copySize({ width, height, vector, bytes }) {
   if (vector && bytes <= LOGO.largestVector) return null;
   if (!vector && width * height > LOGO.largestPixels) {
-    throw new LogoError('That picture is too large for this page to open. Pick a smaller copy of your logo.');
+    throw new LogoError(
+      "That picture is too large for this page to open. Pick a smaller copy of your logo.",
+    );
   }
   const longest = Math.max(width, height);
   if (!vector && longest <= LOGO.longestSide) return null;
   const scale = LOGO.longestSide / longest;
-  return { width: Math.max(1, Math.round(width * scale)), height: Math.max(1, Math.round(height * scale)) };
+  return {
+    width: Math.max(1, Math.round(width * scale)),
+    height: Math.max(1, Math.round(height * scale)),
+  };
 }

@@ -12,8 +12,8 @@
 
 const TYPE_NUMBERS = { A: 1, NS: 2, CNAME: 5, MX: 15, TXT: 16, AAAA: 28, SRV: 33, CAA: 257 };
 
-const bare = (host) => host.replace(/\.$/, '').toLowerCase();
-const unquote = (t) => t.replace(/^"|"$/g, '');
+const bare = (host) => host.replace(/\.$/, "").toLowerCase();
+const unquote = (t) => t.replace(/^"|"$/g, "");
 
 // Writes a live value the way zone.js writes the file's value.
 const NORMALIZE = {
@@ -28,7 +28,7 @@ const NORMALIZE = {
   TXT: (d) => d,
   CAA: (d) => {
     const [flags, tag, ...value] = d.split(/\s+/);
-    return `${Number(flags)} ${tag.toLowerCase()} ${unquote(value.join(' '))}`;
+    return `${Number(flags)} ${tag.toLowerCase()} ${unquote(value.join(" "))}`;
   },
   SRV: (d) => {
     const [priority, weight, port, host] = d.split(/\s+/);
@@ -45,7 +45,9 @@ export function createLookup({ fetch = globalThis.fetch.bind(globalThis) } = {})
   async function getJson(url, what) {
     let response;
     try {
-      response = await fetch(url, { headers: { accept: 'application/dns-json, application/rdap+json, application/json' } });
+      response = await fetch(url, {
+        headers: { accept: "application/dns-json, application/rdap+json, application/json" },
+      });
     } catch {
       throw new LookupError(`couldn't reach ${what}`);
     }
@@ -59,15 +61,20 @@ export function createLookup({ fetch = globalThis.fetch.bind(globalThis) } = {})
     const number = TYPE_NUMBERS[type];
     // edns_client_subnet=0.0.0.0/0 keeps Google from passing on which area the question came from.
     const url = `https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${type}&edns_client_subnet=0.0.0.0/0`;
-    const answer = await getJson(url, 'Google Public DNS');
+    const answer = await getJson(url, "Google Public DNS");
     // Status 3 means the name doesn't exist at all; 0 with no matching answers means it has no
     // record of this type. Anything else is the lookup failing, not the record missing.
-    if (answer.Status !== 0 && answer.Status !== 3) throw new LookupError(`Google Public DNS couldn't look up ${name} (status ${answer.Status})`);
-    const matching = (answer.Answer ?? []).filter((a) => a.type === number && bare(a.name) === bare(name));
+    if (answer.Status !== 0 && answer.Status !== 3)
+      throw new LookupError(`Google Public DNS couldn't look up ${name} (status ${answer.Status})`);
+    const matching = (answer.Answer ?? []).filter(
+      (a) => a.type === number && bare(a.name) === bare(name),
+    );
     // The name may now point somewhere else instead (a CNAME), in which case the answers belong
     // to that other name. Say where it points, so it shows as different rather than missing.
-    const pointer = (answer.Answer ?? []).find((a) => a.type === TYPE_NUMBERS.CNAME && bare(a.name) === bare(name));
-    if (!matching.length && pointer && type !== 'CNAME') {
+    const pointer = (answer.Answer ?? []).find(
+      (a) => a.type === TYPE_NUMBERS.CNAME && bare(a.name) === bare(name),
+    );
+    if (!matching.length && pointer && type !== "CNAME") {
       return { values: [`CNAME ${bare(pointer.data)}`], ttl: pointer.TTL };
     }
     return {
@@ -80,25 +87,29 @@ export function createLookup({ fetch = globalThis.fetch.bind(globalThis) } = {})
   // record can be checked for, since their real targets are hidden behind the company's addresses.
   async function answers(name) {
     const url = `https://dns.google/resolve?name=${encodeURIComponent(name)}&type=A&edns_client_subnet=0.0.0.0/0`;
-    const answer = await getJson(url, 'Google Public DNS');
-    if (answer.Status !== 0 && answer.Status !== 3) throw new LookupError(`Google Public DNS couldn't look up ${name} (status ${answer.Status})`);
+    const answer = await getJson(url, "Google Public DNS");
+    if (answer.Status !== 0 && answer.Status !== 3)
+      throw new LookupError(`Google Public DNS couldn't look up ${name} (status ${answer.Status})`);
     return (answer.Answer ?? []).some((a) => a.type === TYPE_NUMBERS.A);
   }
 
   // IANA's list of which registry runs each domain ending, fetched once per page.
   let registries;
   async function registryFor(domain) {
-    registries ??= getJson('https://data.iana.org/rdap/dns.json', "IANA's list of registries").catch((err) => {
+    registries ??= getJson(
+      "https://data.iana.org/rdap/dns.json",
+      "IANA's list of registries",
+    ).catch((err) => {
       registries = undefined; // try again next time rather than keep the failure
       throw err;
     });
     const { services } = await registries;
     // The longest ending that matches wins (a list could hold both "uk" and "co.uk").
-    const labels = domain.split('.');
+    const labels = domain.split(".");
     for (let i = 1; i < labels.length; i++) {
-      const ending = labels.slice(i).join('.');
+      const ending = labels.slice(i).join(".");
       const service = services.find(([endings]) => endings.includes(ending));
-      if (service) return service[1].find((url) => url.startsWith('https://')) ?? service[1][0];
+      if (service) return service[1].find((url) => url.startsWith("https://")) ?? service[1][0];
     }
     throw new LookupError(`no registry for ${domain} is listed by IANA`);
   }
@@ -107,9 +118,12 @@ export function createLookup({ fetch = globalThis.fetch.bind(globalThis) } = {})
   // registry. `expires` is null when the registry doesn't say.
   async function registry(domain) {
     const base = await registryFor(domain);
-    const data = await getJson(`${base.replace(/\/?$/, '/')}domain/${encodeURIComponent(domain)}`, 'the registry');
+    const data = await getJson(
+      `${base.replace(/\/?$/, "/")}domain/${encodeURIComponent(domain)}`,
+      "the registry",
+    );
     if (!data) throw new NotRegisteredError(`the registry has no record of ${domain}`);
-    const expiration = (data.events ?? []).find((e) => e.eventAction === 'expiration');
+    const expiration = (data.events ?? []).find((e) => e.eventAction === "expiration");
     return {
       nameservers: (data.nameservers ?? []).map((ns) => bare(ns.ldhName)).sort(),
       dnssec: Boolean(data.secureDNS?.delegationSigned),

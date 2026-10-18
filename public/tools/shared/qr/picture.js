@@ -5,16 +5,16 @@
 //   scaleFor(code, pixels)             -> whole pixels per square for a code about that many pixels wide
 //   scansBack(canvas, text)            -> whether the finished picture scans as exactly that text
 
-import { BORDER, readsBack, toPixels } from './qr.js';
-import { drawFitted } from '../logo/read.js';
+import { drawFitted } from "../logo/read.js";
+import { BORDER, readsBack, toPixels } from "./qr.js";
 
 // scale: pixels per square, whole, so every square is sharp.
 export function codeCanvas(code, box, logo, scale) {
   const picture = toPixels(code, scale, box);
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = picture.width;
   canvas.height = picture.height;
-  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
   ctx.putImageData(new ImageData(picture.rgba, picture.width, picture.height), 0, 0);
   if (box && logo) {
     // Half a square of room on every side, so the logo never touches a square.
@@ -30,6 +30,8 @@ export const scaleFor = (code, pixels) => Math.floor(pixels / (code.size + BORDE
 
 // The test-scan, on the finished picture with the logo drawn in.
 export function scansBack(canvas, text) {
-  const { data, width, height } = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
+  const { data, width, height } = canvas
+    .getContext("2d")
+    .getImageData(0, 0, canvas.width, canvas.height);
   return readsBack(data, width, height, text);
 }

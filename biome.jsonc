@@ -1,0 +1,36 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  // Skip what git ignores.
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "includes": [
+      "**",
+      // Copied from brand-kit: change them there.
+      "!public/tools/shared/brand",
+      // The QR libraries exactly as published, beside their licenses.
+      "!public/tools/shared/qr/vendor"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "javascript": {
+    "formatter": { "quoteStyle": "double", "trailingCommas": "all", "semicolons": "always" }
+  },
+  // html-validate checks the pages. Biome's HTML support would also lint and format the scripts and
+  // styles inside them, which is still experimental.
+  "html": { "linter": { "enabled": false }, "formatter": { "enabled": false } },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      // It compares selectors for different elements, such as .privacy p + p and .ai-check p,
+      // which never match the same one, so reordering would only scatter related rules.
+      "style": { "noDescendingSpecificity": "off" }
+    }
+  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } }
+}

@@ -9,18 +9,18 @@
 // - Everything else is a file from public/, with the security headers below added. A page is also
 //   marked so Cloudflare passes it on unchanged (see unchanged()).
 
-const MAIN_SITE = 'https://freedomoftechnology.com';
-const OLD_ADDRESS = 'check.freeot.com';
-const DOMAIN_CHECK = '/tools/domain-check/';
+const MAIN_SITE = "https://freedomoftechnology.com";
+const OLD_ADDRESS = "check.freeot.com";
+const DOMAIN_CHECK = "/tools/domain-check/";
 
 // What every page needs that it can't set for itself. Each page's own Content-Security-Policy
 // (in its HTML) limits what it can load; this one stops other sites showing it inside theirs.
 const SECURITY_HEADERS = {
-  'Content-Security-Policy': "frame-ancestors 'none'",
-  'X-Frame-Options': 'DENY',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'no-referrer',
-  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  "Content-Security-Policy": "frame-ancestors 'none'",
+  "X-Frame-Options": "DENY",
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "no-referrer",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
 };
 
 // Cloudflare can rewrite a page on its way to the visitor: on freedomoftechnology.com it adds its
@@ -28,9 +28,9 @@ const SECURITY_HEADERS = {
 // as its code on GitHub, so its HTML carries "no-transform", which Cloudflare leaves alone. Only
 // the HTML: no-transform also stops Cloudflare compressing a file, and the scripts are the big ones.
 function unchanged(response) {
-  if (!(response.headers.get('Content-Type') ?? '').startsWith('text/html')) return;
-  const cache = response.headers.get('Cache-Control');
-  response.headers.set('Cache-Control', cache ? `${cache}, no-transform` : 'no-transform');
+  if (!(response.headers.get("Content-Type") ?? "").startsWith("text/html")) return;
+  const cache = response.headers.get("Cache-Control");
+  response.headers.set("Cache-Control", cache ? `${cache}, no-transform` : "no-transform");
 }
 
 function moved(to, from) {
@@ -44,9 +44,9 @@ export default {
     const url = new URL(request.url);
 
     if (url.hostname === OLD_ADDRESS) {
-      return moved(DOMAIN_CHECK + url.pathname.replace(/^\/+/, ''), url);
+      return moved(DOMAIN_CHECK + url.pathname.replace(/^\/+/, ""), url);
     }
-    if (url.hostname.startsWith('www.')) {
+    if (url.hostname.startsWith("www.")) {
       return moved(url.pathname, url);
     }
 

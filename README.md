@@ -7,7 +7,7 @@ Free tools from [FreeOT](https://freedomoftechnology.com) for business owners, a
 asked, and nothing typed or uploaded is saved.
 
 | Tool | Address | What it does |
-|---|---|---|
+| --- | --- | --- |
 | The Ownership Checklist | [/tools/ownership-checklist/](https://freedomoftechnology.com/tools/ownership-checklist/) | Ten accounts every small business should hold in its own name: the owner says who holds each, and the page writes the plan: who to ask for what, with a message to send, and what to find out first. |
 | Who owns your Google profile? | [/tools/google-profile-owner/](https://freedomoftechnology.com/tools/google-profile-owner/) | The owner says what they see on their Google Business Profile, and the page says who can take it from them and what to do, with a message for whoever holds it. |
 | Before you sign an SEO contract | [/tools/seo-proposal-check/](https://freedomoftechnology.com/tools/seo-proposal-check/) | The owner ticks what an SEO agency's proposal says, and sees the red flags, why each one matters with its source, and the questions to send the agency. |
@@ -220,7 +220,7 @@ summary to copy lists what to fix and where.
 ## Layout
 
 | Path | What it is |
-|---|---|
+| --- | --- |
 | `public/` | Every file the site serves, at the same path: `public/tools/domain-check/index.html` is `/tools/domain-check/`. No build step. |
 | `public/tools/shared/` | What every tool page shares: `tool.css` (the page layout, the tools menu and result cards), `live.js` (the public lookups: Google Public DNS, IANA and the registry), `page.js` (showing a result and offering its files), `column.js` (drawing a card picture), `maker.css` (the form and downloads of the tools that make something) and `brand/` (FreeOT's color and font settings, fonts and logos, copied from FreeOT's brand kit). |
 | `public/tools/domain-check/` | Almanac Check. `check/` is the checking code: `zone.js` reads a records file, `compare.js` compares it with what's live. `app.js` is the page. |

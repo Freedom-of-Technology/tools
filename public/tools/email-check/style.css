@@ -7,9 +7,13 @@
   background: var(--band);
   border-radius: var(--panel-corner);
   padding: var(--space-card);
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-.ask .fo-p { color: var(--text); }
+.ask .fo-p {
+  color: var(--text);
+}
 .ask input {
   width: 100%;
   max-width: 30em;
@@ -20,12 +24,16 @@
   border-radius: var(--button-corner);
   padding: 12px 14px;
 }
-.ask input:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.ask input:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
 
 /* ---- Results ---- */
 
 /* What needs a fix, or couldn't be checked, is filled. */
-.badge-fix, .badge-failed {
+.badge-fix,
+.badge-failed {
   background: var(--text);
   border-color: var(--text);
   color: var(--page);

@@ -6,7 +6,7 @@
 //   drawFitted(ctx, logo, x, y, w, h)    -> draws the logo centered in the box, keeping its shape
 //   logoPicker({ input, chosen, remove, inCode }) -> wires the picker's button, file name and Remove
 
-import { LogoError, checkFile, copySize } from './rules.js';
+import { checkFile, copySize, LogoError } from "./rules.js";
 
 function readAsDataURL(file) {
   return new Promise((resolve, reject) => {
@@ -23,7 +23,7 @@ async function decoded(href) {
   try {
     await image.decode();
   } catch {
-    throw new LogoError('Your browser couldn\'t open that logo file. Try saving it as a PNG.');
+    throw new LogoError("Your browser couldn't open that logo file. Try saving it as a PNG.");
   }
   return image;
 }
@@ -38,18 +38,21 @@ export async function readLogo(file) {
   // An SVG with no size of its own reports 0; it's drawn to fit, so any shape will do.
   const width = image.naturalWidth || 300;
   const height = image.naturalHeight || 150;
-  const copy = copySize({ width, height, vector: file.type === 'image/svg+xml', bytes: file.size });
+  const copy = copySize({ width, height, vector: file.type === "image/svg+xml", bytes: file.size });
   if (!copy) return { image, href, width, height };
 
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = copy.width;
   canvas.height = copy.height;
-  const ctx = canvas.getContext('2d');
-  ctx.imageSmoothingQuality = 'high';
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingQuality = "high";
   ctx.drawImage(image, 0, 0, copy.width, copy.height);
   // A photo stays a JPG, which is far smaller for photos; everything else becomes a PNG, which keeps
   // a see-through background.
-  const smaller = file.type === 'image/jpeg' ? canvas.toDataURL('image/jpeg', 0.9) : canvas.toDataURL('image/png');
+  const smaller =
+    file.type === "image/jpeg"
+      ? canvas.toDataURL("image/jpeg", 0.9)
+      : canvas.toDataURL("image/png");
   return { image: await decoded(smaller), href: smaller, width: copy.width, height: copy.height };
 }
 
@@ -67,14 +70,14 @@ export function drawFitted(ctx, logo, x, y, w, h) {
 export function logoPicker({ input, chosen, remove, inCode }) {
   function show() {
     const file = input.files[0];
-    chosen.textContent = file ? `Chosen: ${file.name}` : 'No logo chosen';
+    chosen.textContent = file ? `Chosen: ${file.name}` : "No logo chosen";
     remove.hidden = !file;
     inCode.disabled = !file;
     if (!file) inCode.checked = false;
   }
-  input.addEventListener('change', show);
-  remove.addEventListener('click', () => {
-    input.value = '';
+  input.addEventListener("change", show);
+  remove.addEventListener("click", () => {
+    input.value = "";
     show();
     input.focus();
   });
