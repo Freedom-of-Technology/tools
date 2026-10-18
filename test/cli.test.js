@@ -8,7 +8,7 @@ import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import { main } from '../cli/check.mjs';
+import { TEMPLATE_FRONT_PAGE, main } from '../cli/check.mjs';
 import { DKIM, bakeryLive } from './bakery.js';
 import { fakeInternet } from './fake-internet.js';
 
@@ -102,7 +102,6 @@ for (const [name, guide, expected] of [
   });
 }
 
-const TEMPLATE_FRONT_PAGE = 'https://raw.githubusercontent.com/Freedom-of-Technology/almanac-template/main/README.md';
 const frontPage = (version) =>
   '# Your almanac\n\nTemplates and guides created and maintained by\n' +
   '[Freedom of Technology, LLC](https://freedomoftechnology.com) ·\n' +
