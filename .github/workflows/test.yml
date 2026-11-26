@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     # A Worker that can't start fails its tests but can keep the run from ending; this ends it.
     timeout-minutes: 15
     steps:
